@@ -376,6 +376,7 @@ function minutos(hhmm){ if(!hhmm) return null; const [h,m]=hhmm.split(':').map(N
 function relogio(min){ if(min==null) return ''; min=((min%1440)+1440)%1440; return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0'); }
 function duracaoTxt(m){ if(!m) return ''; const h=Math.floor(m/60), x=m%60; return h? (h+'h'+(x?String(x).padStart(2,'0'):'')) : (x+'min'); }
 function moedaTxt(v,m='BRL'){
+  if(m==='MILHAS') return Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:0})+' milhas';
   const simb={BRL:'R$',USD:'US$',ARS:'AR$',PYG:'₲',EUR:'€'}[m]||m;
   const casas = m==='PYG'?0:2;
   return simb+' '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:casas,maximumFractionDigits:casas});
@@ -417,7 +418,8 @@ function ico(n,t=20){ const d=ICONES[n]||ICONES.outros;
   return `<svg class="ico" viewBox="0 0 24 24" width="${t}" height="${t}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d.split(' M').map((x,i)=>`<path d="${i?'M'+x:x}"/>`).join('')}</svg>`; }
 const CATEGORIAS = {
   passeio:{e:'🌄',i:'passeio',n:'Passeio'}, compras:{e:'🛍',i:'compras',n:'Compras'}, comida:{e:'🍽',i:'comida',n:'Comida'},
-  transporte:{e:'🚕',i:'transporte',n:'Transporte'}, hospedagem:{e:'🛏',i:'hospedagem',n:'Hospedagem'},
+  transporte:{e:'🚕',i:'transporte',n:'Transporte'}, voo:{e:'✈︎',i:'voo',n:'Passagem aérea'},
+  hospedagem:{e:'🛏',i:'hospedagem',n:'Hospedagem'},
   ingresso:{e:'🎟',i:'ingresso',n:'Ingresso'}, logistica:{e:'🧳',i:'logistica',n:'Logística'}, outros:{e:'📌',i:'outros',n:'Outros'}
 };
 const PAISES = {BR:{n:'Brasil',b:'🇧🇷'},PY:{n:'Paraguai',b:'🇵🇾'},AR:{n:'Argentina',b:'🇦🇷'}};
@@ -467,7 +469,7 @@ function sementeFoz(){
     nome:'Foz do Iguaçu — Tríplice Fronteira',
     inicio:'2026-09-29', fim:'2026-10-03',
     moedaBase:'BRL',
-    cambio:{BRL:1, USD:5.12, ARS:0.003346, PYG:0.000848},
+    cambio:{BRL:1, USD:5.12, ARS:0.003346, PYG:0.000848, MILHAS:0.025},
     cambioData:'13/09/2026',
     pessoas:[{id:'p1',nome:'Rodolfo'},{id:'p2',nome:'Rita'},{id:'p3',nome:'Francisco'},{id:'p4',nome:'Duda'}],
     cotaPY:500,
@@ -610,6 +612,7 @@ function carregar(){
 function sanear(v){
   v.pessoas=v.pessoas||[]; v.destinos=v.destinos||[]; v.atracoes=v.atracoes||[];
   v.gastos=v.gastos||[]; v.voos=v.voos||[]; v.cambio=v.cambio||{BRL:1}; v.compras=v.compras||[];
+  if(v.cambio.MILHAS===undefined) v.cambio.MILHAS=0.025;   /* milhas entram como moeda: R$ por milha */
   v.moedaBase=v.moedaBase||'BRL';
   v.atracoes.forEach(a=>{ if(a.sel===undefined) a.sel=!!a.dia; if(!a.moeda) a.moeda='BRL'; });
 }
@@ -1453,7 +1456,7 @@ function telaCustos(){
 
   h.push(`<button class="bt larga" data-novo-gasto="1">＋ Lançar gasto</button>
   <div class="filtros" style="margin-top:10px" role="group" aria-label="Lançar rápido por categoria">
-    ${['comida','compras','transporte','ingresso','hospedagem','outros'].map(c=>
+    ${['comida','compras','transporte','voo','ingresso','hospedagem','outros'].map(c=>
       `<button class="chip" data-rapido="${c}">${ico(CATEGORIAS[c].i,16)} ${CATEGORIAS[c].n}</button>`).join('')}
   </div>`);
 
@@ -1586,8 +1589,9 @@ function telaViagem(){
   <div class="cartao pad">
     ${Object.keys(v.cambio).filter(m=>m!=='BRL').map(m=>`
       <div class="campo" style="margin-bottom:10px">
-        <label for="cx_${m}">1 ${m} vale, em reais</label>
+        <label for="cx_${m}">${m==='MILHAS'?'Quanto vale 1 milha, em reais':'1 '+m+' vale, em reais'}</label>
         <input id="cx_${m}" type="number" inputmode="decimal" step="0.000001" min="0" value="${v.cambio[m]}" data-cambio="${m}">
+        ${m==='MILHAS'?`<p class="ajuda" style="margin-top:5px;margin-bottom:0">Está em <b>${moedaTxt(v.cambio.MILHAS*1000,'BRL')} por mil milhas</b>. Serve para saber quanto a passagem “de graça” custou de verdade — lance a passagem em milhas e o app mostra o valor ao lado.</p>`:''}
       </div>`).join('')}
     <p class="ajuda">Atualize antes de viajar e de novo quando a cotação virar. Tudo que você lançar em outra moeda é convertido por aqui.</p>
   </div>`);
@@ -1783,7 +1787,7 @@ function folhaEncaixar(id){
 function folhaGasto(id,catInicial){
   const v=viagem(), novo=!id;
   const g = novo ? {id:idNovo('g'),data:hojeISO(),descricao:'',categoria:catInicial||'comida',valor:'',moeda:v.destinos[0].moeda||'BRL',
-                    destinoId:v.destinos[0].id,pagoPor:(v.pessoas[0]||{}).id,divididoCom:v.pessoas.map(p=>p.id),criado:Date.now()}
+                    destinoId:v.destinos[0].id,pagoPor:(v.pessoas[0]||{}).id,divididoCom:[],criado:Date.now()}
                  : v.gastos.find(x=>x.id===id);
   if(!g) return;
   const dentro = (g.data>=v.inicio&&g.data<=v.fim)?g.data:v.inicio;
@@ -1809,14 +1813,20 @@ function folhaGasto(id,catInicial){
         <div class="pessoas" id="fg_divide">
           ${v.pessoas.map(p=>`<button type="button" data-div="${p.id}" aria-pressed="${(g.divididoCom||[]).includes(p.id)}">${esc(p.nome)}</button>`).join('')}
         </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button type="button" class="chip" id="fg_todos">Todos</button>
+          <button type="button" class="chip" id="fg_soPagou">Só quem pagou</button>
+        </div>
       </div>
       <button type="submit" class="bt larga">${novo?'Lançar':'Salvar'}</button>
       ${novo?'':`<button type="button" class="bt larga perigo" data-apagar-gasto="${g.id}" style="margin-top:8px">Apagar lançamento</button>`}
     </form>`,()=>{
       const conv=()=>{
         const val=parseFloat($('#fg_valor').value)||0, m=$('#fg_moeda').value;
-        $('#fg_convertido').textContent = m==='BRL'? 'Convertido pelo câmbio de '+(v.cambioData||'hoje')+'.'
-          : ('≈ '+brlTxt(paraBRL(val,m))+'  ·  1 '+m+' = '+moedaTxt(v.cambio[m],'BRL'));
+        $('#fg_convertido').textContent =
+          m==='BRL'    ? 'Convertido pelo câmbio de '+(v.cambioData||'hoje')+'.'
+        : m==='MILHAS' ? ('≈ '+brlTxt(paraBRL(val,m))+'  ·  mil milhas = '+moedaTxt(v.cambio.MILHAS*1000,'BRL'))
+        :                ('≈ '+brlTxt(paraBRL(val,m))+'  ·  1 '+m+' = '+moedaTxt(v.cambio[m],'BRL'));
       };
       $('#fg_valor').addEventListener('input',conv); $('#fg_moeda').addEventListener('change',conv); conv();
       $('#fg_dest').addEventListener('change',()=>{
@@ -1827,10 +1837,18 @@ function folhaGasto(id,catInicial){
         const b=e.target.closest('[data-div]'); if(!b) return;
         b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true');
       });
+      $('#fg_todos').onclick=()=>$$('#fg_divide [data-div]').forEach(b=>b.setAttribute('aria-pressed','true'));
+      $('#fg_soPagou').onclick=()=>{ const q=$('#fg_pagou').value;
+        $$('#fg_divide [data-div]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.div===q))); };
       $('#formGasto').addEventListener('submit',e=>{
         e.preventDefault();
         const div=$$('#fg_divide [data-div]').filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.dataset.div);
-        if(!div.length) return torrada('Escolha ao menos uma pessoa para dividir.');
+        if(!div.length){
+          torrada('Escolha entre quem dividir este gasto.');
+          const cx=$('#fg_divide'); cx.scrollIntoView({block:'center',behavior:'smooth'});
+          cx.animate([{outline:'2px solid var(--alerta)'},{outline:'2px solid transparent'}],{duration:900});
+          return;
+        }
         Object.assign(g,{
           valor:parseFloat($('#fg_valor').value)||0, moeda:$('#fg_moeda').value,
           descricao:$('#fg_desc').value.trim(), categoria:$('#fg_cat').value,

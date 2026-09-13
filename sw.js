@@ -2,7 +2,7 @@
    TROQUE A VERSAO A CADA PUBLICAÇÃO. É isso que faz o app atualizar
    no celular de quem já instalou; sem trocar, o aparelho continua
    servindo a versão velha do cache. */
-const VERSAO = 'nv-v6';
+const VERSAO = 'nv-v7';
 
 const CACHE_APP   = 'app-' + VERSAO;
 const CACHE_TILES = 'tiles-v2';      // imagens do mapa, sobrevivem à troca de versão
