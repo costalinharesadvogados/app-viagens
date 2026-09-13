@@ -1,0 +1,1808 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<meta name="theme-color" content="#0d4f4a">
+<meta name="description" content="Roteiro, custos e mapa de atrações para as viagens de Rodolfo e Rita.">
+<title>Nossas Viagens</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icones/favicon.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nossas Viagens">
+<style>
+:root{
+  --agua:#0d4f4a; --agua-2:#12706a; --agua-3:#1c8f86;
+  --areia:#f6f3ec; --papel:#ffffff; --tinta:#15201f; --tinta-2:#4c5c5a;
+  --linha:#e2dfd6; --sol:#e08a2c; --sol-fraco:#fdf1e0;
+  --alerta:#c2410c; --alerta-fraco:#fff1ea; --ok:#15803d; --ok-fraco:#eaf6ee;
+  --br:#1c8f86; --py:#b3452e; --ar:#3b6fb5;
+  --r:14px; --r-p:10px; --sombra:0 1px 2px rgba(21,32,31,.06),0 4px 16px rgba(21,32,31,.07);
+  --toque:48px;
+  --topo:env(safe-area-inset-top,0px); --base:env(safe-area-inset-bottom,0px);
+  --esq:env(safe-area-inset-left,0px); --dir:env(safe-area-inset-right,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --areia:#111817; --papel:#1a2322; --tinta:#eef3f2; --tinta-2:#9fb0ae;
+    --linha:#2c3937; --sol:#f0a44f; --sol-fraco:#332617;
+    --alerta:#fb923c; --alerta-fraco:#361d10; --ok:#4ade80; --ok-fraco:#12291b;
+    --agua:#0b3d39; --agua-2:#1c8f86; --agua-3:#2bb3a7;
+    --sombra:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%;overscroll-behavior-y:none}
+body{
+  background:var(--areia); color:var(--tinta);
+  font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+h1,h2,h3,h4{margin:0;font-weight:650;letter-spacing:-.01em}
+a{color:var(--agua-2)}
+
+/* ---------- topo ---------- */
+#barraTopo{
+  position:sticky;top:0;z-index:40;
+  padding:calc(var(--topo) + 10px) calc(var(--dir) + 16px) 10px calc(var(--esq) + 16px);
+  background:var(--agua); color:#fff;
+  display:flex;align-items:center;gap:10px;
+}
+@media (prefers-color-scheme: dark){ #barraTopo{background:#0b3d39} }
+#barraTopo h1{font-size:17px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#barraTopo .sub{display:block;font-size:12px;font-weight:400;opacity:.8;letter-spacing:0}
+.btTopo{
+  min-width:44px;height:44px;border-radius:12px;color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:6px;padding:0 10px;
+  background:rgba(255,255,255,.14);font-size:13px;font-weight:600;
+}
+.btTopo:active{background:rgba(255,255,255,.28)}
+
+/* ---------- corpo ---------- */
+#corpo{
+  padding:14px calc(var(--dir) + 14px) calc(var(--base) + 96px) calc(var(--esq) + 14px);
+  max-width:780px;margin:0 auto;
+}
+.tela{display:none}
+.tela.on{display:block;animation:entra .18s ease-out}
+@keyframes entra{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- cartões ---------- */
+.cartao{background:var(--papel);border:1px solid var(--linha);border-radius:var(--r);box-shadow:var(--sombra);margin-bottom:12px;overflow:hidden}
+.cartao.pad{padding:14px}
+.tituloSecao{display:flex;align-items:center;gap:8px;margin:18px 2px 10px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-2)}
+.tituloSecao:first-child{margin-top:2px}
+.tituloSecao .linha{flex:1;height:1px;background:var(--linha)}
+
+/* ---------- botões ---------- */
+.bt{
+  min-height:var(--toque);border-radius:12px;padding:0 18px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-weight:650;font-size:15px;background:var(--agua-2);color:#fff;
+}
+.bt:active{transform:scale(.98)}
+.bt.sec{background:var(--papel);color:var(--tinta);border:1px solid var(--linha)}
+.bt.fant{background:transparent;color:var(--agua-2);border:1px solid var(--linha)}
+.bt.perigo{background:transparent;color:var(--alerta);border:1px solid var(--alerta)}
+.bt.larga{width:100%}
+.bt[disabled]{opacity:.45;pointer-events:none}
+.btIcone{width:var(--toque);height:var(--toque);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:19px;color:var(--tinta-2)}
+.btIcone:active{background:var(--linha)}
+
+/* ---------- etiquetas ---------- */
+.eti{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--linha);color:var(--tinta-2);white-space:nowrap}
+.eti.br{background:rgba(28,143,134,.14);color:var(--br)}
+.eti.py{background:rgba(179,69,46,.14);color:var(--py)}
+.eti.ar{background:rgba(59,111,181,.15);color:var(--ar)}
+.eti.sol{background:var(--sol-fraco);color:var(--sol)}
+.eti.ok{background:var(--ok-fraco);color:var(--ok)}
+.eti.alerta{background:var(--alerta-fraco);color:var(--alerta)}
+@media (prefers-color-scheme: dark){ .eti.br{background:rgba(43,179,167,.18)} .eti.py{background:rgba(230,120,90,.18);color:#e6785a} .eti.ar{background:rgba(120,160,230,.18);color:#88aae8} }
+
+/* ---------- aviso ---------- */
+.aviso{display:flex;gap:10px;padding:12px 14px;border-radius:var(--r-p);font-size:13.5px;line-height:1.4;margin-bottom:10px;border:1px solid transparent}
+.aviso .ic{flex:0 0 auto;font-size:16px;line-height:1.2}
+.aviso.at{background:var(--alerta-fraco);border-color:rgba(194,65,12,.25);color:var(--alerta)}
+.aviso.in{background:var(--sol-fraco);border-color:rgba(224,138,44,.25);color:var(--sol)}
+.aviso.bo{background:var(--ok-fraco);border-color:rgba(21,128,61,.22);color:var(--ok)}
+.aviso b{font-weight:700}
+
+/* ---------- roteiro ---------- */
+.dia{margin-bottom:14px}
+.cabDia{
+  position:sticky;top:var(--alturaTopo,86px);z-index:20;
+  background:var(--areia);padding:8px 2px 8px;display:flex;align-items:baseline;gap:8px;
+}
+.cabDia .n{font-size:17px;font-weight:750}
+.cabDia .d{font-size:13px;color:var(--tinta-2);flex:1}
+.cabDia .tot{font-size:12.5px;font-weight:700;color:var(--tinta-2)}
+.item{display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--linha);align-items:flex-start}
+.item:last-child{border-bottom:0}
+.item .hora{flex:0 0 54px;font-size:13px;font-weight:750;color:var(--agua-2);padding-top:2px;font-variant-numeric:tabular-nums}
+.item .corpo{flex:1;min-width:0}
+.item .nome{font-weight:650;font-size:15.5px;line-height:1.3}
+.item .meta{font-size:12.5px;color:var(--tinta-2);margin-top:3px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.item .obs{font-size:12.5px;color:var(--tinta-2);margin-top:5px;line-height:1.4}
+.item.voo{background:linear-gradient(90deg,rgba(13,79,74,.07),transparent)}
+.item.voo .hora{color:var(--tinta-2)}
+.item .acao{flex:0 0 auto;display:flex;flex-direction:column;gap:4px}
+.desloc{display:flex;align-items:center;gap:8px;padding:5px 14px 5px 80px;font-size:12px;color:var(--tinta-2);background:repeating-linear-gradient(180deg,transparent,transparent 3px,var(--linha) 3px,var(--linha) 4px) 66px 0/1px 100% no-repeat}
+.desloc.aviso2{color:var(--alerta);font-weight:600}
+.vazioDia{padding:18px 14px;text-align:center;color:var(--tinta-2);font-size:13.5px}
+
+/* ---------- lista de atrações ---------- */
+.filtros{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filtros::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--linha);
+  background:var(--papel);font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;color:var(--tinta-2)
+}
+.chip[aria-pressed="true"]{background:var(--agua-2);border-color:var(--agua-2);color:#fff}
+.atr{display:flex;align-items:stretch;border-bottom:1px solid var(--linha)}
+.atr:last-child{border-bottom:0}
+.marcar{
+  flex:0 0 var(--toque);min-height:var(--toque);display:flex;align-items:center;justify-content:center;
+  border-right:1px solid var(--linha);font-size:20px;color:var(--tinta-2);align-self:stretch;
+}
+.marcar[aria-pressed="true"]{background:var(--ok-fraco);color:var(--ok)}
+.atr .info{flex:1;min-width:0;padding:11px 12px}
+.atr .n{font-weight:650;font-size:15px;line-height:1.3}
+.atr .m{font-size:12.5px;color:var(--tinta-2);margin-top:3px;display:flex;flex-wrap:wrap;gap:5px 9px;align-items:center}
+.atr .abrir{flex:0 0 44px;display:flex;align-items:center;justify-content:center;color:var(--tinta-2);font-size:18px}
+.atr.escolhida .n{color:var(--agua-2)}
+
+/* ---------- mapa ---------- */
+#caixaMapa{position:relative;width:100%;height:min(60vh,460px);background:#dfe6e2;border-radius:var(--r);overflow:hidden;border:1px solid var(--linha);touch-action:none;cursor:grab}
+@media (prefers-color-scheme: dark){ #caixaMapa{background:#1c2b28} }
+#caixaMapa.arrastando{cursor:grabbing}
+#telaTiles,#telaPinos{position:absolute;inset:0}
+#rotaDia{position:absolute;inset:0;pointer-events:none}
+#rotaDia path{fill:none;stroke:var(--agua);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.55;stroke-dasharray:2 9}
+#telaTiles img{position:absolute;width:256px;height:256px;user-select:none;-webkit-user-drag:none;opacity:0;transition:opacity .25s}
+#telaTiles img.ok{opacity:1}
+#fundoEsquema{position:absolute;inset:0;background-image:linear-gradient(rgba(125,150,145,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(125,150,145,.16) 1px,transparent 1px);background-size:48px 48px;display:none}
+#caixaMapa.offline #fundoEsquema{display:block}
+.pino{
+  position:absolute;width:44px;height:44px;margin:-38px 0 0 -22px;display:flex;align-items:flex-start;justify-content:center;
+  background:none;padding:0;
+}
+.pino i{
+  display:block;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:var(--agua-2);border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35);
+  font-style:normal;display:flex;align-items:center;justify-content:center;
+}
+.pino i span{transform:rotate(45deg);font-size:12px;line-height:1;color:#fff;font-weight:800}
+.pino.py i{background:var(--py)} .pino.ar i{background:var(--ar)}
+.pino.nao i{background:#9aa8a6;opacity:.85}
+.pino.sel i{background:var(--sol);width:32px;height:32px;z-index:5}
+.pino.feita i{background:var(--ok)}
+.pino i span svg{width:13px;height:13px}
+.pino b{
+  position:absolute;top:26px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:10.5px;font-weight:700;background:rgba(255,255,255,.92);color:#15201f;
+  padding:1px 5px;border-radius:5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;pointer-events:none;
+}
+#ferramentasMapa{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:8px;z-index:6}
+#ferramentasMapa button{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,.95);color:#15201f;font-size:20px;font-weight:700;box-shadow:var(--sombra);display:flex;align-items:center;justify-content:center}
+#creditoMapa{position:absolute;left:6px;bottom:4px;font-size:9.5px;color:#4c5c5a;background:rgba(255,255,255,.75);padding:1px 5px;border-radius:4px;z-index:6}
+#semRede{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:6;background:var(--alerta-fraco);color:var(--alerta);font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:999px;display:none;border:1px solid rgba(194,65,12,.3)}
+#caixaMapa.offline #semRede{display:block}
+#fichaMapa{margin-top:10px}
+
+/* ---------- custos ---------- */
+.numero{font-variant-numeric:tabular-nums}
+.resumoGrande{display:flex;flex-direction:column;gap:2px;padding:16px 14px;background:var(--agua);color:#fff;border-radius:var(--r)}
+@media (prefers-color-scheme: dark){ .resumoGrande{background:#0b3d39} }
+.resumoGrande .v{font-size:30px;font-weight:750;letter-spacing:-.02em}
+.resumoGrande .r{font-size:12.5px;opacity:.85}
+.gradeResumo{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:12px}
+.mini{background:var(--papel);border:1px solid var(--linha);border-radius:var(--r-p);padding:11px 12px}
+.mini .r{font-size:11.5px;color:var(--tinta-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.mini .v{font-size:19px;font-weight:750;margin-top:2px}
+.barra{height:8px;border-radius:999px;background:var(--linha);overflow:hidden;margin-top:8px}
+.barra i{display:block;height:100%;background:var(--agua-3);border-radius:999px}
+.barra i.estourou{background:var(--alerta)}
+.gasto{display:flex;gap:12px;padding:12px 14px;border-bottom:1px solid var(--linha);align-items:center}
+.gasto:last-child{border-bottom:0}
+.gasto .cat{flex:0 0 38px;height:38px;border-radius:11px;background:var(--areia);display:flex;align-items:center;justify-content:center;font-size:18px}
+.gasto .c{flex:1;min-width:0}
+.gasto .d{font-weight:600;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gasto .s{font-size:12px;color:var(--tinta-2);margin-top:2px}
+.gasto .v{text-align:right;font-weight:700;font-size:15px;flex:0 0 auto}
+.gasto .v small{display:block;font-weight:500;font-size:11px;color:var(--tinta-2)}
+.acerto{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--linha);font-size:14.5px}
+.acerto:last-child{border-bottom:0}
+.acerto .q{font-weight:600}
+
+/* ---------- formulários ---------- */
+.campo{margin-bottom:12px}
+.campo label{display:block;font-size:12.5px;font-weight:700;color:var(--tinta-2);margin-bottom:5px}
+.campo input,.campo select,.campo textarea{
+  width:100%;min-height:var(--toque);border:1px solid var(--linha);border-radius:var(--r-p);
+  padding:11px 12px;background:var(--papel);font-size:16px;
+}
+.campo textarea{min-height:80px;resize:vertical;line-height:1.4}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:2px solid var(--agua-3);outline-offset:-1px;border-color:var(--agua-3)}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tripla{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pessoas{display:flex;flex-wrap:wrap;gap:8px}
+.pessoas button{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--linha);background:var(--papel);font-size:14px;font-weight:600;color:var(--tinta-2)}
+.pessoas button[aria-pressed="true"]{background:var(--agua-2);border-color:var(--agua-2);color:#fff}
+.ajuda{font-size:12px;color:var(--tinta-2);margin-top:-6px;margin-bottom:12px;line-height:1.4}
+
+/* ---------- folha (modal) ---------- */
+#fundoFolha{position:fixed;inset:0;background:rgba(10,20,19,.45);z-index:60;display:none;backdrop-filter:blur(2px)}
+#fundoFolha.on{display:block}
+#folha{
+  position:fixed;left:0;right:0;bottom:0;z-index:61;background:var(--papel);
+  border-radius:20px 20px 0 0;max-height:92vh;display:none;flex-direction:column;
+  transform:translateY(100%);transition:transform .22s cubic-bezier(.32,.72,0,1);
+  box-shadow:0 -6px 30px rgba(0,0,0,.2);
+}
+#folha.on{display:flex;transform:none}
+#folhaCab{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--linha);flex:0 0 auto}
+#folhaCab h3{flex:1;font-size:17px;min-width:0}
+#folhaCorpo{overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--base) + 16px)}
+#folha .puxador{width:38px;height:4px;border-radius:999px;background:var(--linha);margin:8px auto 0;flex:0 0 auto}
+
+/* ---------- abas ---------- */
+#abas{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;
+  background:var(--papel);border-top:1px solid var(--linha);
+  padding:6px calc(var(--dir) + 4px) calc(var(--base) + 6px) calc(var(--esq) + 4px);
+}
+#abas button{
+  flex:1;min-height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:10.5px;font-weight:650;color:var(--tinta-2);
+}
+#abas button .i{font-size:21px;line-height:1}
+#abas button[aria-selected="true"]{color:var(--agua-2);background:rgba(28,143,134,.09)}
+.vazio{text-align:center;padding:34px 20px;color:var(--tinta-2)}
+.vazio .e{font-size:38px;display:block;margin-bottom:8px;opacity:.6}
+.vazio p{margin:0 0 14px;font-size:14px;line-height:1.5}
+#torrada{position:fixed;left:50%;bottom:calc(var(--base) + 78px);transform:translate(-50%,12px);z-index:70;background:var(--tinta);color:var(--areia);padding:11px 18px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;max-width:90vw;text-align:center}
+#torrada.on{opacity:1;transform:translate(-50%,0)}
+.linhaDado{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.linhaDado:last-child{border-bottom:0}
+.linhaDado .r{color:var(--tinta-2);flex:0 0 auto}
+.linhaDado .v{text-align:right;font-weight:600}
+svg.ico{flex:0 0 auto;vertical-align:-3px}
+.item .nome svg.ico,.atr .n svg.ico{color:var(--agua-2);margin-right:2px}
+.item.feita .nome,.item.feita .meta{opacity:.5;text-decoration:line-height}
+.item.feita .nome{text-decoration:line-through;text-decoration-color:var(--tinta-2)}
+.feito{flex:0 0 auto;width:var(--toque);height:var(--toque);display:flex;align-items:center;justify-content:center;color:transparent;margin:-4px -6px 0 0;background:none}
+.feito b{width:27px;height:27px;border-radius:50%;border:1.8px solid var(--linha);display:flex;align-items:center;justify-content:center}
+.feito[aria-pressed="true"] b{background:var(--ok);border-color:var(--ok);color:#fff}
+.item .corpo{cursor:pointer}
+.resumoAvisos{min-height:var(--toque)}
+.verMais{min-height:44px;padding:6px 0 2px;display:inline-block}
+.dia.hoje .cabDia .n{color:var(--agua-2)}
+.dia.hoje .cabDia .n::after{content:' · hoje';font-size:12px;font-weight:700;color:var(--sol)}
+.resumoAvisos{display:flex;width:100%;gap:9px;align-items:center;padding:10px 14px;border-radius:var(--r-p);background:var(--sol-fraco);color:var(--sol);font-size:13px;font-weight:650;margin-bottom:10px;border:1px solid rgba(224,138,44,.25);text-align:left}
+.resumoAvisos.grave{background:var(--alerta-fraco);color:var(--alerta);border-color:rgba(194,65,12,.25)}
+.resumoAvisos .cnt{margin-left:auto;font-size:12px;opacity:.8;font-weight:700}
+.obs.cortada{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.verMais{font-size:12.5px;font-weight:700;color:var(--agua-2)}
+#barraTopo h1{font-size:16px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2}
+#abas button .i{display:flex;align-items:center;justify-content:center;height:22px}
+.progresso{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--tinta-2);margin-top:10px}
+.progresso .barra{flex:1;margin-top:0}
+@media (orientation:landscape) and (max-height:520px){ #caixaMapa{height:78vh} }
+@media print{ #abas,#barraTopo,.btIcone{display:none} }
+</style>
+</head>
+<body>
+<div id="barraTopo">
+  <div style="flex:1;min-width:0">
+    <h1 id="tituloViagem">Nossas Viagens</h1>
+    <span class="sub" id="subTituloViagem"></span>
+  </div>
+  <button class="btTopo" id="btViagens" aria-label="Trocar de viagem">✈︎ <span id="rotuloViagens">Viagens</span></button>
+</div>
+
+<main id="corpo">
+  <section class="tela on" id="tela-roteiro" role="tabpanel" aria-label="Roteiro"></section>
+  <section class="tela" id="tela-atracoes" role="tabpanel" aria-label="Atrações"></section>
+  <section class="tela" id="tela-mapa" role="tabpanel" aria-label="Mapa"></section>
+  <section class="tela" id="tela-custos" role="tabpanel" aria-label="Custos"></section>
+  <section class="tela" id="tela-viagem" role="tabpanel" aria-label="Viagem"></section>
+</main>
+
+<nav id="abas" role="tablist">
+  <button role="tab" aria-selected="true" data-aba="roteiro"><span class="i" data-ic="calendario"></span>Roteiro</button>
+  <button role="tab" aria-selected="false" data-aba="atracoes"><span class="i" data-ic="outros"></span>Atrações</button>
+  <button role="tab" aria-selected="false" data-aba="mapa"><span class="i" data-ic="mapa"></span>Mapa</button>
+  <button role="tab" aria-selected="false" data-aba="custos"><span class="i" data-ic="carteira"></span>Custos</button>
+  <button role="tab" aria-selected="false" data-aba="viagem"><span class="i" data-ic="bussola"></span>Viagem</button>
+</nav>
+
+<div id="fundoFolha"></div>
+<div id="folha" role="dialog" aria-modal="true" aria-labelledby="folhaTitulo">
+  <div class="puxador"></div>
+  <div id="folhaCab"><h3 id="folhaTitulo"></h3><button class="btIcone" id="btFecharFolha" aria-label="Fechar">✕</button></div>
+  <div id="folhaCorpo"></div>
+</div>
+<div id="torrada" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* ============================================================
+   Nossas Viagens — app de roteiro, custos e mapa
+   Arquivo único, sem dependências externas. Dados no aparelho.
+   ============================================================ */
+
+/* ---------- utilidades ---------- */
+const $ = (s,e=document)=>e.querySelector(s);
+const $$ = (s,e=document)=>[...e.querySelectorAll(s)];
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const idNovo = p => p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const DIAS = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+const DIAS_C = ['dom','seg','ter','qua','qui','sex','sáb'];
+const MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function dataObj(iso){ const [a,m,d]=String(iso).split('-').map(Number); return new Date(a,m-1,d); }
+function dataCurta(iso){ const d=dataObj(iso); return d.getDate()+' '+MESES[d.getMonth()]; }
+function diaSemana(iso){ return DIAS[dataObj(iso).getDay()]; }
+function diaSemanaC(iso){ return DIAS_C[dataObj(iso).getDay()]; }
+function numDiaSemana(iso){ return dataObj(iso).getDay(); }
+function listaDatas(ini,fim){ const r=[]; let d=dataObj(ini), f=dataObj(fim);
+  while(d<=f){ r.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')); d=new Date(d.getTime()+864e5); } return r; }
+function hojeISO(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function minutos(hhmm){ if(!hhmm) return null; const [h,m]=hhmm.split(':').map(Number); return h*60+(m||0); }
+function relogio(min){ if(min==null) return ''; min=((min%1440)+1440)%1440; return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0'); }
+function duracaoTxt(m){ if(!m) return ''; const h=Math.floor(m/60), x=m%60; return h? (h+'h'+(x?String(x).padStart(2,'0'):'')) : (x+'min'); }
+function moedaTxt(v,m='BRL'){
+  const simb={BRL:'R$',USD:'US$',ARS:'AR$',PYG:'₲',EUR:'€'}[m]||m;
+  const casas = m==='PYG'?0:2;
+  return simb+' '+Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:casas,maximumFractionDigits:casas});
+}
+function distKm(a,b,c,d){
+  if([a,b,c,d].some(v=>typeof v!=='number'||isNaN(v))) return null;
+  const R=6371,r=Math.PI/180, dLat=(c-a)*r, dLon=(d-b)*r;
+  const x=Math.sin(dLat/2)**2+Math.cos(a*r)*Math.cos(c*r)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function tempoDeslocamento(km,cruzaFronteira){
+  if(km==null) return null;
+  let min = 6 + (km*1.35)/30*60;          // trânsito urbano ~30 km/h + embarque
+  if(cruzaFronteira) min += 35;            // fila de fronteira
+  return Math.round(min/5)*5;
+}
+function torrada(txt){ const t=$('#torrada'); t.textContent=txt; t.classList.add('on'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),2600); }
+
+/* ---------- catálogo de apoio ---------- */
+const ICONES={
+  passeio:'M3 17.5 8.5 9l3.6 5.4L15 10l6 7.5Z M16.5 6.5a1.6 1.6 0 1 1-3.2 0 1.6 1.6 0 0 1 3.2 0',
+  compras:'M5 8h14l-1.1 11.2a1.6 1.6 0 0 1-1.6 1.4H7.7a1.6 1.6 0 0 1-1.6-1.4Z M8.8 8V6.2a3.2 3.2 0 0 1 6.4 0V8',
+  comida:'M6.5 3v8.5a2 2 0 0 0 2 2v7.2 M6.5 3v5 M9.5 3v5 M16.8 3c-1.4 1.2-2 3-2 5.2 0 1.9.8 3 2 3.3v9.2',
+  transporte:'M4.5 16.5v2.8h3v-2.8 M16.5 16.5v2.8h3v-2.8 M3.4 16.5h17.2v-4.3l-1.8-4.6a1.7 1.7 0 0 0-1.6-1.1H6.8a1.7 1.7 0 0 0-1.6 1.1L3.4 12.2Z M3.7 12.4h16.6 M7 14.6h.1 M17 14.6h.1',
+  hospedagem:'M3 19v-9 M3 14h18v5 M21 14v-2.6a2.4 2.4 0 0 0-2.4-2.4H11V14 M6.8 11.4a1.7 1.7 0 1 0 0-3.4 1.7 1.7 0 0 0 0 3.4',
+  ingresso:'M4 9.2V6.6h16v2.6a2.8 2.8 0 0 0 0 5.6v2.6H4v-2.6a2.8 2.8 0 0 0 0-5.6Z M13.5 6.6v2 M13.5 11v2 M13.5 15.4v2',
+  logistica:'M6 8h12a1.6 1.6 0 0 1 1.6 1.6v9.2A1.6 1.6 0 0 1 18 20.4H6a1.6 1.6 0 0 1-1.6-1.6V9.6A1.6 1.6 0 0 1 6 8Z M9 8V5.4A1.4 1.4 0 0 1 10.4 4h3.2A1.4 1.4 0 0 1 15 5.4V8 M9 20.4V8 M15 20.4V8',
+  outros:'M12 21s6.5-6 6.5-10.4a6.5 6.5 0 1 0-13 0C5.5 15 12 21 12 21Z M12 12.6a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4',
+  voo:'M4 14.5 20 9l-2.2 4.2 2.2 5.3-3 .9-3.4-4.4-4.3 1.4-.6 2.8-1.9.5-.4-3.6L4 14.5Z',
+  calendario:'M4.5 7.4h15v12.1h-15Z M4.5 11h15 M8.6 4.6v3.4 M15.4 4.6v3.4',
+  mapa:'M9.2 5.2 3.8 7.4v11.4l5.4-2.2 5.6 2.2 5.4-2.2V5.2l-5.4 2.2Z M9.2 5.2v11.4 M14.8 7.4v11.4',
+  carteira:'M4 8.4A2 2 0 0 1 6 6.4h11.2a1.6 1.6 0 0 1 1.6 1.6v1.2 M4 8.4v9.4a2 2 0 0 0 2 2h12.4a1.6 1.6 0 0 0 1.6-1.6v-7.6a1.6 1.6 0 0 0-1.6-1.6H6a2 2 0 0 1-2-2Z M16.6 14.2h.1',
+  bussola:'M12 20.8a8.8 8.8 0 1 0 0-17.6 8.8 8.8 0 0 0 0 17.6Z M15.4 8.6l-1.7 5-5 1.8 1.7-5Z',
+  relogio:'M12 20.5a8.5 8.5 0 1 0 0-17 8.5 8.5 0 0 0 0 17Z M12 7.2V12l3 1.8',
+  aviso:'M12 4.2 21 19.5H3ZM12 10v3.8M12 16.6h.01',
+  ok:'M5 12.6 9.8 17.4 19 7.4'
+};
+function ico(n,t=20){ const d=ICONES[n]||ICONES.outros;
+  return `<svg class="ico" viewBox="0 0 24 24" width="${t}" height="${t}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d.split(' M').map((x,i)=>`<path d="${i?'M'+x:x}"/>`).join('')}</svg>`; }
+const CATEGORIAS = {
+  passeio:{e:'🌄',i:'passeio',n:'Passeio'}, compras:{e:'🛍',i:'compras',n:'Compras'}, comida:{e:'🍽',i:'comida',n:'Comida'},
+  transporte:{e:'🚕',i:'transporte',n:'Transporte'}, hospedagem:{e:'🛏',i:'hospedagem',n:'Hospedagem'},
+  ingresso:{e:'🎟',i:'ingresso',n:'Ingresso'}, logistica:{e:'🧳',i:'logistica',n:'Logística'}, outros:{e:'📌',i:'outros',n:'Outros'}
+};
+const PAISES = {BR:{n:'Brasil',b:'🇧🇷'},PY:{n:'Paraguai',b:'🇵🇾'},AR:{n:'Argentina',b:'🇦🇷'}};
+
+/* ---------- semente: a viagem de Foz ---------- */
+function sementeFoz(){
+  const A = (o)=>Object.assign({id:idNovo('at'),cat:'passeio',dur:60,custo:0,moeda:'BRL',sel:false,dia:null,hora:null,precisao:'ok',dica:'',janela:null,ehTrecho:false,feita:false},o);
+  return {
+    id:'foz2026',
+    nome:'Foz do Iguaçu — Tríplice Fronteira',
+    inicio:'2026-09-29', fim:'2026-10-03',
+    moedaBase:'BRL',
+    cambio:{BRL:1, USD:5.12, ARS:0.003346, PYG:0.000848},
+    cambioData:'13/09/2026',
+    pessoas:[{id:'p1',nome:'Rodolfo'},{id:'p2',nome:'Rita'},{id:'p3',nome:'Francisco'},{id:'p4',nome:'Duda'}],
+    cotaPY:500,
+    destinos:[
+      {id:'foz',nome:'Foz do Iguaçu',pais:'BR',moeda:'BRL',lat:-25.5469,lon:-54.5882,orcamento:7000},
+      {id:'cde',nome:'Ciudad del Este',pais:'PY',moeda:'USD',lat:-25.5110,lon:-54.6085,orcamento:12000},
+      {id:'pti',nome:'Puerto Iguazú',pais:'AR',moeda:'ARS',lat:-25.5990,lon:-54.5735,orcamento:2500}
+    ],
+    hospedagem:{nome:'Village Iguassu Hotel',end:'Rua Tarobá, 985 — Centro, Foz do Iguaçu',lat:-25.5442,lon:-54.5873,
+      obs:'Recepção 24h. Café da manhã a partir das 3h sob solicitação. Transfer gratuito do aeroporto (pedir 48–72h antes, reserva direta). Estacionamento coberto com vagas limitadas. Tel. (45) 2105-7520.'},
+    voos:[
+      {id:'v1',data:'2026-09-29',hora:'23:00',titulo:'FOR → SLZ → GRU → IGU',sub:'LA3508 23:00 · LA3857 02:15 · LA3200 07:30',reserva:'SBLRFB',fim:'2026-09-30 09:20'},
+      {id:'v2',data:'2026-10-03',hora:'05:05',titulo:'IGU → GIG → BSB → FOR',sub:'LA3029 05:05 · LA3027 10:50 · LA3732 13:40 · chega 16:15',reserva:'GTRTGM',fim:'2026-10-03 16:15'}
+    ],
+    atracoes:[
+      /* ---- Foz / Brasil ---- */
+      A({destinoId:'foz',nome:'Transfer aeroporto → hotel',cat:'transporte',lat:-25.5942,lon:-54.4873,dur:45,custo:0,ehTrecho:true,
+        dica:'Transfer gratuito do Village Iguassu para quem reservou direto — pedir por WhatsApp com 48 a 72h de antecedência. Uber: R$ 45 a 60.',sel:true,dia:'2026-09-30',hora:'10:00'}),
+      A({destinoId:'foz',nome:'Check-in Village Iguassu Hotel',cat:'hospedagem',lat:-25.5442,lon:-54.5873,dur:45,custo:0,precisao:'aprox',
+        dica:'Chegando às 10h45 o quarto pode não estar pronto: deixem as malas na recepção e sigam o dia.',sel:true,dia:'2026-09-30',hora:'10:50'}),
+      A({destinoId:'foz',nome:'Almoço — Le Mir (árabe)',cat:'comida',lat:-25.5430,lon:-54.5860,dur:60,custo:110,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'12:00',fecha:'23:00'},
+        dica:'Rua Jorge Sanwais, 1.146 — Centro. 19º do mundo no Travellers Choice 2025. Vá às 12h em ponto ou pegue fila.',sel:true,dia:'2026-09-30',hora:'12:00'}),
+      A({destinoId:'foz',nome:'Cataratas do Iguaçu (lado brasileiro)',cat:'passeio',lat:-25.613851,lon:-54.479063,dur:210,custo:121,
+        janela:{dias:[0,1,2,3,4,5,6],abre:'09:00',entradaAte:'16:00',fecha:'17:45',obs:'sáb/dom/feriado abre 8h30; entrada só até 16h'},
+        dica:'INGRESSO SÓ ONLINE, com dia e hora marcados e lotação limitada — compre os 4 antes de viajar. Entrando às 13h45 você pega a trilha esvaziando e a melhor luz na Garganta do Diabo. Estacionamento R$ 63,80.',
+        sel:true,dia:'2026-09-30',hora:'13:45'}),
+      A({destinoId:'foz',nome:'Hotel das Cataratas (Belmond) — o hotel da Princesa Diana',cat:'comida',lat:-25.6857,lon:-54.4452,dur:150,custo:300,precisao:'aprox',
+        dica:'Diana dormiu aqui em 26/04/1991, quando ainda era Hotel Tropical das Cataratas. Não-hóspede entra COM RESERVA no Restaurante Y ou no Ipê — reserve por WhatsApp (45) 99123-3145. É o único jeito de ficar dentro do parque depois que ele fecha, e é o que transforma a tarde nas Cataratas em noite nas Cataratas.',
+        sel:true,dia:'2026-09-30',hora:'18:00'}),
+      A({destinoId:'foz',nome:'Marco das Três Fronteiras',cat:'passeio',lat:-25.5950,lon:-54.5995,dur:165,custo:60,precisao:'aprox',
+        janela:{dias:[2,3,4,5,6,0],abre:'14:00',fecha:'21:00'},
+        dica:'Fecha às segundas. O ponto alto é o pôr do sol (~18h15 no início de outubro) sobre o encontro dos rios, com os marcos da Argentina e do Paraguai à frente. Tem restaurante e apresentação cultural à noite. Chegue às 17h para pegar a luz caindo.',
+        sel:true,dia:'2026-10-01',hora:'17:00'}),
+      A({destinoId:'foz',nome:'Jantar — Quinta da Oliva',cat:'comida',lat:-25.5445,lon:-54.5865,dur:90,custo:130,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'18:00',fecha:'23:30'},
+        dica:'Rua Estanislau Zambrzycki, 197 — Centro. Top 30 do Paraná no Bom Gourmet 2026. Só jantar. Reserve para 4: (45) 3572-3131.',
+        sel:true,dia:'2026-10-01',hora:'20:15'}),
+      A({destinoId:'foz',nome:'Macuco Safari (barco sob as quedas)',cat:'passeio',lat:-25.6640,lon:-54.4490,dur:120,custo:384,precisao:'aprox',
+        janela:{dias:[1,2,3,4,5],abre:'09:00',fecha:'17:00'},
+        dica:'Não está incluso no ingresso do parque. Você sai encharcado: leve roupa extra e saco estanque para o celular.'}),
+      A({destinoId:'foz',nome:'Parque das Aves',cat:'passeio',lat:-25.6180,lon:-54.4825,dur:120,custo:110,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'08:30',fecha:'16:30'},
+        dica:'A 1 km da entrada das Cataratas — encaixa na mesma manhã. Estacionamento R$ 60 (paga de novo se for nos dois).'}),
+      A({destinoId:'foz',nome:'Itaipu Panorâmica',cat:'passeio',lat:-25.4222,lon:-54.5805,dur:70,custo:63,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'08:30',fecha:'16:00'},
+        dica:'Circuito externo com audioguia. Fica no sentido oposto às Cataratas — reserve meio período.'}),
+      A({destinoId:'foz',nome:'Itaipu Iluminada',cat:'passeio',lat:-25.4222,lon:-54.5805,dur:120,custo:50,precisao:'aprox',
+        janela:{dias:[5,6],abre:'19:00',fecha:'21:00'},
+        dica:'SÓ sexta e sábado às 19h. Nas suas datas, só caberia na sexta 02/10 — que já é a noite de Puerto Iguazú. Escolha uma.'}),
+      A({destinoId:'foz',nome:'Templo Budista Chen Tien',cat:'passeio',lat:-25.5200,lon:-54.5460,dur:60,custo:0,precisao:'aprox',
+        janela:{dias:[2,3,4,5,6],abre:'09:30',fecha:'17:00'},
+        dica:'42 hectares com ~120 estátuas ao ar livre. Horário de fonte antiga — confirme por telefone (45) 3524-5566. Coordenada aproximada.'}),
+      /* ---- Ciudad del Este / Paraguai ---- */
+      A({destinoId:'cde',nome:'Travessia — Ponte da Amizade (ida)',cat:'transporte',lat:-25.5165,lon:-54.5924,dur:40,custo:0,precisao:'aprox',ehTrecho:true,
+        dica:'Uber/99 NÃO cruzam a fronteira: vão até a cabeceira brasileira (R$ 15 a 25 do centro) e vocês atravessam a pé pela passarela, ~800 m. Melhor ir antes das 7h ou depois das 14h.',
+        sel:true,dia:'2026-10-01',hora:'07:30'}),
+      A({destinoId:'cde',nome:'Shopping China',cat:'compras',lat:-25.5133586,lon:-54.6060622,dur:120,custo:0,moeda:'USD',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'07:00',fecha:'20:00'},
+        dica:'Av. Luis María Argaña. Um dos poucos que fica aberto até 19–20h; a maioria das lojas de CDE fecha por volta das 16h.',
+        sel:true,dia:'2026-10-01',hora:'08:20'}),
+      A({destinoId:'cde',nome:'Cellshop (eletrônicos)',cat:'compras',lat:-25.5104048,lon:-54.6106204,dur:75,custo:0,moeda:'USD',
+        dica:'Cinco andares de eletrônicos. Confira garantia internacional e nota — a nota é o que segura sua cota na volta.',
+        sel:true,dia:'2026-10-01',hora:'10:35'}),
+      A({destinoId:'cde',nome:'Monalisa (perfumes e luxo)',cat:'compras',lat:-25.509863,lon:-54.610395,dur:70,custo:0,moeda:'USD',
+        dica:'Sete pisos: perfumaria, bebidas, relojoaria. Lembre do limite de 12 litros de bebida por pessoa.',
+        sel:true,dia:'2026-10-01',hora:'12:00'}),
+      A({destinoId:'cde',nome:'Casa Nissei',cat:'compras',lat:-25.5110079,lon:-54.6095124,dur:60,custo:0,moeda:'USD',
+        dica:'Eletrônicos e casa. Fecha em feriado paraguaio — confira antes de subir a rua.',
+        sel:true,dia:'2026-10-01',hora:'13:20'}),
+      A({destinoId:'cde',nome:'Travessia — volta ao Brasil',cat:'transporte',lat:-25.5165,lon:-54.5924,dur:45,custo:0,precisao:'aprox',ehTrecho:true,
+        dica:'Volta a pé. Evite entre 11h e 16h nos dias de pico; sábado de manhã é o pior horário da semana.',
+        sel:true,dia:'2026-10-01',hora:'14:35'}),
+      A({destinoId:'cde',nome:'Travessia — Ponte da Amizade (ida, dia 2)',cat:'transporte',lat:-25.5165,lon:-54.5924,dur:35,custo:0,precisao:'aprox',ehTrecho:true,
+        dica:'Saindo do hotel às 6h45 vocês pegam a ponte vazia. As lojas abrem entre 7h e 7h30.',
+        sel:true,dia:'2026-10-02',hora:'07:00'}),
+      A({destinoId:'cde',nome:'Mega Eletrônicos',cat:'compras',lat:-25.5098621,lon:-54.6087875,dur:90,custo:0,moeda:'USD',
+        dica:'Bom para fechar o que ficou faltando no dia 1 e comparar preço antes de bater o martelo.',
+        sel:true,dia:'2026-10-02',hora:'07:50'}),
+      A({destinoId:'cde',nome:'Shopping Paris',cat:'compras',lat:-25.5130562,lon:-54.6059716,dur:90,custo:0,moeda:'USD',
+        dica:'No mesmo quarteirão do Shopping China (que ocupa o 3º piso). Fecha em feriado paraguaio.',
+        sel:true,dia:'2026-10-02',hora:'09:35'}),
+      A({destinoId:'cde',nome:'Atacado Collections',cat:'compras',lat:-25.5130139,lon:-54.6069937,dur:60,custo:0,moeda:'USD',
+        dica:'Colecionáveis e geek, em frente ao Shopping Paris. O site deles tem câmera ao vivo da Ponte da Amizade — confira a fila antes de voltar.',
+        sel:true,dia:'2026-10-02',hora:'11:15'}),
+      A({destinoId:'cde',nome:'Travessia — volta ao Brasil (dia 2)',cat:'transporte',lat:-25.5165,lon:-54.5924,dur:50,custo:0,precisao:'aprox',ehTrecho:true,
+        dica:'Guardem as notas separadas por pessoa: a cota é de US$ 500 por CPF a cada 30 dias, por via terrestre.',
+        sel:true,dia:'2026-10-02',hora:'12:25'}),
+      A({destinoId:'cde',nome:'SAX Department Store',cat:'compras',lat:-25.5088826,lon:-54.6072962,dur:60,custo:0,moeda:'USD',dica:'Opção extra se sobrar tempo e cota.'}),
+      /* ---- Puerto Iguazú / Argentina ---- */
+      A({destinoId:'pti',nome:'Travessia — Ponte Tancredo Neves (ida)',cat:'transporte',lat:-25.5942,lon:-54.5787,dur:45,custo:0,precisao:'aprox',ehTrecho:true,
+        dica:'Uber não opera na Argentina: combine táxi ou transfer privativo (R$ 320 a 420 por trecho, o carro). Basta RG com menos de 10 anos ou passaporte. Há controle dos dois lados.',
+        sel:true,dia:'2026-10-02',hora:'17:15'}),
+      A({destinoId:'pti',nome:'Duty Free Shop Puerto Iguazú',cat:'compras',lat:-25.5884,lon:-54.5786,dur:75,custo:0,moeda:'USD',precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'12:00',fecha:'21:00',obs:'dom a qui fecha 20h; sex e sáb, 21h'},
+        dica:'Fica antes da aduana argentina, na cabeceira da ponte. Aceita Pix, real e dólar. ATENÇÃO: o que comprar aqui divide a MESMA cota de US$ 500 das compras do Paraguai.',
+        sel:true,dia:'2026-10-02',hora:'18:10'}),
+      A({destinoId:'pti',nome:'Jantar — Aqva Restaurant',cat:'comida',lat:-25.59308,lon:-54.57677,dur:105,custo:210,moeda:'BRL',precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'19:00',fecha:'23:30'},
+        dica:'Av. Córdoba esq. Carlos Thays. Peixes de rio (surubí, dorado, pacú) e carnes. Reserve: WhatsApp +54 9 3757 505025. Na maquininha, pague sempre em peso, nunca em real.',
+        sel:true,dia:'2026-10-02',hora:'19:45'}),
+      A({destinoId:'pti',nome:'Volta a Foz do Iguaçu',cat:'transporte',lat:-25.5942,lon:-54.5787,dur:45,custo:0,precisao:'aprox',ehTrecho:true,
+        dica:'Não estique: o voo de volta sai às 5h05 de sábado e o transfer sai do hotel às 3h30.',
+        sel:true,dia:'2026-10-02',hora:'21:45'}),
+      A({destinoId:'pti',nome:'El Quincho del Tío Querido (parrilla)',cat:'comida',lat:-25.60411,lon:-54.56663,dur:100,custo:180,precisao:'aprox',
+        janela:{dias:[2,3,4,5,6,0],abre:'18:30',fecha:'22:30'},dica:'Parrilla tradicional com mais de 20 anos. Alternativa ao Aqva.'}),
+      A({destinoId:'pti',nome:'La Rueda 1975',cat:'comida',lat:-25.60119,lon:-54.57192,dur:100,custo:180,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'19:00',fecha:'00:00'},dica:'Clássico da cidade, carnes argentinas. Av. Córdoba, 28.'}),
+      A({destinoId:'pti',nome:'Feirinha da Av. Brasil',cat:'compras',lat:-25.5988,lon:-54.5730,dur:60,custo:0,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'16:00',fecha:'23:00'},dica:'Empanadas, vinhos, alfajores e artesanato. Muitos aceitam real e Pix. Barato e rápido.'})
+    ],
+    gastos:[], checklist:[],
+    notas:'Reserva ida SBLRFB · volta GTRTGM. Ingresso das Cataratas é só online, com hora marcada. Reservar Belmond e jantar na Argentina com antecedência.'
+  };
+}
+
+/* ---------- estado e armazenamento ---------- */
+const CHAVE='nossasviagens.v1';
+let BD = {versao:1, viagens:[], ativa:null, aba:'roteiro'};
+
+function carregar(){
+  let bruto=null;
+  try{ bruto = localStorage.getItem(CHAVE); }catch(e){ /* navegação privada */ }
+  if(bruto){
+    try{
+      const d=JSON.parse(bruto);
+      if(d && Array.isArray(d.viagens)){ BD=Object.assign(BD,d); }
+    }catch(e){ console.warn('dados ilegíveis, recomeçando',e); }
+  }
+  if(!BD.viagens.length){ BD.viagens=[sementeFoz()]; BD.ativa='foz2026'; }
+  if(!BD.ativa || !BD.viagens.some(v=>v.id===BD.ativa)) BD.ativa=BD.viagens[0].id;
+  BD.viagens.forEach(sanear);
+}
+function sanear(v){
+  v.pessoas=v.pessoas||[]; v.destinos=v.destinos||[]; v.atracoes=v.atracoes||[];
+  v.gastos=v.gastos||[]; v.voos=v.voos||[]; v.cambio=v.cambio||{BRL:1};
+  v.moedaBase=v.moedaBase||'BRL';
+  v.atracoes.forEach(a=>{ if(a.sel===undefined) a.sel=!!a.dia; if(!a.moeda) a.moeda='BRL'; });
+}
+let salvarFalhou=false;
+function salvar(){
+  try{ localStorage.setItem(CHAVE,JSON.stringify(BD)); salvarFalhou=false; }
+  catch(e){
+    if(!salvarFalhou){ salvarFalhou=true; torrada('Não consegui salvar neste navegador. Exporte o backup na aba Viagem.'); }
+  }
+}
+const viagem = ()=>BD.viagens.find(v=>v.id===BD.ativa)||BD.viagens[0];
+const destino = (id)=>viagem().destinos.find(d=>d.id===id)||{nome:'—',pais:'BR',moeda:'BRL'};
+const pessoa = (id)=>viagem().pessoas.find(p=>p.id===id)||{nome:'—'};
+
+function paraBRL(valor,moeda){
+  const v=viagem(); const t=(v.cambio&&v.cambio[moeda])||(moeda==='BRL'?1:null);
+  if(t==null) return null;
+  return Number(valor||0)*t;
+}
+function brlTxt(v){ return v==null?'—':moedaTxt(v,'BRL'); }
+
+/* ---------- regras do roteiro ---------- */
+function alternarFeita(id){
+  const a=viagem().atracoes.find(x=>x.id===id); if(!a) return;
+  a.feita=!a.feita; salvar();
+}
+function progressoRoteiro(){
+  const v=viagem(), sel=v.atracoes.filter(a=>a.sel);
+  return {total:sel.length, comDia:sel.filter(a=>a.dia).length, feitas:sel.filter(a=>a.feita).length};
+}
+function atracoesDoDia(data){
+  return viagem().atracoes.filter(a=>a.sel && a.dia===data)
+    .sort((a,b)=>(minutos(a.hora)??1e9)-(minutos(b.hora)??1e9));
+}
+function semDia(){ return viagem().atracoes.filter(a=>a.sel && !a.dia); }
+function conflitoHorario(a){
+  if(!a.janela || !a.hora || !a.dia) return null;
+  const j=a.janela, ini=minutos(a.hora), fim=ini+(a.dur||0);
+  const d=numDiaSemana(a.dia);
+  if(j.dias && !j.dias.includes(d)) return 'fecha '+diaSemanaC(a.dia);
+  const ab=minutos(j.abre), fe=minutos(j.fecha)||1440;
+  const ent=j.entradaAte?minutos(j.entradaAte):null;
+  if(ini<ab) return 'só abre '+j.abre;
+  if(ent!=null && ini>ent) return 'última entrada '+j.entradaAte;
+  if(ini>=fe) return 'já fechou às '+j.fecha;
+  if(fim>fe+15) return 'fecha '+j.fecha+', antes do fim';
+  return null;
+}
+function paisDe(a){ return destino(a.destinoId).pais; }
+function trechoEntre(a,b){
+  const km=distKm(a.lat,a.lon,b.lat,b.lon);
+  if(km==null) return null;
+  /* se um dos dois já É o deslocamento (transfer, travessia), o tempo dele conta, não somamos outro */
+  if(a.ehTrecho||b.ehTrecho) return {km, min:5, cruza:false, embutido:true};
+  const cruza = paisDe(a)!==paisDe(b);
+  return {km, min:tempoDeslocamento(km,cruza), cruza};
+}
+function analisarDia(data){
+  const itens=atracoesDoDia(data), avisos=[];
+  for(let i=0;i<itens.length;i++){
+    const c=conflitoHorario(itens[i]);
+    if(c) avisos.push({tipo:'horario',atracao:itens[i],txt:itens[i].nome+' — '+c});
+    if(i<itens.length-1){
+      const t=trechoEntre(itens[i],itens[i+1]);
+      const fim=minutos(itens[i].hora)+(itens[i].dur||0);
+      const prox=minutos(itens[i+1].hora);
+      if(t && prox!=null && fim!=null && prox-fim < t.min)
+        avisos.push({tipo:'tempo',atracao:itens[i+1],txt:'Entre “'+itens[i].nome+'” e “'+itens[i+1].nome+'” faltam '+(t.min-(prox-fim))+' min para o deslocamento'});
+      if(prox!=null && fim!=null && prox<fim)
+        avisos.push({tipo:'sobrepoe',atracao:itens[i+1],txt:'“'+itens[i+1].nome+'” começa antes de “'+itens[i].nome+'” terminar'});
+    }
+  }
+  return {itens,avisos};
+}
+function kmDoDia(data){
+  const it=atracoesDoDia(data); let s=0;
+  for(let i=0;i<it.length-1;i++){ const t=trechoEntre(it[i],it[i+1]); if(t) s+=t.km; }
+  return s;
+}
+/* reordena o dia pelo vizinho mais próximo, mantendo o 1º item e as âncoras de horário rígido */
+function otimizarDia(data){
+  const it=atracoesDoDia(data);
+  if(it.length<3) return 0;
+  const antes=kmDoDia(data);
+  const moveis=it.filter(a=>typeof a.lat==='number'&&typeof a.lon==='number');
+  if(moveis.length<3) return 0;
+  const ordem=[moveis[0]]; const resto=moveis.slice(1);
+  while(resto.length){
+    const u=ordem[ordem.length-1];
+    let melhor=0,md=Infinity;
+    resto.forEach((c,i)=>{ const k=distKm(u.lat,u.lon,c.lat,c.lon); if(k!=null&&k<md){md=k;melhor=i;} });
+    ordem.push(resto.splice(melhor,1)[0]);
+  }
+  // redistribui os horários a partir do início do dia, respeitando deslocamentos
+  let t=minutos(ordem[0].hora)??minutos('09:00');
+  ordem.forEach((a,i)=>{
+    if(i>0){ const tr=trechoEntre(ordem[i-1],a); t += (ordem[i-1].dur||0) + (tr?tr.min:15); }
+    a.hora=relogio(t);
+  });
+  salvar();
+  const depois=kmDoDia(data);
+  return Math.max(0,antes-depois);
+}
+
+/* ---------- contas ---------- */
+function gastoBRL(g){ return paraBRL(g.valor,g.moeda)??0; }
+function totalGasto(filtro){ return viagem().gastos.filter(filtro||(()=>true)).reduce((s,g)=>s+gastoBRL(g),0); }
+function previstoBRL(){
+  const v=viagem(), n=Math.max(1,v.pessoas.length);
+  return v.atracoes.filter(a=>a.sel).reduce((s,a)=>s+((paraBRL(a.custo,a.moeda)??0)*n),0);
+}
+function orcamentoTotal(){ return viagem().destinos.reduce((s,d)=>s+(Number(d.orcamento)||0),0); }
+function saldos(){
+  const v=viagem(), mapa={}; v.pessoas.forEach(p=>mapa[p.id]={pagou:0,deve:0});
+  v.gastos.forEach(g=>{
+    const val=gastoBRL(g);
+    if(mapa[g.pagoPor]) mapa[g.pagoPor].pagou+=val;
+    const div=(g.divididoCom&&g.divididoCom.length)?g.divididoCom:v.pessoas.map(p=>p.id);
+    const cota=val/div.length;
+    div.forEach(id=>{ if(mapa[id]) mapa[id].deve+=cota; });
+  });
+  return v.pessoas.map(p=>({...p,...mapa[p.id],saldo:mapa[p.id].pagou-mapa[p.id].deve}));
+}
+function cotaPorPessoa(){
+  const v=viagem(); if(!v.cotaPY) return null;
+  const usd=v.cambio.USD||1;
+  const res=v.pessoas.map(p=>({...p,usado:0}));
+  v.gastos.forEach(g=>{
+    const d=v.destinos.find(x=>x.id===g.destinoId);
+    if(!d || d.pais==='BR' || g.categoria!=='compras') return;
+    const emUSD=(gastoBRL(g))/usd;
+    const div=(g.divididoCom&&g.divididoCom.length)?g.divididoCom:v.pessoas.map(p=>p.id);
+    div.forEach(id=>{ const r=res.find(x=>x.id===id); if(r) r.usado+=emUSD/div.length; });
+  });
+  return res;
+}
+
+/* ============================================================
+   TELA 1 — ROTEIRO
+   ============================================================ */
+function diasMontados(){
+  const v=viagem();
+  return listaDatas(v.inicio,v.fim).filter(d=>atracoesDoDia(d).length||v.voos.some(f=>f.data===d)).length;
+}
+function proximaParada(){
+  const v=viagem(), hoje=hojeISO();
+  if(hoje<v.inicio||hoje>v.fim) return null;
+  const ag=new Date(), agora=ag.getHours()*60+ag.getMinutes();
+  const doDia=atracoesDoDia(hoje).filter(a=>!a.feita);
+  return doDia.find(a=>(minutos(a.hora)??0)+(a.dur||0)>=agora) || null;
+}
+function telaRoteiro(){
+  const v=viagem(), datas=listaDatas(v.inicio,v.fim), h=[];
+  const pend=semDia(), hoje=hojeISO();
+  const pr=progressoRoteiro();
+  const custoPrev=previstoBRL(), gasto=totalGasto();
+
+  h.push(`<div class="cartao pad">
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:110px"><div class="r" style="font-size:11.5px;color:var(--tinta-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Previsto no roteiro</div>
+        <div class="v numero" style="font-size:21px;font-weight:750">${brlTxt(custoPrev)}</div></div>
+      <div style="flex:1;min-width:110px"><div class="r" style="font-size:11.5px;color:var(--tinta-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em">Já lançado</div>
+        <div class="v numero" style="font-size:21px;font-weight:750">${brlTxt(gasto)}</div></div>
+      <button class="bt sec" data-ir="custos" style="min-height:44px;padding:0 14px">Custos ›</button>
+    </div>
+    <div class="progresso">
+      <div class="barra"><i style="width:${pr.total?(pr.feitas||pr.comDia)/pr.total*100:0}%"></i></div>
+      <span>${pr.feitas? pr.feitas+' de '+pr.total+' feitas' : diasMontados()+' de '+datas.length+' dias montados'}</span>
+    </div>
+    ${pr.feitas?'':`<p style="font-size:12px;color:var(--tinta-2);margin:8px 0 0;line-height:1.4">Durante a viagem, toque no círculo ao lado de cada parada para riscá-la da lista.</p>`}
+  </div>`);
+
+  const prox=proximaParada();
+  if(prox){
+    const dp=destino(prox.destinoId);
+    h.push(`<button class="cartao pad" data-ficha="${prox.id}" style="display:block;width:100%;text-align:left;border-color:var(--agua-3)">
+      <div style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--agua-2)">Agora / a seguir</div>
+      <div style="font-size:17px;font-weight:700;margin-top:4px">${esc(prox.hora||'')} · ${esc(prox.nome)}</div>
+      <div style="font-size:12.5px;color:var(--tinta-2);margin-top:3px">${PAISES[dp.pais].b} ${esc(dp.nome)}${prox.dur?' · '+duracaoTxt(prox.dur):''}</div>
+    </button>`);
+  }
+  if(pend.length){
+    h.push(`<div class="cartao">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--linha);display:flex;align-items:center;gap:8px">
+        <b style="flex:1;font-size:14.5px">Escolhidas, ainda sem dia</b>
+        <span class="eti sol">${pend.length}</span></div>
+      ${pend.map(a=>`<div class="atr">
+        <div class="info"><div class="n">${ico(CATEGORIAS[a.cat].i,17)} ${esc(a.nome)}</div>
+        <div class="m"><span class="eti ${paisDe(a).toLowerCase()}">${PAISES[paisDe(a)].b} ${esc(destino(a.destinoId).nome)}</span>
+        <span>${duracaoTxt(a.dur)}</span></div></div>
+        <button data-encaixar="${a.id}" aria-label="Escolher dia para ${esc(a.nome)}" style="flex:0 0 auto;padding:0 16px;color:var(--agua-2);font-weight:700;font-size:14px;min-height:var(--toque)">Encaixar</button>
+      </div>`).join('')}
+    </div>`);
+  }
+
+  datas.forEach(data=>{
+    const {itens,avisos}=analisarDia(data);
+    const voos=v.voos.filter(f=>f.data===data);
+    const custoDia=itens.reduce((s,a)=>s+((paraBRL(a.custo,a.moeda)??0)*Math.max(1,v.pessoas.length)),0);
+    const km=kmDoDia(data);
+    const ehHoje = data===hoje;
+    const graves=avisos.filter(x=>x.tipo==='horario'||x.tipo==='sobrepoe').length;
+    h.push(`<div class="dia ${ehHoje?'hoje':''}" id="dia-${data}">
+      <div class="cabDia">
+        <span class="n">${diaSemanaC(data)} ${dataCurta(data)}</span>
+        <span class="d">${itens.length? itens.length+' parada'+(itens.length>1?'s':'')+(km>0?' · '+km.toFixed(0)+' km':'') : 'livre'}</span>
+        ${custoDia>0?`<span class="tot numero">${brlTxt(custoDia)}</span>`:''}
+      </div>`);
+    if(avisos.length){
+      const aberto = abertos.has(data);
+      h.push(`<button class="resumoAvisos ${graves?'grave':''}" data-avisos="${data}">
+        ${ico('aviso',17)}<span>${avisos.length===1?'1 ponto de atenção neste dia':avisos.length+' pontos de atenção neste dia'}</span>
+        <span class="cnt">${aberto?'esconder':'ver'}</span></button>`);
+      if(aberto) avisos.forEach(av=>h.push(`<div class="aviso ${av.tipo==='horario'?'at':'in'}"><span class="ic">${av.tipo==='horario'?ico('relogio',16):ico('aviso',16)}</span><div>${esc(av.txt)}</div></div>`));
+    }
+    h.push(`<div class="cartao">`);
+    if(!itens.length && !voos.length){
+      h.push(`<div class="vazioDia">Nada marcado.<br><button class="bt fant" data-ir="atracoes" style="margin-top:10px">Escolher atrações</button></div>`);
+    }
+    voos.forEach(f=>h.push(`<div class="item voo">
+      <div class="hora numero">${f.hora}</div>
+      <div class="corpo"><div class="nome">${ico('voo',18)} ${esc(f.titulo)}</div>
+      <div class="meta"><span>${esc(f.sub)}</span></div>
+      <div class="obs">Reserva <b>${esc(f.reserva)}</b></div></div></div>`));
+    itens.forEach((a,i)=>{
+      const conf=conflitoHorario(a);
+      const d=destino(a.destinoId);
+      const custo=(paraBRL(a.custo,a.moeda)??0);
+      const cortar=(a.dica||'').length>115;
+      h.push(`<div class="item ${a.feita?'feita':''}" data-atracao="${a.id}">
+        <div class="hora numero">${esc(a.hora||'--:--')}</div>
+        <div class="corpo" data-ficha="${a.id}" role="button" tabindex="0">
+          <div class="nome">${ico(CATEGORIAS[a.cat].i,18)} ${esc(a.nome)}</div>
+          <div class="meta">
+            <span class="eti ${d.pais.toLowerCase()}">${PAISES[d.pais].b} ${esc(d.nome)}</span>
+            ${a.dur?`<span>${duracaoTxt(a.dur)}</span>`:''}
+            ${custo>0?`<span>${brlTxt(custo)}/pessoa</span>`:''}
+            ${conf?`<span class="eti alerta">${esc(conf)}</span>`:''}
+            ${a.precisao==='aprox'?`<span class="eti">local aprox.</span>`:''}
+          </div>
+          ${a.dica?`<div class="obs ${cortar&&!abertos.has(a.id)?'cortada':''}" id="obs-${a.id}">${esc(a.dica)}</div>
+            ${cortar?`<button class="verMais" data-vermais="${a.id}">${abertos.has(a.id)?'menos':'ver mais'}</button>`:''}`:''}
+        </div>
+        <div class="acao">
+          <button class="feito" data-feito="${a.id}" aria-pressed="${!!a.feita}" aria-label="Marcar ${esc(a.nome)} como já feita"><b>${ico('ok',15)}</b></button>
+        </div>
+      </div>`);
+      if(i<itens.length-1){
+        const t=trechoEntre(a,itens[i+1]);
+        if(t && !t.embutido){
+          const folga=minutos(itens[i+1].hora)-(minutos(a.hora)+(a.dur||0));
+          const apertado = folga<t.min;
+          h.push(`<div class="desloc ${apertado?'aviso2':''}">
+            <span>↓ ${t.km<1? Math.round(t.km*1000)+' m':t.km.toFixed(1)+' km'} · ~${t.min} min${t.cruza?' · cruza fronteira':''}</span>
+            ${apertado?`<span>· folga de ${folga} min</span>`:''}</div>`);
+        }
+      }
+    });
+    h.push(`</div>`);
+    if(itens.length>2) h.push(`<div style="display:flex;gap:8px;margin:-4px 0 6px"><button class="bt fant" data-otimizar="${data}" style="min-height:44px;font-size:13.5px">↻ Otimizar ordem do dia</button></div>`);
+    h.push(`</div>`);
+  });
+  $('#tela-roteiro').innerHTML=h.join('');
+  if(!telaRoteiro._rolou && datas.includes(hoje)){
+    telaRoteiro._rolou=true;
+    const alvo=$('#dia-'+hoje);
+    if(alvo) setTimeout(()=>alvo.scrollIntoView({block:'start',behavior:'smooth'}),120);
+  }
+}
+
+/* ============================================================
+   TELA 2 — ATRAÇÕES
+   ============================================================ */
+const abertos=new Set();
+let filtroDestino='todos', filtroCat='todas', filtroSel='todas';
+function telaAtracoes(){
+  const v=viagem(), h=[];
+  h.push(`<div class="filtros" role="group" aria-label="Filtrar por destino">
+    <button class="chip" data-fd="todos" aria-pressed="${filtroDestino==='todos'}">Todos os destinos</button>
+    ${v.destinos.map(d=>`<button class="chip" data-fd="${d.id}" aria-pressed="${filtroDestino===d.id}">${PAISES[d.pais].b} ${esc(d.nome)}</button>`).join('')}
+  </div>
+  <div class="filtros" role="group" aria-label="Filtrar por situação">
+    <button class="chip" data-fs="todas" aria-pressed="${filtroSel==='todas'}">Todas</button>
+    <button class="chip" data-fs="sim" aria-pressed="${filtroSel==='sim'}">✓ No roteiro</button>
+    <button class="chip" data-fs="nao" aria-pressed="${filtroSel==='nao'}">Ideias</button>
+    ${Object.keys(CATEGORIAS).filter(c=>v.atracoes.some(a=>a.cat===c)).map(c=>`<button class="chip" data-fc="${c}" aria-pressed="${filtroCat===c}">${ico(CATEGORIAS[c].i,16)} ${CATEGORIAS[c].n}</button>`).join('')}
+  </div>`);
+
+  let lista=v.atracoes.slice();
+  if(filtroDestino!=='todos') lista=lista.filter(a=>a.destinoId===filtroDestino);
+  if(filtroCat!=='todas') lista=lista.filter(a=>a.cat===filtroCat);
+  if(filtroSel==='sim') lista=lista.filter(a=>a.sel);
+  if(filtroSel==='nao') lista=lista.filter(a=>!a.sel);
+
+  const marcadas=v.atracoes.filter(a=>a.sel).length;
+  h.push(`<div class="aviso bo"><span class="ic">${ico('ok',16)}</span><div><b>${marcadas}</b> no roteiro, de ${v.atracoes.length} cadastradas. Toque no <b>+</b> para pôr no roteiro — o app já pergunta o dia. Toque no nome para abrir a ficha.</div></div>`);
+
+  if(!lista.length){
+    h.push(`<div class="vazio"><span class="e">🔍</span><p>Nenhuma atração com esse filtro.</p><button class="bt fant" data-limparfiltro="1">Limpar filtros</button></div>`);
+  } else {
+    const grupos={};
+    lista.forEach(a=>{ (grupos[a.destinoId]=grupos[a.destinoId]||[]).push(a); });
+    Object.keys(grupos).forEach(did=>{
+      const d=destino(did);
+      h.push(`<div class="tituloSecao">${PAISES[d.pais].b} ${esc(d.nome)}<span class="linha"></span><span style="text-transform:none;letter-spacing:0">${grupos[did].length}</span></div><div class="cartao">`);
+      grupos[did].sort((a,b)=>(a.dia||'z').localeCompare(b.dia||'z')||(minutos(a.hora)??1e9)-(minutos(b.hora)??1e9));
+      grupos[did].forEach(a=>{
+        const custo=(paraBRL(a.custo,a.moeda)??0);
+        h.push(`<div class="atr ${a.sel?'escolhida':''}">
+          <button class="marcar" data-marcar="${a.id}" aria-pressed="${!!a.sel}" aria-label="${a.sel?'Tirar':'Pôr'} ${esc(a.nome)} no roteiro">${a.sel?'✓':'＋'}</button>
+          <button class="info" data-ficha="${a.id}" style="text-align:left;background:none">
+            <div class="n">${ico(CATEGORIAS[a.cat].i,17)} ${esc(a.nome)}</div>
+            <div class="m">
+              ${a.dia?`<span class="eti ok">${diaSemanaC(a.dia)} ${dataCurta(a.dia)}${a.hora?' · '+a.hora:''}</span>`:(a.sel?`<span class="eti sol">sem dia</span>`:'')}
+              ${a.dur?`<span>${duracaoTxt(a.dur)}</span>`:''}
+              ${custo>0?`<span>${brlTxt(custo)}</span>`:''}
+              ${a.janela?`<span>${esc(a.janela.abre)}–${esc(a.janela.fecha)}${a.janela.entradaAte?' · entra até '+esc(a.janela.entradaAte):''}</span>`:''}
+            </div>
+          </button>
+          <div class="abrir" aria-hidden="true">›</div>
+        </div>`);
+      });
+      h.push(`</div>`);
+    });
+  }
+  h.push(`<button class="bt larga sec" data-nova-atracao="1" style="margin-top:6px">＋ Nova atração</button>`);
+  $('#tela-atracoes').innerHTML=h.join('');
+}
+
+/* ============================================================
+   TELA 3 — MAPA (leve, sem biblioteca externa)
+   ============================================================ */
+const MAPA={lat:-25.560,lon:-54.545,z:11.6,sel:null,dia:'todos',pronto:false,ok:0,erro:0};
+const BASE_TILES = (typeof window.NV_TILES==='string' && window.NV_TILES) || 'https://tile.openstreetmap.org';
+const Z_MIN=9, Z_MAX=18;
+const lonX=(lon,z)=>(lon+180)/360*Math.pow(2,z)*256;
+const latY=(lat,z)=>{const s=Math.max(-.9999,Math.min(.9999,Math.sin(lat*Math.PI/180)));
+  return (0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*Math.pow(2,z)*256;};
+const xLon=(x,z)=>x/(256*Math.pow(2,z))*360-180;
+const yLat=(y,z)=>{const n=Math.PI-2*Math.PI*y/(256*Math.pow(2,z));
+  return 180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n)));};
+
+function telaMapa(){
+  const v=viagem();
+  const datas=listaDatas(v.inicio,v.fim).filter(d=>atracoesDoDia(d).length);
+  $('#tela-mapa').innerHTML=`
+    <div class="filtros" role="group" aria-label="Filtrar o mapa por dia">
+      <button class="chip" data-fm="todos" aria-pressed="${MAPA.dia==='todos'}">Tudo</button>
+      <button class="chip" data-fm="roteiro" aria-pressed="${MAPA.dia==='roteiro'}">✓ No roteiro</button>
+      ${datas.map(d=>`<button class="chip" data-fm="${d}" aria-pressed="${MAPA.dia===d}">${diaSemanaC(d)} ${dataCurta(d)}</button>`).join('')}
+    </div>
+    <div id="caixaMapa">
+      <div id="fundoEsquema"></div>
+      <div id="telaTiles"></div>
+      <svg id="rotaDia" aria-hidden="true"></svg>
+      <div id="telaPinos"></div>
+      <div id="semRede">mapa off-line · pontos no lugar certo</div>
+      <div id="ferramentasMapa">
+        <button id="btMaisZoom" aria-label="Aproximar">＋</button>
+        <button id="btMenosZoom" aria-label="Afastar">－</button>
+        <button id="btCentrar" aria-label="Enquadrar tudo" style="font-size:16px">⤢</button>
+      </div>
+      <div id="creditoMapa">© OpenStreetMap</div>
+    </div>
+    <div id="fichaMapa"></div>`;
+  MAPA.pronto=true;
+  ligarGestosMapa();
+  enquadrarTudo();
+  fichaMapa(null);
+}
+function pinosVisiveis(){
+  const v=viagem();
+  return v.atracoes.filter(a=>{
+    if(typeof a.lat!=='number'||typeof a.lon!=='number') return false;
+    if(MAPA.dia==='todos') return true;
+    if(MAPA.dia==='roteiro') return !!a.sel;
+    return a.dia===MAPA.dia;
+  });
+}
+function enquadrarTudo(){
+  const p=pinosVisiveis(); const c=$('#caixaMapa'); if(!c) return;
+  const w=c.clientWidth||320, h=c.clientHeight||300;
+  if(!p.length){ MAPA.lat=-25.56; MAPA.lon=-54.545; MAPA.z=11.6; return desenharMapa(); }
+  const lats=p.map(a=>a.lat), lons=p.map(a=>a.lon);
+  const n=Math.max(...lats), s=Math.min(...lats), l=Math.min(...lons), r=Math.max(...lons);
+  MAPA.lat=(n+s)/2; MAPA.lon=(l+r)/2;
+  let z=Z_MAX;
+  for(;z>Z_MIN;z-=0.1){
+    const dx=Math.abs(lonX(r,z)-lonX(l,z)), dy=Math.abs(latY(s,z)-latY(n,z));
+    if(dx<w-90 && dy<h-90) break;
+  }
+  MAPA.z=Math.max(Z_MIN,Math.min(Z_MAX,z));
+  desenharMapa();
+}
+function desenharMapa(){
+  const c=$('#caixaMapa'); if(!c) return;
+  const w=c.clientWidth, h=c.clientHeight;
+  if(!w||!h) return;
+  const zi=Math.max(Z_MIN,Math.min(Z_MAX,Math.round(MAPA.z)));
+  const s=Math.pow(2,MAPA.z-zi);
+  const cx=lonX(MAPA.lon,zi), cy=latY(MAPA.lat,zi);
+  const ox=cx-(w/2)/s, oy=cy-(h/2)/s;
+  const larg=w/s, alt=h/s;
+
+  /* tiles */
+  const tiles=$('#telaTiles'); const max=Math.pow(2,zi);
+  let html='';
+  const x0=Math.floor(ox/256), x1=Math.floor((ox+larg)/256);
+  const y0=Math.floor(oy/256), y1=Math.floor((oy+alt)/256);
+  for(let tx=x0;tx<=x1;tx++) for(let ty=y0;ty<=y1;ty++){
+    if(ty<0||ty>=max) continue;
+    const nx=((tx%max)+max)%max;
+    html+=`<img alt="" loading="lazy" data-t="1" src="${BASE_TILES}/${zi}/${nx}/${ty}.png" style="left:${(tx*256-ox)}px;top:${(ty*256-oy)}px">`;
+  }
+  tiles.style.transform=`scale(${s})`; tiles.style.transformOrigin='0 0';
+  tiles.style.width=larg+'px'; tiles.style.height=alt+'px';
+  tiles.innerHTML=html;
+  $$('#telaTiles img').forEach(im=>{
+    im.addEventListener('load',()=>{ im.classList.add('ok'); MAPA.ok++; c.classList.remove('offline'); },{once:true});
+    im.addEventListener('error',()=>{ MAPA.erro++; if(MAPA.ok===0&&MAPA.erro>=3) c.classList.add('offline'); },{once:true});
+  });
+
+  /* rota do dia */
+  const rota=$('#rotaDia');
+  if(rota){
+    rota.setAttribute('viewBox',`0 0 ${w} ${h}`); rota.setAttribute('width',w); rota.setAttribute('height',h);
+    if(MAPA.dia!=='todos' && MAPA.dia!=='roteiro'){
+      const seq=atracoesDoDia(MAPA.dia).filter(a=>typeof a.lat==='number');
+      const pts=seq.map(a=>`${((lonX(a.lon,zi)-ox)*s).toFixed(1)},${((latY(a.lat,zi)-oy)*s).toFixed(1)}`);
+      rota.innerHTML = pts.length>1 ? `<path d="M${pts.join(' L')}"/>` : '';
+    } else rota.innerHTML='';
+  }
+
+  /* pinos */
+  const p=pinosVisiveis();
+  $('#telaPinos').innerHTML=p.map(a=>{
+    const px=(lonX(a.lon,zi)-ox)*s, py=(latY(a.lat,zi)-oy)*s;
+    if(px<-60||py<-60||px>w+60||py>h+60) return '';
+    const pais=paisDe(a).toLowerCase();
+    const cls=[ 'pino', pais, a.sel?'':'nao', a.feita?'feita':'', MAPA.sel===a.id?'sel':'' ].join(' ');
+    const rot = MAPA.sel===a.id || MAPA.z>13.2;
+    const ordem = (MAPA.dia!=='todos'&&MAPA.dia!=='roteiro') ? (atracoesDoDia(MAPA.dia).indexOf(a)+1) : 0;
+    return `<button class="${cls}" style="left:${px}px;top:${py}px" data-pino="${a.id}" aria-label="${esc(a.nome)}">
+      <i><span>${ordem>0?ordem:ico(CATEGORIAS[a.cat].i,14)}</span></i>${rot?`<b>${esc(a.nome.length>22?a.nome.slice(0,20)+'…':a.nome)}</b>`:''}</button>`;
+  }).join('');
+}
+function fichaMapa(id){
+  MAPA.sel=id;
+  const caixa=$('#fichaMapa'); if(!caixa) return;
+  if(!id){
+    const n=pinosVisiveis().length;
+    caixa.innerHTML=`<div class="cartao pad" style="font-size:13.5px;color:var(--tinta-2)">
+      <b style="color:var(--tinta)">${n} ponto${n>1?'s':''} no mapa.</b> Toque em um pino para ver a ficha, o horário e abrir a rota.
+      Pinos cinzas são ideias que ainda não entraram no roteiro.</div>`;
+    return;
+  }
+  const a=viagem().atracoes.find(x=>x.id===id); if(!a) return;
+  const d=destino(a.destinoId), custo=(paraBRL(a.custo,a.moeda)??0);
+  caixa.innerHTML=`<div class="cartao pad">
+    <div style="display:flex;gap:10px;align-items:flex-start">
+      <div style="flex:1"><h3 style="font-size:16px">${ico(CATEGORIAS[a.cat].i,18)} ${esc(a.nome)}</h3>
+      <div class="m" style="font-size:12.5px;color:var(--tinta-2);margin-top:5px;display:flex;gap:8px;flex-wrap:wrap">
+        <span class="eti ${d.pais.toLowerCase()}">${PAISES[d.pais].b} ${esc(d.nome)}</span>
+        ${a.dia?`<span class="eti ok">${diaSemanaC(a.dia)} ${dataCurta(a.dia)} ${esc(a.hora||'')}</span>`:''}
+        ${custo>0?`<span>${brlTxt(custo)}</span>`:''}
+        ${a.precisao==='aprox'?`<span class="eti">local aprox.</span>`:''}
+      </div></div>
+      <button class="btIcone" data-fechaficha="1" aria-label="Fechar ficha">✕</button>
+    </div>
+    ${a.dica?`<p style="font-size:13.5px;color:var(--tinta-2);margin:10px 0 0;line-height:1.45">${esc(a.dica)}</p>`:''}
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="bt sec" data-marcar="${a.id}" style="flex:1;min-width:130px">${a.sel?'✓ No roteiro':'＋ Pôr no roteiro'}</button>
+      <a class="bt fant" style="flex:1;min-width:130px;text-decoration:none" target="_blank" rel="noopener"
+         href="https://www.google.com/maps/search/?api=1&query=${a.lat},${a.lon}">Abrir rota ↗</a>
+    </div>
+    <button class="bt fant larga" data-ficha="${a.id}" style="margin-top:8px">Ver ficha completa</button>
+  </div>`;
+}
+function ligarGestosMapa(){
+  const c=$('#caixaMapa'); if(!c||c._ligado) return; c._ligado=true;
+  const pts=new Map(); let base=null, moveu=0;
+  c.addEventListener('pointerdown',e=>{
+    if(e.target.closest('#ferramentasMapa')||e.target.closest('.pino')) return;
+    c.setPointerCapture(e.pointerId); pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); moveu=0;
+    c.classList.add('arrastando');
+    if(pts.size===2){ const [a,b]=[...pts.values()]; base={d:Math.hypot(a.x-b.x,a.y-b.y),z:MAPA.z}; }
+  });
+  c.addEventListener('pointermove',e=>{
+    if(!pts.has(e.pointerId)) return;
+    const ant=pts.get(e.pointerId); const dx=e.clientX-ant.x, dy=e.clientY-ant.y;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    moveu+=Math.abs(dx)+Math.abs(dy);
+    if(pts.size===1){
+      const zi=Math.max(Z_MIN,Math.min(Z_MAX,Math.round(MAPA.z))), s=Math.pow(2,MAPA.z-zi);
+      MAPA.lon=xLon(lonX(MAPA.lon,zi)-dx/s,zi);
+      MAPA.lat=yLat(latY(MAPA.lat,zi)-dy/s,zi);
+      desenharMapa();
+    } else if(pts.size===2 && base){
+      const [a,b]=[...pts.values()]; const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(base.d>10){ MAPA.z=Math.max(Z_MIN,Math.min(Z_MAX,base.z+Math.log2(d/base.d))); desenharMapa(); }
+    }
+  });
+  const fim=e=>{ pts.delete(e.pointerId); if(pts.size<2) base=null; if(!pts.size) c.classList.remove('arrastando'); };
+  c.addEventListener('pointerup',fim); c.addEventListener('pointercancel',fim);
+  c.addEventListener('wheel',e=>{ e.preventDefault(); MAPA.z=Math.max(Z_MIN,Math.min(Z_MAX,MAPA.z-Math.sign(e.deltaY)*0.4)); desenharMapa(); },{passive:false});
+  let ultimoToque=0;
+  c.addEventListener('click',e=>{
+    const p=e.target.closest('.pino');
+    if(p){ fichaMapa(p.dataset.pino); desenharMapa(); return; }
+    if(e.target.closest('#ferramentasMapa')) return;
+    const agora=Date.now();
+    if(agora-ultimoToque<320 && moveu<12){ MAPA.z=Math.min(Z_MAX,MAPA.z+1); desenharMapa(); }
+    ultimoToque=agora;
+  });
+  $('#btMaisZoom').onclick=()=>{ MAPA.z=Math.min(Z_MAX,MAPA.z+1); desenharMapa(); };
+  $('#btMenosZoom').onclick=()=>{ MAPA.z=Math.max(Z_MIN,MAPA.z-1); desenharMapa(); };
+  $('#btCentrar').onclick=()=>{ enquadrarTudo(); };
+}
+
+/* ============================================================
+   TELA 4 — CUSTOS
+   ============================================================ */
+let filtroGastoDestino='todos';
+function telaCustos(){
+  const v=viagem(), h=[];
+  const orc=orcamentoTotal(), gasto=totalGasto(), prev=previstoBRL();
+  const pct=orc? Math.min(100,gasto/orc*100):0;
+  h.push(`<div class="resumoGrande">
+    <div class="r">Gasto até agora · ${v.pessoas.length} pessoas</div>
+    <div class="v numero">${brlTxt(gasto)}</div>
+    <div class="r">${orc?`de ${brlTxt(orc)} de orçamento · falta ${brlTxt(Math.max(0,orc-gasto))}`:'sem orçamento definido'}</div>
+    ${orc?`<div class="barra"><i class="${gasto>orc?'estourou':''}" style="width:${pct}%"></i></div>`:''}
+  </div>`);
+
+  h.push(`<div class="gradeResumo">
+    <div class="mini"><div class="r">Por pessoa</div><div class="v numero">${brlTxt(gasto/Math.max(1,v.pessoas.length))}</div></div>
+    <div class="mini"><div class="r">Previsto no roteiro</div><div class="v numero">${brlTxt(prev)}</div></div>
+  </div>`);
+
+  h.push(`<button class="bt larga" data-novo-gasto="1">＋ Lançar gasto</button>
+  <div class="filtros" style="margin-top:10px" role="group" aria-label="Lançar rápido por categoria">
+    ${['comida','compras','transporte','ingresso','hospedagem','outros'].map(c=>
+      `<button class="chip" data-rapido="${c}">${ico(CATEGORIAS[c].i,16)} ${CATEGORIAS[c].n}</button>`).join('')}
+  </div>`);
+
+  /* cota do Paraguai */
+  const cotas=cotaPorPessoa();
+  if(cotas){
+    h.push(`<div class="tituloSecao">Cota de isenção · US$ ${v.cotaPY} por pessoa<span class="linha"></span></div>
+    <div class="cartao pad">
+      <p style="margin:0 0 12px;font-size:12.5px;color:var(--tinta-2);line-height:1.45">Compras no Paraguai e no duty free argentino dividem a <b>mesma</b> cota de US$ ${v.cotaPY} por CPF, por via terrestre, a cada 30 dias. Acima disso, 50% de imposto sobre o excedente.</p>
+      ${cotas.map(p=>{
+        const pc=Math.min(100,p.usado/v.cotaPY*100), estourou=p.usado>v.cotaPY;
+        return `<div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:13.5px">
+            <b>${esc(p.nome)}</b>
+            <span class="numero ${estourou?'':''}" style="color:${estourou?'var(--alerta)':'var(--tinta-2)'}">${moedaTxt(p.usado,'USD')} / ${moedaTxt(v.cotaPY,'USD')}</span>
+          </div>
+          <div class="barra"><i class="${estourou?'estourou':''}" style="width:${pc}%"></i></div>
+        </div>`;}).join('')}
+    </div>`);
+  }
+
+  /* por destino */
+  h.push(`<div class="tituloSecao">Por destino<span class="linha"></span></div><div class="cartao">`);
+  v.destinos.forEach(d=>{
+    const g=totalGasto(x=>x.destinoId===d.id), o=Number(d.orcamento)||0;
+    const p=o?Math.min(100,g/o*100):0;
+    h.push(`<div style="padding:12px 14px;border-bottom:1px solid var(--linha)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+        <b style="font-size:14.5px">${PAISES[d.pais].b} ${esc(d.nome)}</b>
+        <span class="numero" style="font-weight:700">${brlTxt(g)}</span>
+      </div>
+      ${o?`<div class="barra"><i class="${g>o?'estourou':''}" style="width:${p}%"></i></div>
+      <div style="font-size:11.5px;color:var(--tinta-2);margin-top:4px">orçamento ${brlTxt(o)}</div>`:''}
+    </div>`);
+  });
+  h.push(`</div>`);
+
+  /* por categoria */
+  const cats={};
+  v.gastos.forEach(g=>{ cats[g.categoria]=(cats[g.categoria]||0)+gastoBRL(g); });
+  const chaves=Object.keys(cats).sort((a,b)=>cats[b]-cats[a]);
+  if(chaves.length){
+    h.push(`<div class="tituloSecao">Por categoria<span class="linha"></span></div><div class="cartao pad">`);
+    const maior=cats[chaves[0]]||1;
+    chaves.forEach(c=>h.push(`<div style="margin-bottom:11px">
+      <div style="display:flex;justify-content:space-between;font-size:13.5px;align-items:center"><span style="display:flex;align-items:center;gap:6px">${CATEGORIAS[c]?ico(CATEGORIAS[c].i,16)+' '+CATEGORIAS[c].n:esc(c)}</span><b class="numero">${brlTxt(cats[c])}</b></div>
+      <div class="barra"><i style="width:${cats[c]/maior*100}%"></i></div></div>`));
+    h.push(`</div>`);
+  }
+
+  /* acerto de contas */
+  if(v.gastos.length && v.pessoas.length>1){
+    h.push(`<div class="tituloSecao">Acerto entre vocês<span class="linha"></span></div><div class="cartao">`);
+    saldos().forEach(p=>{
+      const s=p.saldo;
+      h.push(`<div class="acerto"><span class="q">${esc(p.nome)}</span>
+        <span style="text-align:right">
+          <b class="numero" style="color:${Math.abs(s)<0.01?'var(--tinta-2)':(s>0?'var(--ok)':'var(--alerta)')}">${s>0?'recebe ':(s<0?'paga ':'quite ')}${Math.abs(s)>=0.01?brlTxt(Math.abs(s)):''}</b>
+          <small style="display:block;font-size:11px;color:var(--tinta-2)">pagou ${brlTxt(p.pagou)} · cota ${brlTxt(p.deve)}</small>
+        </span></div>`);
+    });
+    h.push(`</div>`);
+  }
+
+  /* lançamentos */
+  h.push(`<div class="tituloSecao">Lançamentos<span class="linha"></span><span style="text-transform:none;letter-spacing:0">${v.gastos.length}</span></div>`);
+  if(!v.gastos.length){
+    h.push(`<div class="cartao"><div class="vazio"><span class="e">💰</span>
+      <p>Nenhum gasto lançado ainda.<br>Lance na hora, ainda na fila do caixa — depois ninguém lembra.</p>
+      <button class="bt" data-novo-gasto="1">＋ Lançar o primeiro</button></div></div>`);
+  } else {
+    h.push(`<div class="filtros"><button class="chip" data-fg="todos" aria-pressed="${filtroGastoDestino==='todos'}">Todos</button>
+      ${v.destinos.map(d=>`<button class="chip" data-fg="${d.id}" aria-pressed="${filtroGastoDestino===d.id}">${PAISES[d.pais].b} ${esc(d.nome)}</button>`).join('')}</div>`);
+    let lista=v.gastos.slice().sort((a,b)=>(b.data||'').localeCompare(a.data||'')||(b.criado||0)-(a.criado||0));
+    if(filtroGastoDestino!=='todos') lista=lista.filter(g=>g.destinoId===filtroGastoDestino);
+    h.push(`<div class="cartao">`);
+    lista.forEach(g=>{
+      const c=CATEGORIAS[g.categoria]||CATEGORIAS.outros;
+      const div=(g.divididoCom&&g.divididoCom.length)?g.divididoCom:v.pessoas.map(p=>p.id);
+      h.push(`<button class="gasto" data-gasto="${g.id}" style="width:100%;text-align:left">
+        <span class="cat">${ico(c.i,19)}</span>
+        <span class="c"><span class="d">${esc(g.descricao||c.n)}</span>
+          <span class="s">${g.data?dataCurta(g.data)+' · ':''}${esc(destino(g.destinoId).nome)} · ${esc(pessoa(g.pagoPor).nome)} pagou · ÷${div.length}</span></span>
+        <span class="v numero">${brlTxt(gastoBRL(g))}${g.moeda!=='BRL'?`<small>${moedaTxt(g.valor,g.moeda)}</small>`:''}</span>
+      </button>`);
+    });
+    h.push(`</div>`);
+  }
+  $('#tela-custos').innerHTML=h.join('');
+}
+
+/* ============================================================
+   TELA 5 — VIAGEM
+   ============================================================ */
+function telaViagem(){
+  const v=viagem(), h=[];
+  h.push(`<div class="cartao pad">
+    <h3 style="font-size:17px">${esc(v.nome)}</h3>
+    <div class="linhaDado"><span class="r">Quando</span><span class="v">${dataCurta(v.inicio)} a ${dataCurta(v.fim)} de ${dataObj(v.fim).getFullYear()}</span></div>
+    <div class="linhaDado"><span class="r">Quem vai</span><span class="v">${v.pessoas.map(p=>esc(p.nome)).join(', ')}</span></div>
+    <div class="linhaDado"><span class="r">Destinos</span><span class="v">${v.destinos.map(d=>PAISES[d.pais].b+' '+esc(d.nome)).join(' · ')}</span></div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="bt sec" data-editar-viagem="1" style="flex:1;min-width:140px">Editar viagem</button>
+      <button class="bt fant" data-destinos="1" style="flex:1;min-width:140px">Destinos e orçamento</button>
+    </div>
+  </div>`);
+
+  if(v.hospedagem){
+    h.push(`<div class="tituloSecao">Hospedagem<span class="linha"></span></div>
+    <div class="cartao pad">
+      <b style="font-size:15px">🛏 ${esc(v.hospedagem.nome)}</b>
+      <div style="font-size:13px;color:var(--tinta-2);margin-top:3px">${esc(v.hospedagem.end)}</div>
+      <p style="font-size:13px;color:var(--tinta-2);line-height:1.45;margin:10px 0 0">${esc(v.hospedagem.obs||'')}</p>
+      <a class="bt fant larga" style="margin-top:10px;text-decoration:none" target="_blank" rel="noopener"
+         href="https://www.google.com/maps/search/?api=1&query=${v.hospedagem.lat},${v.hospedagem.lon}">Abrir no mapa ↗</a>
+    </div>`);
+  }
+
+  if(v.voos&&v.voos.length){
+    h.push(`<div class="tituloSecao">Voos<span class="linha"></span></div><div class="cartao">`);
+    v.voos.forEach(f=>h.push(`<div style="padding:12px 14px;border-bottom:1px solid var(--linha)">
+      <b style="font-size:14.5px">✈︎ ${esc(f.titulo)}</b>
+      <div style="font-size:12.5px;color:var(--tinta-2);margin-top:3px">${diaSemanaC(f.data)} ${dataCurta(f.data)} · ${esc(f.sub)}</div>
+      <div style="font-size:12.5px;margin-top:5px">Reserva <b>${esc(f.reserva)}</b></div></div>`));
+    h.push(`</div>`);
+  }
+
+  /* câmbio */
+  h.push(`<div class="tituloSecao">Câmbio<span class="linha"></span><span style="text-transform:none;letter-spacing:0">${esc(v.cambioData||'')}</span></div>
+  <div class="cartao pad">
+    ${Object.keys(v.cambio).filter(m=>m!=='BRL').map(m=>`
+      <div class="campo" style="margin-bottom:10px">
+        <label for="cx_${m}">1 ${m} vale, em reais</label>
+        <input id="cx_${m}" type="number" inputmode="decimal" step="0.000001" min="0" value="${v.cambio[m]}" data-cambio="${m}">
+      </div>`).join('')}
+    <p class="ajuda">Atualize antes de viajar e de novo quando a cotação virar. Tudo que você lançar em outra moeda é convertido por aqui.</p>
+  </div>`);
+
+  /* transporte */
+  h.push(`<div class="tituloSecao">Carro alugado ou Uber?<span class="linha"></span></div>
+  <div class="cartao pad">
+    <p style="font-size:13.5px;line-height:1.5;margin:0 0 12px">Para <b>este</b> roteiro, a conta fecha a favor do aplicativo — e por três motivos que não têm a ver com preço de diária.</p>
+    <div class="aviso at"><span class="ic">⛔</span><div><b>Fronteira.</b> As grandes locadoras do aeroporto não liberam o carro para o Paraguai e a Argentina. Cruzar exige autorização por escrito <i>e</i> Carta Verde (seguro Mercosul). Só locadora local de fronteira entrega assim.</div></div>
+    <div class="aviso at"><span class="ic">🕒</span><div><b>Devolução às 3h30 de sábado.</b> O balcão do aeroporto de Foz só desperta por volta das 4h. Ou você devolve na véspera e paga transfer assim mesmo, ou paga taxa de devolução fora do horário e assume o risco do carro.</div></div>
+    <div class="aviso in"><span class="ic">🅿️</span><div><b>O carro ficaria parado.</b> Dois dias de compras no Paraguai são a pé e a noite na Argentina é de táxi. Você pagaria diária, seguro e estacionamento para não rodar.</div></div>
+    <div style="overflow-x:auto;margin-top:6px">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:330px">
+      <tr style="text-align:left;color:var(--tinta-2)"><th style="padding:6px 4px;font-weight:700">Item</th><th style="padding:6px 4px;text-align:right;font-weight:700">Carro</th><th style="padding:6px 4px;text-align:right;font-weight:700">App</th></tr>
+      ${[['Locação 3 diárias (autom.+proteção)','570–900','—'],
+         ['Taxa de aeroporto','60–150','—'],
+         ['Carta Verde + autorização','150–300','—'],
+         ['Combustível (~180 km)','80–110','—'],
+         ['Estacionamentos','250–280','—'],
+         ['Aeroporto ↔ hotel','incluso','0 (transfer do hotel)'],
+         ['Cataratas ida e volta','incluso','100–140'],
+         ['Marco das 3 Fronteiras','incluso','45–65'],
+         ['Ponte da Amizade, 2 dias','+ estac. no PY','60–100'],
+         ['Puerto Iguazú (táxi, ida e volta)','incluso','640–840'],
+         ['Aeroporto às 3h30 de sábado','balcão fechado','0–172']
+        ].map(l=>`<tr style="border-top:1px solid var(--linha)"><td style="padding:7px 4px">${l[0]}</td><td style="padding:7px 4px;text-align:right" class="numero">${l[1]}</td><td style="padding:7px 4px;text-align:right" class="numero">${l[2]}</td></tr>`).join('')}
+      <tr style="border-top:2px solid var(--linha);font-weight:800"><td style="padding:9px 4px">Total estimado</td><td style="padding:9px 4px;text-align:right" class="numero">1.110–1.740</td><td style="padding:9px 4px;text-align:right;color:var(--ok)" class="numero">895–1.400</td></tr>
+    </table></div>
+    <div class="aviso bo" style="margin-top:12px"><span class="ic">✓</span><div><b>O que fazer.</b> Peça ao Village Iguassu, por escrito e com 48–72h de antecedência, o transfer gratuito do aeroporto, o café da manhã às 3h e a confirmação do transfer de volta às 3h30. Feche à parte só o táxi da Argentina. Para o Paraguai, vá a pé pela ponte.</div></div>
+    <p class="ajuda" style="margin-top:10px">Valores de set/2026; diárias de locadora e corridas de app são estimativas — confirme antes de fechar.</p>
+  </div>`);
+
+  /* documentos */
+  h.push(`<div class="tituloSecao">Antes de sair de casa<span class="linha"></span></div><div class="cartao pad">
+    ${[['RG com menos de 10 anos ou passaporte, dos quatro','Serve para o Paraguai e para a Argentina. CNH digital não vale fora do Brasil.'],
+       ['Ingressos das Cataratas comprados online','Dia e hora marcados, lotação limitada. Não há bilheteria de porta confiável.'],
+       ['Reserva no Hotel das Cataratas (Belmond)','É o que permite ficar dentro do parque depois que ele fecha. WhatsApp (45) 99123-3145.'],
+       ['Reserva do jantar em Puerto Iguazú','E o táxi/transfer combinado para os dois trechos.'],
+       ['Transfer e café das 3h com o hotel','Por escrito, 48 a 72h antes.'],
+       ['Notas fiscais separadas por pessoa','A cota de US$ 500 é por CPF. Guarde tudo até chegar em casa.']
+      ].map((l,i)=>`<label style="display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--linha);cursor:pointer">
+        <input type="checkbox" data-check="${i}" ${(v.checklist||[]).includes(String(i))?'checked':''} style="width:24px;height:24px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--agua-2)">
+        <span style="flex:1"><b style="font-size:14px;font-weight:600">${l[0]}</b>
+        <span style="display:block;font-size:12.5px;color:var(--tinta-2);margin-top:2px;line-height:1.4">${l[1]}</span></span></label>`).join('')}
+  </div>`);
+
+  /* instalar e mapa off-line */
+  h.push(`<div class="tituloSecao">No celular<span class="linha"></span></div><div class="cartao pad">
+    <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 12px;line-height:1.45">Instalado na tela de início, o app abre em tela cheia e funciona sem internet.</p>
+    <button class="bt larga" id="btInstalar" hidden>⤓ Instalar na tela de início</button>
+    <div id="dicaIOS" style="font-size:13px;color:var(--tinta-2);line-height:1.5" hidden>
+      <b style="color:var(--tinta)">No iPhone:</b> toque em <b>Compartilhar</b> na barra do Safari e escolha <b>Adicionar à Tela de Início</b>.
+    </div>
+    <div id="jaInstalado" style="font-size:13px;color:var(--ok);font-weight:600" hidden>Instalado. Você já está usando o app.</div>
+    <hr style="border:0;border-top:1px solid var(--linha);margin:14px 0">
+    <b style="font-size:14.5px">Mapa off-line</b>
+    <p style="font-size:13px;color:var(--tinta-2);margin:6px 0 10px;line-height:1.45">Baixe as imagens do mapa da região enquanto estiver no wi-fi. Depois o mapa desenha mesmo sem sinal, no Paraguai e na Argentina. São cerca de 900 imagens, perto de 10 MB.</p>
+    <button class="bt sec larga" id="btBaixarMapa">⤓ Baixar mapa desta viagem</button>
+    <div id="progMapa" style="font-size:12.5px;color:var(--tinta-2);margin-top:8px" hidden><div class="barra"><i id="progMapaBarra" style="width:0%"></i></div><span id="progMapaTxt"></span></div>
+  </div>`);
+
+  /* backup */
+  h.push(`<div class="tituloSecao">Segurança dos dados<span class="linha"></span></div><div class="cartao pad">
+    <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 12px;line-height:1.45">Tudo fica salvo só neste aparelho, neste navegador. Exporte um backup antes de viajar e mande para você mesmo.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="bt sec" data-exportar="1" style="flex:1;min-width:140px">⤓ Exportar backup</button>
+      <button class="bt sec" data-importar="1" style="flex:1;min-width:140px">⤒ Importar</button>
+    </div>
+    <button class="bt perigo larga" data-zerar="1" style="margin-top:10px">Apagar tudo e recomeçar</button>
+  </div>
+  <p style="text-align:center;font-size:11.5px;color:var(--tinta-2);margin:18px 0 0">Nossas Viagens · v1 · feito para Rodolfo e Rita</p>`);
+  $('#tela-viagem').innerHTML=h.join('');
+}
+
+/* ============================================================
+   FOLHA (janelas)
+   ============================================================ */
+function abrirFolha(titulo,html,depois){
+  $('#folhaTitulo').textContent=titulo;
+  $('#folhaCorpo').innerHTML=html;
+  $('#folha').classList.add('on'); $('#fundoFolha').classList.add('on');
+  document.body.style.overflow='hidden';
+  $('#folhaCorpo').scrollTop=0;
+  if(depois) depois();
+  const foco=$('#folhaCorpo input,#folhaCorpo select,#folhaCorpo textarea,#folhaCorpo button');
+  if(foco && foco.type!=='number') setTimeout(()=>{},0);
+}
+function fecharFolha(){
+  $('#folha').classList.remove('on'); $('#fundoFolha').classList.remove('on');
+  document.body.style.overflow='';
+}
+function selDestinos(sel){ return viagem().destinos.map(d=>`<option value="${d.id}" ${sel===d.id?'selected':''}>${PAISES[d.pais].b} ${esc(d.nome)}</option>`).join(''); }
+function selDias(sel){
+  const v=viagem();
+  return `<option value="">— sem dia —</option>`+listaDatas(v.inicio,v.fim).map(d=>`<option value="${d}" ${sel===d?'selected':''}>${diaSemanaC(d)} ${dataCurta(d)}</option>`).join('');
+}
+function selMoedas(sel){ return Object.keys(viagem().cambio).map(m=>`<option value="${m}" ${sel===m?'selected':''}>${m}</option>`).join(''); }
+function selCats(sel){ return Object.keys(CATEGORIAS).map(c=>`<option value="${c}" ${sel===c?'selected':''}>${CATEGORIAS[c].e} ${CATEGORIAS[c].n}</option>`).join(''); }
+
+/* --- ficha / edição de atração --- */
+function folhaAtracao(id){
+  const nova=!id;
+  const a = nova ? {id:idNovo('at'),destinoId:viagem().destinos[0].id,nome:'',cat:'passeio',dur:60,custo:0,moeda:'BRL',sel:true,dia:null,hora:null,lat:null,lon:null,dica:'',precisao:'ok'}
+                 : viagem().atracoes.find(x=>x.id===id);
+  if(!a) return;
+  const conf=conflitoHorario(a);
+  abrirFolha(nova?'Nova atração':'Atração',`
+    ${!nova&&a.janela?`<div class="aviso ${conf?'at':'bo'}"><span class="ic">${conf?'⛔':'🕘'}</span><div>Funciona das <b>${esc(a.janela.abre)}</b> às <b>${esc(a.janela.fecha)}</b>${a.janela.dias&&a.janela.dias.length<7?', '+a.janela.dias.map(d=>DIAS_C[d]).join(', '):', todos os dias'}.${a.janela.obs?' ('+esc(a.janela.obs)+')':''}${conf?' <b>Seu horário não cabe: '+esc(conf)+'.</b>':''}</div></div>`:''}
+    ${!nova&&a.dica?`<div class="aviso in"><span class="ic">💡</span><div>${esc(a.dica)}</div></div>`:''}
+    <form id="formAtracao">
+      <div class="campo"><label for="fa_nome">Nome</label><input id="fa_nome" value="${esc(a.nome)}" required placeholder="Ex.: Parque das Aves"></div>
+      <div class="dupla">
+        <div class="campo"><label for="fa_dest">Destino</label><select id="fa_dest">${selDestinos(a.destinoId)}</select></div>
+        <div class="campo"><label for="fa_cat">Tipo</label><select id="fa_cat">${selCats(a.cat)}</select></div>
+      </div>
+      <div class="dupla">
+        <div class="campo"><label for="fa_dia">Dia</label><select id="fa_dia">${selDias(a.dia)}</select></div>
+        <div class="campo"><label for="fa_hora">Começa às</label><input id="fa_hora" type="time" value="${esc(a.hora||'')}"></div>
+      </div>
+      <div class="dupla">
+        <div class="campo"><label for="fa_dur">Duração (min)</label><input id="fa_dur" type="number" inputmode="numeric" min="0" step="15" value="${a.dur||0}"></div>
+        <div class="campo"><label for="fa_custo">Custo por pessoa</label>
+          <div style="display:flex;gap:6px"><input id="fa_custo" type="number" inputmode="decimal" min="0" step="0.01" value="${a.custo||0}" style="flex:1">
+          <select id="fa_moeda" style="flex:0 0 88px">${selMoedas(a.moeda)}</select></div></div>
+      </div>
+      <div class="dupla">
+        <div class="campo"><label for="fa_lat">Latitude</label><input id="fa_lat" type="number" inputmode="decimal" step="0.000001" value="${a.lat??''}" placeholder="-25.5469"></div>
+        <div class="campo"><label for="fa_lon">Longitude</label><input id="fa_lon" type="number" inputmode="decimal" step="0.000001" value="${a.lon??''}" placeholder="-54.5882"></div>
+      </div>
+      <p class="ajuda">Sem coordenada a atração não aparece no mapa nem entra na conta de deslocamento. Copie do Google Maps: toque e segure no ponto e o app mostra os números.</p>
+      <div class="campo"><label for="fa_dica">Observações</label><textarea id="fa_dica" placeholder="Reserva, telefone, o que levar...">${esc(a.dica||'')}</textarea></div>
+      <button type="submit" class="bt larga">${nova?'Criar':'Salvar'}</button>
+      ${nova?'':`<button type="button" class="bt larga sec" data-alternar="${a.id}" style="margin-top:8px">${a.sel?'Tirar do roteiro':'Pôr no roteiro'}</button>
+      <button type="button" class="bt larga perigo" data-apagar-atracao="${a.id}" style="margin-top:8px">Apagar atração</button>`}
+    </form>`,()=>{
+      $('#formAtracao').addEventListener('submit',e=>{
+        e.preventDefault();
+        const v=viagem();
+        const lat=parseFloat($('#fa_lat').value), lon=parseFloat($('#fa_lon').value);
+        Object.assign(a,{
+          nome:$('#fa_nome').value.trim()||'Sem nome',
+          destinoId:$('#fa_dest').value, cat:$('#fa_cat').value,
+          dia:$('#fa_dia').value||null, hora:$('#fa_hora').value||null,
+          dur:parseInt($('#fa_dur').value)||0,
+          custo:parseFloat($('#fa_custo').value)||0, moeda:$('#fa_moeda').value,
+          lat:isNaN(lat)?null:lat, lon:isNaN(lon)?null:lon,
+          dica:$('#fa_dica').value.trim()
+        });
+        if(a.dia) a.sel=true;
+        if(nova) v.atracoes.push(a);
+        salvar(); fecharFolha(); desenhar(); torrada(nova?'Atração criada':'Atração salva');
+      });
+    });
+}
+
+/* --- encaixar no dia (rápido) --- */
+function folhaEncaixar(id){
+  const a=viagem().atracoes.find(x=>x.id===id); if(!a) return;
+  const v=viagem(), datas=listaDatas(v.inicio,v.fim);
+  abrirFolha('Encaixar '+a.nome,`
+    <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 14px;line-height:1.45">Escolha o dia. O horário sugerido é logo depois da última parada, já contando o deslocamento.</p>
+    ${datas.map(d=>{
+      const it=atracoesDoDia(d);
+      const ult=it[it.length-1];
+      let sug='09:00';
+      if(ult){ const t=trechoEntre(ult,a); sug=relogio((minutos(ult.hora)||0)+(ult.dur||0)+(t?t.min:20)); }
+      const simulada=Object.assign({},a,{dia:d,hora:sug});
+      const c=conflitoHorario(simulada);
+      return `<button class="bt larga sec" data-encaixar-em="${a.id}|${d}|${sug}" style="justify-content:space-between;margin-bottom:8px;text-align:left">
+        <span><b>${diaSemanaC(d)} ${dataCurta(d)}</b> <span style="font-weight:400;color:var(--tinta-2);font-size:13px">· ${it.length} parada${it.length===1?'':'s'}</span></span>
+        <span style="font-size:13px;color:${c?'var(--alerta)':'var(--agua-2)'};font-weight:700">${c?'⛔ '+c:sug}</span>
+      </button>`;
+    }).join('')}
+    <button class="bt larga fant" data-ficha="${a.id}" style="margin-top:6px">Abrir ficha completa</button>`);
+}
+
+/* --- gasto --- */
+function folhaGasto(id,catInicial){
+  const v=viagem(), novo=!id;
+  const g = novo ? {id:idNovo('g'),data:hojeISO(),descricao:'',categoria:catInicial||'comida',valor:'',moeda:v.destinos[0].moeda||'BRL',
+                    destinoId:v.destinos[0].id,pagoPor:(v.pessoas[0]||{}).id,divididoCom:v.pessoas.map(p=>p.id),criado:Date.now()}
+                 : v.gastos.find(x=>x.id===id);
+  if(!g) return;
+  const dentro = (g.data>=v.inicio&&g.data<=v.fim)?g.data:v.inicio;
+  abrirFolha(novo?'Lançar gasto':'Gasto',`
+    <form id="formGasto">
+      <div class="campo"><label for="fg_valor">Quanto foi</label>
+        <div style="display:flex;gap:8px">
+          <input id="fg_valor" type="number" inputmode="decimal" step="0.01" min="0" value="${g.valor}" required placeholder="0,00" style="flex:1;font-size:22px;font-weight:700;min-height:58px">
+          <select id="fg_moeda" style="flex:0 0 100px;font-size:17px;font-weight:700">${selMoedas(g.moeda)}</select>
+        </div>
+        <div id="fg_convertido" class="ajuda" style="margin-top:6px"></div>
+      </div>
+      <div class="campo"><label for="fg_desc">O que foi</label><input id="fg_desc" value="${esc(g.descricao)}" placeholder="Ex.: almoço no Le Mir"></div>
+      <div class="dupla">
+        <div class="campo"><label for="fg_cat">Categoria</label><select id="fg_cat">${selCats(g.categoria)}</select></div>
+        <div class="campo"><label for="fg_dest">Onde</label><select id="fg_dest">${selDestinos(g.destinoId)}</select></div>
+      </div>
+      <div class="dupla">
+        <div class="campo"><label for="fg_data">Dia</label><input id="fg_data" type="date" value="${dentro}" min="${v.inicio}" max="${v.fim}"></div>
+        <div class="campo"><label for="fg_pagou">Quem pagou</label><select id="fg_pagou">${v.pessoas.map(p=>`<option value="${p.id}" ${g.pagoPor===p.id?'selected':''}>${esc(p.nome)}</option>`).join('')}</select></div>
+      </div>
+      <div class="campo"><label>Dividir entre</label>
+        <div class="pessoas" id="fg_divide">
+          ${v.pessoas.map(p=>`<button type="button" data-div="${p.id}" aria-pressed="${(g.divididoCom||[]).includes(p.id)}">${esc(p.nome)}</button>`).join('')}
+        </div>
+      </div>
+      <button type="submit" class="bt larga">${novo?'Lançar':'Salvar'}</button>
+      ${novo?'':`<button type="button" class="bt larga perigo" data-apagar-gasto="${g.id}" style="margin-top:8px">Apagar lançamento</button>`}
+    </form>`,()=>{
+      const conv=()=>{
+        const val=parseFloat($('#fg_valor').value)||0, m=$('#fg_moeda').value;
+        $('#fg_convertido').textContent = m==='BRL'? 'Convertido pelo câmbio de '+(v.cambioData||'hoje')+'.'
+          : ('≈ '+brlTxt(paraBRL(val,m))+'  ·  1 '+m+' = '+moedaTxt(v.cambio[m],'BRL'));
+      };
+      $('#fg_valor').addEventListener('input',conv); $('#fg_moeda').addEventListener('change',conv); conv();
+      $('#fg_dest').addEventListener('change',()=>{
+        const d=destino($('#fg_dest').value);
+        if(novo && d.moeda && v.cambio[d.moeda]!==undefined){ $('#fg_moeda').value=d.moeda; conv(); }
+      });
+      $('#fg_divide').addEventListener('click',e=>{
+        const b=e.target.closest('[data-div]'); if(!b) return;
+        b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true');
+      });
+      $('#formGasto').addEventListener('submit',e=>{
+        e.preventDefault();
+        const div=$$('#fg_divide [data-div]').filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.dataset.div);
+        if(!div.length) return torrada('Escolha ao menos uma pessoa para dividir.');
+        Object.assign(g,{
+          valor:parseFloat($('#fg_valor').value)||0, moeda:$('#fg_moeda').value,
+          descricao:$('#fg_desc').value.trim(), categoria:$('#fg_cat').value,
+          destinoId:$('#fg_dest').value, data:$('#fg_data').value||hojeISO(),
+          pagoPor:$('#fg_pagou').value, divididoCom:div
+        });
+        if(novo) v.gastos.push(g);
+        salvar(); fecharFolha(); desenhar(); torrada(novo?'Gasto lançado':'Gasto salvo');
+      });
+    });
+}
+
+/* --- viagens / edição / destinos --- */
+function folhaViagens(){
+  abrirFolha('Suas viagens',`
+    ${BD.viagens.map(v=>`<button class="bt larga ${v.id===BD.ativa?'':'sec'}" data-abrir-viagem="${v.id}" style="justify-content:space-between;margin-bottom:8px;text-align:left">
+      <span><b>${esc(v.nome)}</b><br><span style="font-weight:400;font-size:12.5px;opacity:.8">${dataCurta(v.inicio)}–${dataCurta(v.fim)} · ${v.destinos.length} destino${v.destinos.length===1?'':'s'}</span></span>
+      ${v.id===BD.ativa?'<span>✓</span>':'<span>›</span>'}</button>`).join('')}
+    <button class="bt larga fant" data-nova-viagem="1" style="margin-top:10px">＋ Nova viagem</button>
+    ${BD.viagens.length>1?`<button class="bt larga perigo" data-apagar-viagem="${BD.ativa}" style="margin-top:8px">Apagar a viagem aberta</button>`:''}`);
+}
+function folhaEditarViagem(nova){
+  const v = nova? {id:idNovo('vi'),nome:'',inicio:hojeISO(),fim:hojeISO(),moedaBase:'BRL',cambio:{BRL:1,USD:5.12},
+                   pessoas:[{id:idNovo('p'),nome:'Rodolfo'},{id:idNovo('p'),nome:'Rita'}],
+                   destinos:[],atracoes:[],gastos:[],voos:[]} : viagem();
+  abrirFolha(nova?'Nova viagem':'Editar viagem',`
+    <form id="formViagem">
+      <div class="campo"><label for="fv_nome">Nome da viagem</label><input id="fv_nome" value="${esc(v.nome)}" required placeholder="Ex.: Chile em julho"></div>
+      <div class="dupla">
+        <div class="campo"><label for="fv_ini">Começa</label><input id="fv_ini" type="date" value="${v.inicio}" required></div>
+        <div class="campo"><label for="fv_fim">Termina</label><input id="fv_fim" type="date" value="${v.fim}" required></div>
+      </div>
+      <div class="campo"><label for="fv_pessoas">Quem vai (separado por vírgula)</label>
+        <input id="fv_pessoas" value="${esc(v.pessoas.map(p=>p.nome).join(', '))}" placeholder="Rodolfo, Rita"></div>
+      ${nova?`<div class="campo"><label for="fv_dest">Destinos (um por linha: nome, país BR/PY/AR/…)</label>
+        <textarea id="fv_dest" placeholder="Santiago, CL&#10;Valparaíso, CL"></textarea></div>`:''}
+      <button type="submit" class="bt larga">${nova?'Criar viagem':'Salvar'}</button>
+    </form>`,()=>{
+      $('#formViagem').addEventListener('submit',e=>{
+        e.preventDefault();
+        const ini=$('#fv_ini').value, fim=$('#fv_fim').value;
+        if(fim<ini) return torrada('A data final é antes da inicial.');
+        v.nome=$('#fv_nome').value.trim()||'Viagem'; v.inicio=ini; v.fim=fim;
+        const nomes=$('#fv_pessoas').value.split(',').map(s=>s.trim()).filter(Boolean);
+        if(nomes.length){
+          const antigos=v.pessoas.slice();
+          v.pessoas=nomes.map((n,i)=>antigos[i]?Object.assign(antigos[i],{nome:n}):{id:idNovo('p'),nome:n});
+        }
+        if(nova){
+          const linhas=($('#fv_dest').value||'').split('\n').map(s=>s.trim()).filter(Boolean);
+          v.destinos=linhas.map(l=>{ const [n,p]=l.split(',').map(s=>s.trim());
+            return {id:idNovo('d'),nome:n||'Destino',pais:(p||'BR').toUpperCase().slice(0,2),moeda:'BRL',lat:null,lon:null,orcamento:0}; });
+          if(!v.destinos.length) v.destinos=[{id:idNovo('d'),nome:v.nome,pais:'BR',moeda:'BRL',lat:null,lon:null,orcamento:0}];
+          v.destinos.forEach(d=>{ if(!PAISES[d.pais]) PAISES[d.pais]={n:d.pais,b:'🏳️'}; });
+          BD.viagens.push(v); BD.ativa=v.id;
+        }
+        /* atracoes fora do novo intervalo perdem o dia */
+        const validas=listaDatas(v.inicio,v.fim);
+        v.atracoes.forEach(a=>{ if(a.dia && !validas.includes(a.dia)) a.dia=null; });
+        salvar(); fecharFolha(); desenhar(); torrada(nova?'Viagem criada':'Viagem salva');
+      });
+    });
+}
+function folhaDestinos(){
+  const v=viagem();
+  abrirFolha('Destinos e orçamento',`
+    <form id="formDestinos">
+      ${v.destinos.map(d=>`<div class="cartao pad" style="margin-bottom:10px">
+        <div class="campo"><label>Nome</label><input value="${esc(d.nome)}" data-d="${d.id}|nome"></div>
+        <div class="tripla">
+          <div class="campo"><label>País</label><input value="${esc(d.pais)}" maxlength="2" data-d="${d.id}|pais" style="text-transform:uppercase"></div>
+          <div class="campo"><label>Moeda</label><select data-d="${d.id}|moeda">${selMoedas(d.moeda)}</select></div>
+        </div>
+        <div class="campo"><label>Orçamento em reais</label><input type="number" inputmode="decimal" min="0" step="100" value="${d.orcamento||0}" data-d="${d.id}|orcamento"></div>
+      </div>`).join('')}
+      <button type="submit" class="bt larga">Salvar</button>
+      <button type="button" class="bt larga sec" data-novo-destino="1" style="margin-top:8px">＋ Novo destino</button>
+    </form>`,()=>{
+      $('#formDestinos').addEventListener('submit',e=>{
+        e.preventDefault();
+        $$('#formDestinos [data-d]').forEach(el=>{
+          const [id,campo]=el.dataset.d.split('|');
+          const d=v.destinos.find(x=>x.id===id); if(!d) return;
+          d[campo] = campo==='orcamento' ? (parseFloat(el.value)||0) : (campo==='pais'? el.value.toUpperCase().slice(0,2) : el.value.trim());
+          if(campo==='pais' && !PAISES[d.pais]) PAISES[d.pais]={n:d.pais,b:'🏳️'};
+        });
+        salvar(); fecharFolha(); desenhar(); torrada('Destinos salvos');
+      });
+    });
+}
+
+/* ============================================================
+   BACKUP
+   ============================================================ */
+function exportar(){
+  const txt=JSON.stringify(BD,null,2);
+  const blob=new Blob([txt],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='nossas-viagens-'+hojeISO()+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+  torrada('Backup gerado');
+}
+function importar(){
+  const i=document.createElement('input'); i.type='file'; i.accept='application/json,.json';
+  i.onchange=()=>{
+    const f=i.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=()=>{
+      try{
+        const d=JSON.parse(r.result);
+        if(!d||!Array.isArray(d.viagens)) throw new Error('formato');
+        BD=Object.assign({versao:1,aba:'roteiro'},d);
+        if(!BD.ativa||!BD.viagens.some(v=>v.id===BD.ativa)) BD.ativa=BD.viagens[0].id;
+        BD.viagens.forEach(sanear);
+        salvar(); fecharFolha(); desenhar(); torrada('Backup restaurado');
+      }catch(e){ torrada('Arquivo inválido. Use um backup exportado por este app.'); }
+    };
+    r.readAsText(f);
+  };
+  i.click();
+}
+function confirmar(titulo,texto,rotulo,acao){
+  abrirFolha(titulo,`<p style="font-size:14.5px;line-height:1.5;margin:0 0 18px">${texto}</p>
+    <button class="bt larga perigo" id="btConfirma">${rotulo}</button>
+    <button class="bt larga sec" id="btCancela" style="margin-top:8px">Cancelar</button>`,()=>{
+      $('#btConfirma').onclick=()=>{ acao(); };
+      $('#btCancela').onclick=fecharFolha;
+    });
+}
+
+/* ============================================================
+   DESENHO GERAL E EVENTOS
+   ============================================================ */
+let desenhar = function(){
+  const v=viagem();
+  $('#tituloViagem').textContent=v.nome;
+  $('#subTituloViagem').textContent=`${dataCurta(v.inicio)}–${dataCurta(v.fim)} · ${v.pessoas.length} pessoas`;
+  $('#rotuloViagens').textContent=BD.viagens.length>1?BD.viagens.length+' viagens':'Viagens';
+  medirTopo();
+  if(BD.aba==='roteiro') telaRoteiro();
+  else if(BD.aba==='atracoes') telaAtracoes();
+  else if(BD.aba==='mapa') telaMapa();
+  else if(BD.aba==='custos') telaCustos();
+  else telaViagem();
+}
+function irPara(aba){
+  BD.aba=aba; salvar();
+  $$('#abas button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.aba===aba)));
+  $$('.tela').forEach(t=>t.classList.toggle('on',t.id==='tela-'+aba));
+  desenhar();
+  window.scrollTo({top:0});
+}
+$('#abas').addEventListener('click',e=>{ const b=e.target.closest('[data-aba]'); if(b) irPara(b.dataset.aba); });
+$('#btViagens').addEventListener('click',folhaViagens);
+$('#btFecharFolha').addEventListener('click',fecharFolha);
+$('#fundoFolha').addEventListener('click',fecharFolha);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && $('#folha').classList.contains('on')) fecharFolha(); });
+
+document.addEventListener('click',e=>{
+  const al=s=>e.target.closest('['+s+']');
+  let b;
+  if(b=al('data-ir')) return irPara(b.dataset.ir);
+  if(b=al('data-marcar')){
+    const a=viagem().atracoes.find(x=>x.id===b.dataset.marcar); if(!a) return;
+    a.sel=!a.sel; if(!a.sel){ a.dia=null; a.hora=null; a.feita=false; }
+    salvar(); desenhar();
+    if(BD.aba==='mapa'){ fichaMapa(a.id); desenharMapa(); }
+    if(a.sel && !a.dia) folhaEncaixar(a.id); else torrada('Tirada do roteiro');
+    return;
+  }
+  if(b=al('data-avisos')){ const d=b.dataset.avisos; abertos.has(d)?abertos.delete(d):abertos.add(d); telaRoteiro(); return; }
+  if(b=al('data-vermais')){ const i=b.dataset.vermais; abertos.has(i)?abertos.delete(i):abertos.add(i); telaRoteiro(); return; }
+  if(b=al('data-feito')){ alternarFeita(b.dataset.feito); desenhar(); return; }
+  if(b=al('data-ficha')) return folhaAtracao(b.dataset.ficha);
+  if(b=al('data-encaixar')) return folhaEncaixar(b.dataset.encaixar);
+  if(b=al('data-encaixar-em')){
+    const [id,dia,hora]=b.dataset.encaixarEm.split('|');
+    const a=viagem().atracoes.find(x=>x.id===id); if(!a) return;
+    a.dia=dia; a.hora=hora; a.sel=true;
+    salvar(); fecharFolha(); irPara('roteiro'); torrada('Encaixada em '+diaSemanaC(dia)+' às '+hora);
+    return;
+  }
+  if(b=al('data-alternar')){
+    const a=viagem().atracoes.find(x=>x.id===b.dataset.alternar); if(!a) return;
+    a.sel=!a.sel; if(!a.sel){a.dia=null;a.hora=null;}
+    salvar(); fecharFolha(); desenhar(); torrada(a.sel?'Posta no roteiro':'Tirada do roteiro'); return;
+  }
+  if(b=al('data-apagar-atracao')){
+    const id=b.dataset.apagarAtracao;
+    return confirmar('Apagar atração','Isso remove a atração da lista e do roteiro. Não dá para desfazer.','Apagar',()=>{
+      const v=viagem(); v.atracoes=v.atracoes.filter(x=>x.id!==id);
+      salvar(); fecharFolha(); desenhar(); torrada('Atração apagada');
+    });
+  }
+  if(b=al('data-otimizar')){
+    const data=b.dataset.otimizar, ganho=otimizarDia(data);
+    desenhar();
+    torrada(ganho>0.3?('Ordem refeita — '+ganho.toFixed(1)+' km a menos'):'A ordem já estava boa');
+    return;
+  }
+  if(al('data-nova-atracao')) return folhaAtracao(null);
+  if(al('data-novo-gasto')) return folhaGasto(null);
+  if(b=al('data-rapido')) return folhaGasto(null,b.dataset.rapido);
+  if(b=al('data-gasto')) return folhaGasto(b.dataset.gasto);
+  if(b=al('data-apagar-gasto')){
+    const id=b.dataset.apagarGasto;
+    return confirmar('Apagar lançamento','O valor sai das somas e do acerto de contas.','Apagar',()=>{
+      const v=viagem(); v.gastos=v.gastos.filter(x=>x.id!==id);
+      salvar(); fecharFolha(); desenhar(); torrada('Lançamento apagado');
+    });
+  }
+  if(b=al('data-fd')){ filtroDestino=b.dataset.fd; telaAtracoes(); return; }
+  if(b=al('data-fc')){ filtroCat = filtroCat===b.dataset.fc?'todas':b.dataset.fc; telaAtracoes(); return; }
+  if(b=al('data-fs')){ filtroSel=b.dataset.fs; telaAtracoes(); return; }
+  if(al('data-limparfiltro')){ filtroDestino='todos'; filtroCat='todas'; filtroSel='todas'; telaAtracoes(); return; }
+  if(b=al('data-fg')){ filtroGastoDestino=b.dataset.fg; telaCustos(); return; }
+  if(b=al('data-fm')){ MAPA.dia=b.dataset.fm; telaMapa(); return; }
+  if(al('data-fechaficha')){ fichaMapa(null); desenharMapa(); return; }
+  if(b=al('data-abrir-viagem')){ BD.ativa=b.dataset.abrirViagem; salvar(); fecharFolha(); irPara('roteiro'); return; }
+  if(al('data-nova-viagem')) return folhaEditarViagem(true);
+  if(al('data-editar-viagem')) return folhaEditarViagem(false);
+  if(al('data-destinos')) return folhaDestinos();
+  if(al('data-novo-destino')){
+    const v=viagem(); v.destinos.push({id:idNovo('d'),nome:'Novo destino',pais:'BR',moeda:'BRL',lat:null,lon:null,orcamento:0});
+    salvar(); folhaDestinos(); return;
+  }
+  if(b=al('data-apagar-viagem')){
+    const id=b.dataset.apagarViagem;
+    return confirmar('Apagar viagem','Some tudo dessa viagem: roteiro, atrações e gastos. Exporte um backup antes se tiver dúvida.','Apagar viagem',()=>{
+      BD.viagens=BD.viagens.filter(v=>v.id!==id);
+      if(!BD.viagens.length) BD.viagens=[sementeFoz()];
+      BD.ativa=BD.viagens[0].id; salvar(); fecharFolha(); irPara('roteiro'); torrada('Viagem apagada');
+    });
+  }
+  if(al('data-exportar')) return exportar();
+  if(al('data-importar')) return importar();
+  if(al('data-zerar')){
+    return confirmar('Apagar tudo','Todas as viagens somem deste aparelho e o app volta com a viagem de Foz do Iguaçu de fábrica.','Apagar tudo',()=>{
+      try{ localStorage.removeItem(CHAVE); }catch(e){}
+      BD={versao:1,viagens:[sementeFoz()],ativa:'foz2026',aba:'roteiro'};
+      salvar(); fecharFolha(); irPara('roteiro'); torrada('Tudo zerado');
+    });
+  }
+});
+document.addEventListener('change',e=>{
+  const c=e.target.closest('[data-cambio]');
+  if(c){ const v=viagem(); v.cambio[c.dataset.cambio]=parseFloat(c.value)||0; salvar(); torrada('Câmbio atualizado'); return; }
+  const k=e.target.closest('[data-check]');
+  if(k){ const v=viagem(); v.checklist=v.checklist||[];
+    const id=k.dataset.check;
+    v.checklist = k.checked ? [...new Set([...v.checklist,id])] : v.checklist.filter(x=>x!==id);
+    salvar(); return; }
+});
+function medirTopo(){
+  const b=$('#barraTopo'); if(b) document.documentElement.style.setProperty('--alturaTopo',b.offsetHeight+'px');
+}
+let redimensiona;
+window.addEventListener('resize',()=>{ clearTimeout(redimensiona); redimensiona=setTimeout(()=>{ medirTopo(); if(BD.aba==='mapa'&&MAPA.pronto) desenharMapa(); },160); });
+window.addEventListener('orientationchange',()=>setTimeout(()=>{ if(BD.aba==='mapa'&&MAPA.pronto) enquadrarTudo(); },320));
+
+/* ---------- PWA: instalação, service worker e mapa off-line ---------- */
+let convitePWA=null;
+const rodandoInstalado = matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
+const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); convitePWA=e; pintarInstalacao(); });
+window.addEventListener('appinstalled',()=>{ convitePWA=null; torrada('App instalado'); pintarInstalacao(); });
+function pintarInstalacao(){
+  const bt=$('#btInstalar'); if(!bt) return;
+  const ios=$('#dicaIOS'), ja=$('#jaInstalado');
+  bt.hidden = !convitePWA || rodandoInstalado;
+  ios.hidden = !(ehIOS && !rodandoInstalado);
+  ja.hidden = !rodandoInstalado;
+  bt.onclick = async ()=>{ if(!convitePWA) return; convitePWA.prompt(); await convitePWA.userChoice; convitePWA=null; pintarInstalacao(); };
+  const bm=$('#btBaixarMapa'); if(bm) bm.onclick=baixarMapa;
+}
+function tilesDaViagem(){
+  const p=viagem().atracoes.filter(a=>typeof a.lat==='number'&&typeof a.lon==='number').map(a=>({lat:a.lat,lon:a.lon}));
+  const ho=viagem().hospedagem; if(ho&&typeof ho.lat==='number') p.push({lat:ho.lat,lon:ho.lon});
+  if(!p.length) return [];
+  const m=0.02;
+  const n=Math.max(...p.map(a=>a.lat))+m, su=Math.min(...p.map(a=>a.lat))-m;
+  const l=Math.min(...p.map(a=>a.lon))-m, r=Math.max(...p.map(a=>a.lon))+m;
+  const lista=[];
+  for(let z=11;z<=15;z++){
+    const x0=Math.floor(lonX(l,z)/256), x1=Math.floor(lonX(r,z)/256);
+    const y0=Math.floor(latY(n,z)/256), y1=Math.floor(latY(su,z)/256);
+    for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++) lista.push(`${BASE_TILES}/${z}/${x}/${y}.png`);
+  }
+  return lista;
+}
+async function baixarMapa(){
+  const bt=$('#btBaixarMapa'), cx=$('#progMapa'), barra=$('#progMapaBarra'), txt=$('#progMapaTxt');
+  const lista=tilesDaViagem();
+  if(!lista.length) return torrada('Nenhum ponto com coordenada nesta viagem.');
+  bt.disabled=true; cx.hidden=false;
+  let feitos=0;
+  const fila=lista.slice();
+  /* Em modo no-cors a resposta é opaca e o status vem sempre zerado: não dá
+     para saber pelo fetch se deu certo. Quem diz a verdade é o cache. */
+  const trabalhador=async()=>{
+    while(fila.length){
+      const u=fila.shift();
+      try{ await fetch(u,{mode:'no-cors',cache:'reload'}); }catch(e){}
+      feitos++;
+      if(feitos%10===0||!fila.length){
+        barra.style.width=(feitos/lista.length*100)+'%';
+        txt.textContent=feitos+' de '+lista.length+' imagens';
+      }
+    }
+  };
+  await Promise.all(Array.from({length:6},trabalhador));
+  bt.disabled=false;
+  let guardadas=null;
+  try{
+    if(self.caches && (await caches.keys()).includes('tiles-v1')){
+      const c=await caches.open('tiles-v1');
+      const achados=await Promise.all(lista.map(u=>c.match(u).then(x=>!!x)));
+      guardadas=achados.filter(Boolean).length;
+    }
+  }catch(e){}
+  if(guardadas==null){
+    txt.textContent='Concluído. Sem o app instalado, as imagens ficam só no cache do navegador — instale na tela de início para guardá-las de verdade.';
+    torrada('Concluído');
+  } else if(guardadas>=lista.length){
+    txt.textContent='Pronto: '+lista.length+' imagens guardadas no aparelho.';
+    torrada('Mapa guardado para uso off-line');
+  } else {
+    txt.textContent=guardadas+' de '+lista.length+' guardadas — repita no wi-fi para completar o resto.';
+    torrada(guardadas?'Baixou em parte — repita no wi-fi':'Sem rede: não deu para baixar');
+  }
+}
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(e=>console.warn('service worker não registrou',e));
+    let recarregou=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(recarregou) return; recarregou=true; location.reload();
+    });
+  });
+}
+const desenharOriginal = desenhar;
+desenhar = function(){ desenharOriginal(); if(BD.aba==='viagem') pintarInstalacao(); };
+
+/* ---------- partida ---------- */
+$$('#abas .i[data-ic]').forEach(el=>el.innerHTML=ico(el.dataset.ic,22));
+carregar();
+medirTopo(); setTimeout(medirTopo,300);
+if(!['roteiro','atracoes','mapa','custos','viagem'].includes(BD.aba)) BD.aba='roteiro';
+irPara(BD.aba);
+window.NV={BD,viagem,salvar,desenhar,analisarDia,otimizarDia,saldos,cotaPorPessoa,distKm,MAPA};
+</script>
+</body>
+</html>
