@@ -2,10 +2,10 @@
    TROQUE A VERSAO A CADA PUBLICAÇÃO. É isso que faz o app atualizar
    no celular de quem já instalou; sem trocar, o aparelho continua
    servindo a versão velha do cache. */
-const VERSAO = 'nv-v1';
+const VERSAO = 'nv-v3';
 
 const CACHE_APP   = 'app-' + VERSAO;
-const CACHE_TILES = 'tiles-v1';      // imagens do mapa, sobrevivem à troca de versão
+const CACHE_TILES = 'tiles-v2';      // imagens do mapa, sobrevivem à troca de versão
 const TETO_TILES  = 4000;
 
 const CASCA = [
@@ -30,6 +30,8 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil((async () => {
     const nomes = await caches.keys();
+    /* apaga versões antigas do app e o cache de tiles anterior, que na v1 ficou
+       cheio de imagens de bloqueio do OpenStreetMap */
     await Promise.all(nomes.map(n => {
       if (n === CACHE_APP || n === CACHE_TILES) return null;
       return caches.delete(n);
@@ -50,20 +52,27 @@ self.addEventListener('fetch', e => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  /* imagens do mapa (qualquer provedor no padrão /z/x/y.png): cache primeiro */
-  if (/\/\d{1,2}\/\d+\/\d+\.png$/.test(url.pathname)) {
+  /* imagens do mapa (qualquer provedor no padrão /z/x/y[.ext]): cache primeiro.
+     Buscamos com CORS de propósito: resposta opaca esconde o status, e foi assim
+     que a v1 acabou guardando 900 imagens de "Access blocked" como se fossem mapa.
+     Só entra no cache o que voltar 200. */
+  if (/\/\d{1,2}\/\d+\/\d+(\.\w{2,4})?$/.test(url.pathname)) {
     e.respondWith((async () => {
       const c = await caches.open(CACHE_TILES);
       const guardado = await c.match(req);
       if (guardado) return guardado;
       try {
-        const resp = await fetch(req);
-        if (resp && (resp.ok || resp.type === 'opaque')) {
+        const resp = await fetch(url.href, {mode: 'cors', credentials: 'omit'});
+        if (resp && resp.ok) {
           try { await c.put(req, resp.clone()); podarTiles(); } catch (e) { /* cota cheia */ }
+          return resp;
         }
-        return resp;
+        /* erro do provedor (403, 429...): não guarda e não mostra a imagem de aviso dele */
+        return new Response('', {status: resp ? resp.status : 502, statusText: 'provedor recusou'});
       } catch (err) {
-        return new Response('', {status: 504, statusText: 'sem rede'});
+        try { return await fetch(req); } catch (e2) {
+          return new Response('', {status: 504, statusText: 'sem rede'});
+        }
       }
     })());
     return;

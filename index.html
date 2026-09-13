@@ -139,7 +139,7 @@ a{color:var(--agua-2)}
 .filtros{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .filtros::-webkit-scrollbar{display:none}
 .chip{
-  flex:0 0 auto;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--linha);
+  flex:0 0 auto;min-height:var(--toque);padding:0 15px;border-radius:999px;border:1px solid var(--linha);
   background:var(--papel);font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;color:var(--tinta-2)
 }
 .chip[aria-pressed="true"]{background:var(--agua-2);border-color:var(--agua-2);color:#fff}
@@ -257,9 +257,10 @@ a{color:var(--agua-2)}
   padding:6px calc(var(--dir) + 4px) calc(var(--base) + 6px) calc(var(--esq) + 4px);
 }
 #abas button{
-  flex:1;min-height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  font-size:10.5px;font-weight:650;color:var(--tinta-2);
+  flex:1;min-width:0;min-height:52px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:9.5px;font-weight:650;color:var(--tinta-2);letter-spacing:-.01em;
 }
+@media (min-width:360px){ #abas button{font-size:10.5px} }
 #abas button .i{font-size:21px;line-height:1}
 #abas button[aria-selected="true"]{color:var(--agua-2);background:rgba(28,143,134,.09)}
 .vazio{text-align:center;padding:34px 20px;color:var(--tinta-2)}
@@ -272,6 +273,23 @@ a{color:var(--agua-2)}
 .linhaDado .r{color:var(--tinta-2);flex:0 0 auto}
 .linhaDado .v{text-align:right;font-weight:600}
 svg.ico{flex:0 0 auto;vertical-align:-3px}
+.buscaLinha{display:flex;gap:8px;margin-bottom:10px}
+.buscaLinha input{flex:1;min-height:var(--toque);border:1px solid var(--linha);border-radius:var(--r-p);padding:11px 12px;background:var(--papel);font-size:16px}
+.buscaLinha button{flex:0 0 auto}
+.site{display:flex;align-items:center;gap:10px;width:100%;padding:12px 14px;border-bottom:1px solid var(--linha);text-align:left;text-decoration:none;color:inherit;min-height:var(--toque)}
+.site:last-child{border-bottom:0}
+.site .n{font-weight:650;font-size:14.5px;display:flex;align-items:center;gap:6px}
+.site .d{font-size:12px;color:var(--tinta-2);margin-top:2px;line-height:1.35}
+.site .seta{margin-left:auto;color:var(--tinta-2);font-size:17px;flex:0 0 auto}
+.compra{display:flex;align-items:stretch;border-bottom:1px solid var(--linha)}
+.compra:last-child{border-bottom:0}
+.compra .info{flex:1;min-width:0;padding:11px 12px;text-align:left;background:none}
+.compra .n{font-weight:650;font-size:15px;line-height:1.3}
+.compra .m{font-size:12.5px;color:var(--tinta-2);margin-top:3px;display:flex;flex-wrap:wrap;gap:5px 9px;align-items:center}
+.compra.comprado .n{text-decoration:line-through;color:var(--tinta-2)}
+.ganho{font-weight:700;color:var(--ok)}
+.perda{font-weight:700;color:var(--alerta)}
+.sugestoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}
 .item .nome svg.ico,.atr .n svg.ico{color:var(--agua-2);margin-right:2px}
 .item.feita .nome,.item.feita .meta{opacity:.5;text-decoration:line-height}
 .item.feita .nome{text-decoration:line-through;text-decoration-color:var(--tinta-2)}
@@ -309,6 +327,7 @@ svg.ico{flex:0 0 auto;vertical-align:-3px}
   <section class="tela on" id="tela-roteiro" role="tabpanel" aria-label="Roteiro"></section>
   <section class="tela" id="tela-atracoes" role="tabpanel" aria-label="Atrações"></section>
   <section class="tela" id="tela-mapa" role="tabpanel" aria-label="Mapa"></section>
+  <section class="tela" id="tela-compras" role="tabpanel" aria-label="Lista de compras"></section>
   <section class="tela" id="tela-custos" role="tabpanel" aria-label="Custos"></section>
   <section class="tela" id="tela-viagem" role="tabpanel" aria-label="Viagem"></section>
 </main>
@@ -317,6 +336,7 @@ svg.ico{flex:0 0 auto;vertical-align:-3px}
   <button role="tab" aria-selected="true" data-aba="roteiro"><span class="i" data-ic="calendario"></span>Roteiro</button>
   <button role="tab" aria-selected="false" data-aba="atracoes"><span class="i" data-ic="outros"></span>Atrações</button>
   <button role="tab" aria-selected="false" data-aba="mapa"><span class="i" data-ic="mapa"></span>Mapa</button>
+  <button role="tab" aria-selected="false" data-aba="compras"><span class="i" data-ic="compras"></span>Compras</button>
   <button role="tab" aria-selected="false" data-aba="custos"><span class="i" data-ic="carteira"></span>Custos</button>
   <button role="tab" aria-selected="false" data-aba="viagem"><span class="i" data-ic="bussola"></span>Viagem</button>
 </nav>
@@ -401,6 +421,39 @@ const CATEGORIAS = {
   ingresso:{e:'🎟',i:'ingresso',n:'Ingresso'}, logistica:{e:'🧳',i:'logistica',n:'Logística'}, outros:{e:'📌',i:'outros',n:'Outros'}
 };
 const PAISES = {BR:{n:'Brasil',b:'🇧🇷'},PY:{n:'Paraguai',b:'🇵🇾'},AR:{n:'Argentina',b:'🇦🇷'}};
+
+/* Sites de busca de produto. {q} é trocado pelo termo.
+   Conferidos em 13/09/2026; os marcados com aviso:true não foram confirmados. */
+const SITES = [
+  {n:'Compras Paraguai', g:'comparador', u:'https://www.comprasparaguai.com.br/busca/?q={q}',
+   d:'O comparador com mais lojas de Ciudad del Este. Mostra preço em US$ e em R$.'},
+  {n:'Compara Paraguai', g:'comparador', u:'https://comparaparaguai.com/busca?q={q}',
+   d:'Comparador com 24 lojas mapeadas. Bom para cruzar com o anterior.'},
+  {n:'Mega Eletrônicos', g:'loja', u:'https://www.megaeletronicos.com/producto/buscar/?search={q}',
+   d:'Eletrônicos, celulares e perfumaria, com preço em US$ e R$.'},
+  {n:'Nissei', g:'loja', u:'https://nissei.com/br/catalogsearch/result/?q={q}',
+   d:'Eletrônicos, informática, perfumaria, casa e ferramentas.'},
+  {n:'Shopping China', g:'loja', u:'https://www.shoppingchina.com.py/site/search?query={q}',
+   d:'A maior loja de departamentos de CDE. Preços em guaranis.'},
+  {n:'Cellshop', g:'loja', u:'https://cellshop.com.py/catalogsearch/result/?q={q}',
+   d:'Eletrônicos, celulares, informática e perfumes.'},
+  {n:'Atacado Connect', g:'loja', u:'https://atacadoconnect.com/termo/{q}', aviso:true,
+   d:'Ex-Atacado Games: celulares, games e smart home. Endereço de busca não confirmado.'},
+  {n:'Duty Free Puerto Iguazú', g:'loja', u:'https://dutyfreeshoppuertoiguazu.com/pt/?s={q}', aviso:true,
+   d:'Site institucional, sem catálogo de preços. Serve para ver marcas, não valores.'},
+  {n:'Mercado Livre', g:'brasil', u:'https://lista.mercadolivre.com.br/{q}', caminho:true,
+   d:'Quanto custa no Brasil — a régua para saber se vale a pena.'},
+  {n:'Buscapé', g:'brasil', u:'https://www.buscape.com.br/search?q={q}', aviso:true,
+   d:'Comparador brasileiro. Endereço de busca não confirmado.'},
+  {n:'Zoom', g:'brasil', u:'https://www.zoom.com.br/search?q={q}', aviso:true,
+   d:'Comparador brasileiro. Endereço de busca não confirmado.'}
+];
+const GRUPOS_SITE = {comparador:'Comparadores do Paraguai', loja:'Lojas', brasil:'Preço no Brasil'};
+function urlBusca(site,termo){
+  const t=(termo||'').trim();
+  if(!t) return new URL(site.u.replace(/\{q\}.*$/,'').replace(/[?&][^?&]*$/,'')).origin;
+  return site.u.replace('{q}', site.caminho ? encodeURIComponent(t.replace(/\s+/g,'-')) : encodeURIComponent(t));
+}
 
 /* ---------- semente: a viagem de Foz ---------- */
 function sementeFoz(){
@@ -522,7 +575,7 @@ function sementeFoz(){
       A({destinoId:'pti',nome:'Feirinha da Av. Brasil',cat:'compras',lat:-25.5988,lon:-54.5730,dur:60,custo:0,precisao:'aprox',
         janela:{dias:[0,1,2,3,4,5,6],abre:'16:00',fecha:'23:00'},dica:'Empanadas, vinhos, alfajores e artesanato. Muitos aceitam real e Pix. Barato e rápido.'})
     ],
-    gastos:[], checklist:[],
+    gastos:[], checklist:[], compras:[], termoBusca:'',
     notas:'Reserva ida SBLRFB · volta GTRTGM. Ingresso das Cataratas é só online, com hora marcada. Reservar Belmond e jantar na Argentina com antecedência.'
   };
 }
@@ -546,7 +599,7 @@ function carregar(){
 }
 function sanear(v){
   v.pessoas=v.pessoas||[]; v.destinos=v.destinos||[]; v.atracoes=v.atracoes||[];
-  v.gastos=v.gastos||[]; v.voos=v.voos||[]; v.cambio=v.cambio||{BRL:1};
+  v.gastos=v.gastos||[]; v.voos=v.voos||[]; v.cambio=v.cambio||{BRL:1}; v.compras=v.compras||[];
   v.moedaBase=v.moedaBase||'BRL';
   v.atracoes.forEach(a=>{ if(a.sel===undefined) a.sel=!!a.dia; if(!a.moeda) a.moeda='BRL'; });
 }
@@ -879,8 +932,27 @@ function telaAtracoes(){
 /* ============================================================
    TELA 3 — MAPA (leve, sem biblioteca externa)
    ============================================================ */
-const MAPA={lat:-25.560,lon:-54.545,z:11.6,sel:null,dia:'todos',pronto:false,ok:0,erro:0};
-const BASE_TILES = (typeof window.NV_TILES==='string' && window.NV_TILES) || 'https://tile.openstreetmap.org';
+const MAPA={lat:-25.560,lon:-54.545,z:11.6,sel:null,dia:'todos',pronto:false,ok:0,erro:0,bloqueado:false};
+/* Provedores de imagens de mapa. Regra de ouro: pedir só o que a tela mostra.
+   Pré-carregar região inteira é "bulk downloading" e é proibido — foi o que
+   nos bloqueou no OpenStreetMap na primeira versão. */
+const PROVEDORES=[
+  {id:'osm', n:'OpenStreetMap', u:'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+   cred:'© OpenStreetMap', d:'Servidor de voluntários. Padrão. Só navegação normal.'},
+  {id:'esri', n:'Esri World Street Map', u:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+   cred:'Esri, HERE, Garmin, © OpenStreetMap', d:'Reserva, caso o OpenStreetMap bloqueie ou fique fora do ar.'},
+  {id:'custom', n:'Outro provedor', u:'', cred:'© do provedor escolhido', d:'Cole o endereço com {z}, {x} e {y} — por exemplo o CARTO com a chave gratuita.'}
+];
+function provedorAtual(){
+  const id=(BD.mapa&&BD.mapa.provedor)||'osm';
+  const p=PROVEDORES.find(x=>x.id===id)||PROVEDORES[0];
+  if(p.id==='custom') return Object.assign({},p,{u:(BD.mapa&&BD.mapa.custom)||PROVEDORES[0].u});
+  return p;
+}
+function urlTile(z,x,y){
+  if(typeof window.NV_TILES==='string' && window.NV_TILES) return window.NV_TILES+'/'+z+'/'+x+'/'+y+'.png';
+  return provedorAtual().u.replace('{z}',z).replace('{x}',x).replace('{y}',y);
+}
 const Z_MIN=9, Z_MAX=18;
 const lonX=(lon,z)=>(lon+180)/360*Math.pow(2,z)*256;
 const latY=(lat,z)=>{const s=Math.max(-.9999,Math.min(.9999,Math.sin(lat*Math.PI/180)));
@@ -903,19 +975,21 @@ function telaMapa(){
       <div id="telaTiles"></div>
       <svg id="rotaDia" aria-hidden="true"></svg>
       <div id="telaPinos"></div>
-      <div id="semRede">mapa off-line · pontos no lugar certo</div>
+      <div id="semRede">sem imagens de mapa · pontos no lugar certo</div>
       <div id="ferramentasMapa">
         <button id="btMaisZoom" aria-label="Aproximar">＋</button>
         <button id="btMenosZoom" aria-label="Afastar">－</button>
         <button id="btCentrar" aria-label="Enquadrar tudo" style="font-size:16px">⤢</button>
       </div>
-      <div id="creditoMapa">© OpenStreetMap</div>
+      <div id="creditoMapa"></div>
     </div>
     <div id="fichaMapa"></div>`;
   MAPA.pronto=true;
+  $('#creditoMapa').textContent=provedorAtual().cred;
   ligarGestosMapa();
   enquadrarTudo();
   fichaMapa(null);
+  sondarProvedor();
 }
 function pinosVisiveis(){
   const v=viagem();
@@ -954,16 +1028,21 @@ function desenharMapa(){
   /* tiles */
   const tiles=$('#telaTiles'); const max=Math.pow(2,zi);
   let html='';
+  if(MAPA.bloqueado){
+    tiles.innerHTML=''; c.classList.add('offline');
+    $('#semRede').textContent='provedor recusou as imagens · pontos no lugar certo';
+  }
   const x0=Math.floor(ox/256), x1=Math.floor((ox+larg)/256);
   const y0=Math.floor(oy/256), y1=Math.floor((oy+alt)/256);
   for(let tx=x0;tx<=x1;tx++) for(let ty=y0;ty<=y1;ty++){
+    if(MAPA.bloqueado) break;
     if(ty<0||ty>=max) continue;
     const nx=((tx%max)+max)%max;
-    html+=`<img alt="" loading="lazy" data-t="1" src="${BASE_TILES}/${zi}/${nx}/${ty}.png" style="left:${(tx*256-ox)}px;top:${(ty*256-oy)}px">`;
+    html+=`<img alt="" loading="lazy" data-t="1" src="${urlTile(zi,nx,ty)}" style="left:${(tx*256-ox)}px;top:${(ty*256-oy)}px">`;
   }
   tiles.style.transform=`scale(${s})`; tiles.style.transformOrigin='0 0';
   tiles.style.width=larg+'px'; tiles.style.height=alt+'px';
-  tiles.innerHTML=html;
+  if(!MAPA.bloqueado) tiles.innerHTML=html;
   $$('#telaTiles img').forEach(im=>{
     im.addEventListener('load',()=>{ im.classList.add('ok'); MAPA.ok++; c.classList.remove('offline'); },{once:true});
     im.addEventListener('error',()=>{ MAPA.erro++; if(MAPA.ok===0&&MAPA.erro>=3) c.classList.add('offline'); },{once:true});
@@ -992,6 +1071,30 @@ function desenharMapa(){
     return `<button class="${cls}" style="left:${px}px;top:${py}px" data-pino="${a.id}" aria-label="${esc(a.nome)}">
       <i><span>${ordem>0?ordem:ico(CATEGORIAS[a.cat].i,14)}</span></i>${rot?`<b>${esc(a.nome.length>22?a.nome.slice(0,20)+'…':a.nome)}</b>`:''}</button>`;
   }).join('');
+}
+/* Uma única requisição, com CORS, para saber se o provedor está respondendo.
+   É assim que descobrimos um bloqueio em vez de exibir a imagem de erro dele. */
+async function sondarProvedor(){
+  const u=urlTile(11,1279,1246);
+  try{
+    /* sem cache:'no-store' de propósito: a política do OpenStreetMap pede que
+       não se mande diretiva de não-cachear. Uma requisição, e ela fica guardada. */
+    const r=await fetch(u,{mode:'cors',credentials:'omit'});
+    const antes=MAPA.bloqueado;
+    MAPA.bloqueado = !r.ok;
+    if(!r.ok){ avisoProvedor(r.status); desenharMapa(); }
+    else { const a=$('#avisoProvedor'); if(a) a.remove(); if(antes) desenharMapa(); }
+  }catch(e){ /* sem rede ou sem CORS: não dá para concluir nada */ }
+}
+function avisoProvedor(status){
+  const cx=$('#tela-mapa'); if(!cx || $('#avisoProvedor')) return;
+  const d=document.createElement('div');
+  d.id='avisoProvedor'; d.className='aviso at'; d.style.marginTop='10px';
+  d.innerHTML=`<span class="ic">${ico('aviso',16)}</span><div>
+    <b>${esc(provedorAtual().n)} recusou as imagens${status?' (erro '+status+')':''}.</b>
+    Os pontos continuam no lugar certo. Troque de provedor em <b>Viagem › Imagens do mapa</b>.
+    <button class="bt fant" data-ir="viagem" style="min-height:40px;margin-top:8px;font-size:13px">Ir para Viagem</button></div>`;
+  cx.appendChild(d);
 }
 function fichaMapa(id){
   MAPA.sel=id;
@@ -1064,6 +1167,252 @@ function ligarGestosMapa(){
   $('#btMaisZoom').onclick=()=>{ MAPA.z=Math.min(Z_MAX,MAPA.z+1); desenharMapa(); };
   $('#btMenosZoom').onclick=()=>{ MAPA.z=Math.max(Z_MIN,MAPA.z-1); desenharMapa(); };
   $('#btCentrar').onclick=()=>{ enquadrarTudo(); };
+}
+
+/* ============================================================
+   TELA — LISTA DE COMPRAS
+   ============================================================ */
+function cambioUSD(){ return viagem().cambio.USD||1; }
+function compraBRL(c){ return (Number(c.alvoUSD)||0)*cambioUSD(); }
+function economiaItem(c){
+  const py=compraBRL(c), br=Number(c.precoBR)||0;
+  if(!py||!br) return null;
+  return {dif:br-py, pct:(br-py)/br*100};
+}
+function resumoCompras(){
+  const v=viagem(), lista=v.compras||[];
+  const aberto=lista.filter(c=>c.status!=='comprado');
+  const alvo=aberto.reduce((s,c)=>s+compraBRL(c),0);
+  const feito=lista.filter(c=>c.status==='comprado').reduce((s,c)=>s+compraBRL(c),0);
+  const eco=lista.reduce((s,c)=>{ const e=economiaItem(c); return s+(e?e.dif:0); },0);
+  return {total:lista.length, aberto:aberto.length, alvo, feito, eco};
+}
+function telaCompras(){
+  const v=viagem(), h=[], lista=v.compras||[], r=resumoCompras();
+  const termo=v.termoBusca||'';
+
+  h.push(`<div class="cartao pad">
+    <label for="buscaProduto" style="display:block;font-size:12.5px;font-weight:700;color:var(--tinta-2);margin-bottom:6px">Procurar preço de um produto</label>
+    <div class="buscaLinha">
+      <input id="buscaProduto" type="search" enterkeyhint="search" placeholder="Ex.: iPhone 16 128GB" value="${esc(termo)}" autocomplete="off">
+      <button class="bt sec" id="btLimparBusca" aria-label="Limpar busca" style="padding:0 14px">✕</button>
+    </div>
+    <p style="font-size:12.5px;color:var(--tinta-2);margin:0;line-height:1.45">Digite e toque no site. Abre em outra aba, já com a busca feita. Comece pelos comparadores e confira o preço no Brasil antes de decidir.</p>
+  </div>`);
+
+  const blocoSites=(g)=>{
+    let x=`<div class="cartao">`;
+    SITES.filter(s=>s.g===g).forEach((site,i)=>{
+      x+=`<a class="site" href="${esc(urlBusca(site,termo))}" target="_blank" rel="noopener" data-site="${g}|${i}">
+        <span style="flex:1;min-width:0">
+          <span class="n">${esc(site.n)}${site.aviso?'<span class="eti sol">a confirmar</span>':''}</span>
+          <span class="d">${esc(site.d)}</span>
+        </span><span class="seta">↗</span></a>`;
+    });
+    return x+`</div>`;
+  };
+  h.push(`<div class="tituloSecao">${GRUPOS_SITE.comparador}<span class="linha"></span><span style="text-transform:none;letter-spacing:0">comece por aqui</span></div>`);
+  h.push(blocoSites('comparador'));
+
+  h.push(`<div class="tituloSecao">Nossa lista<span class="linha"></span>${lista.length?`<span style="text-transform:none;letter-spacing:0">${lista.length}</span>`:''}</div>`);
+
+  if(lista.length){
+    h.push(`<div class="gradeResumo">
+      <div class="mini"><div class="r">Falta comprar</div><div class="v numero">${brlTxt(r.alvo)}</div>
+        <div style="font-size:11.5px;color:var(--tinta-2);margin-top:2px">${r.aberto} item${r.aberto===1?'':'s'} · ${moedaTxt(r.alvo/cambioUSD(),'USD')}</div></div>
+      <div class="mini"><div class="r">Já comprado</div><div class="v numero">${brlTxt(r.feito)}</div>
+        ${r.eco?`<div style="font-size:11.5px;margin-top:2px" class="${r.eco>0?'ganho':'perda'}">${r.eco>0?'economia estimada de ':'mais caro em '}${brlTxt(Math.abs(r.eco))}</div>`:''}</div>
+    </div>`);
+  }
+
+  h.push(`<button class="bt larga" data-nova-compra="1">＋ Novo item na lista</button>`);
+
+  if(!lista.length){
+    h.push(`<div class="cartao" style="margin-top:12px"><div class="vazio"><span class="e">🛍</span>
+      <p>A lista está vazia.<br>Anote antes de atravessar a ponte — em Ciudad del Este, decidir na loja custa caro.</p>
+      <div class="sugestoes">${['Celular','Perfume','Notebook','Tênis','Bebida','Brinquedo','Relógio','Fone'].map(x=>`<button class="chip" data-sugestao="${x}">＋ ${x}</button>`).join('')}</div>
+      </div></div>`);
+  } else {
+    const ordem={procurar:0,achado:1,comprado:2};
+    const rotulo={procurar:'Procurar',achado:'Achei o preço',comprado:'Comprado'};
+    ['procurar','achado','comprado'].forEach(st=>{
+      const g=lista.filter(c=>(c.status||'procurar')===st);
+      if(!g.length) return;
+      h.push(`<div class="tituloSecao" style="margin-top:14px">${rotulo[st]}<span class="linha"></span><span style="text-transform:none;letter-spacing:0">${g.length}</span></div><div class="cartao">`);
+      g.forEach(c=>{
+        const e=economiaItem(c);
+        const quem=(c.paraQuem||[]).map(id=>pessoa(id).nome).join(', ');
+        h.push(`<div class="compra ${st==='comprado'?'comprado':''}">
+          <button class="marcar" data-avancar="${c.id}" aria-label="Avançar situação de ${esc(c.nome)}">${st==='comprado'?'✓':(st==='achado'?'◑':'＋')}</button>
+          <button class="info" data-compra="${c.id}">
+            <div class="n">${esc(c.nome)}</div>
+            <div class="m">
+              ${c.alvoUSD?`<span>${moedaTxt(c.alvoUSD,'USD')} · ${brlTxt(compraBRL(c))}</span>`:'<span>sem preço ainda</span>'}
+              ${quem?`<span class="eti">${esc(quem)}</span>`:''}
+              ${c.loja?`<span>${esc(c.loja)}</span>`:''}
+              ${e?`<span class="${e.dif>0?'ganho':'perda'}">${e.dif>0?'−':'+'}${brlTxt(Math.abs(e.dif))} vs. Brasil</span>`:''}
+              ${st==='comprado'&&!c.gastoId?`<span class="eti alerta">não lançado</span>`:''}
+              ${c.gastoId?`<span class="eti ok">em Custos</span>`:''}
+            </div>
+          </button>
+          ${st==='comprado'&&!c.gastoId
+            ? `<button data-compra="${c.id}" style="flex:0 0 auto;padding:0 14px;color:var(--alerta);font-weight:700;font-size:13px;min-height:var(--toque)">lançar</button>`
+            : `<div class="abrir" aria-hidden="true">›</div>`}
+        </div>`);
+      });
+      h.push(`</div>`);
+    });
+    h.push(`<div class="sugestoes" style="justify-content:flex-start;margin-top:12px">${['Celular','Perfume','Notebook','Tênis','Bebida','Brinquedo'].map(x=>`<button class="chip" data-sugestao="${x}">＋ ${x}</button>`).join('')}</div>`);
+  }
+
+  /* demais sites, recolhidos */
+  const abertoSites=abertos.has('sites');
+  const nOutros=SITES.filter(s=>s.g!=='comparador').length;
+  h.push(`<div class="tituloSecao" style="margin-top:16px">Mais sites<span class="linha"></span></div>
+    <button class="bt sec larga" data-abrir-sites="1" style="justify-content:space-between">
+      <span>${abertoSites?'Esconder':'Ver'} lojas e preço no Brasil</span><span style="color:var(--tinta-2);font-weight:600">${nOutros}</span>
+    </button>`);
+  if(abertoSites){
+    h.push(`<div class="tituloSecao">${GRUPOS_SITE.loja}<span class="linha"></span></div>`+blocoSites('loja'));
+    h.push(`<div class="tituloSecao">${GRUPOS_SITE.brasil}<span class="linha"></span></div>`+blocoSites('brasil'));
+  }
+
+  /* cota */
+  const cotas=cotaPorPessoa();
+  if(cotas && lista.length){
+    const usd=cambioUSD();
+    const planejado={}; v.pessoas.forEach(p=>planejado[p.id]=0);
+    lista.filter(c=>c.status!=='comprado').forEach(c=>{
+      const div=(c.paraQuem&&c.paraQuem.length)?c.paraQuem:v.pessoas.map(p=>p.id);
+      div.forEach(id=>{ if(planejado[id]!=null) planejado[id]+=(Number(c.alvoUSD)||0)/div.length; });
+    });
+    h.push(`<div class="tituloSecao">Cabe na cota?<span class="linha"></span></div><div class="cartao pad">
+      <p style="margin:0 0 12px;font-size:12.5px;color:var(--tinta-2);line-height:1.45">Barra cheia é o que já foi lançado em Custos; o traço mais claro é o que ainda está na lista para comprar. Teto de ${moedaTxt(v.cotaPY,'USD')} por pessoa.</p>
+      ${cotas.map(p=>{
+        const gasto=p.usado, prev=planejado[p.id]||0, soma=gasto+prev;
+        const a=Math.min(100,gasto/v.cotaPY*100), b=Math.min(100-a,prev/v.cotaPY*100);
+        return `<div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:13.5px">
+            <b>${esc(p.nome)}</b>
+            <span class="numero" style="color:${soma>v.cotaPY?'var(--alerta)':'var(--tinta-2)'}">${moedaTxt(soma,'USD')} / ${moedaTxt(v.cotaPY,'USD')}</span>
+          </div>
+          <div class="barra" style="display:flex"><i class="${soma>v.cotaPY?'estourou':''}" style="width:${a}%;border-radius:999px 0 0 999px"></i><i style="width:${b}%;opacity:.42;border-radius:0 999px 999px 0"></i></div>
+          ${soma>v.cotaPY?`<div style="font-size:11.5px;color:var(--alerta);margin-top:4px">Passa ${moedaTxt(soma-v.cotaPY,'USD')} da cota — o excedente paga 50% de imposto.</div>`:''}
+        </div>`;}).join('')}
+    </div>`);
+  }
+
+  $('#tela-compras').innerHTML=h.join('');
+  const campo=$('#buscaProduto');
+  if(campo){
+    campo.addEventListener('input',()=>{
+      viagem().termoBusca=campo.value; salvar();
+      const t=campo.value;
+      $$('#tela-compras .site').forEach(a=>{
+        const [g,i]=a.dataset.site.split('|');
+        a.href=urlBusca(SITES.filter(s=>s.g===g)[Number(i)],t);
+      });
+    });
+    campo.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); campo.blur(); } });
+  }
+  const bl=$('#btLimparBusca');
+  if(bl) bl.onclick=()=>{ viagem().termoBusca=''; salvar(); telaCompras(); $('#buscaProduto').focus(); };
+}
+
+/* --- ficha do item de compra --- */
+function folhaCompra(id,nomeInicial,statusInicial){
+  const v=viagem(), novo=!id;
+  const c = novo ? {id:idNovo('c'),nome:nomeInicial||'',paraQuem:v.pessoas.map(p=>p.id),alvoUSD:'',precoBR:'',
+                    loja:'',link:'',status:'procurar',obs:'',destinoId:(v.destinos.find(d=>d.pais!=='BR')||v.destinos[0]).id}
+                 : (v.compras||[]).find(x=>x.id===id);
+  if(!c) return;
+  const stAtual = statusInicial || c.status || 'procurar';
+  abrirFolha(novo?'Novo item':'Item da lista',`
+    <form id="formCompra">
+      <div class="campo"><label for="fc_nome">O que é</label><input id="fc_nome" value="${esc(c.nome)}" required placeholder="Ex.: iPhone 16 128GB"></div>
+      <div class="dupla">
+        <div class="campo"><label for="fc_alvo">Preço lá (US$)</label><input id="fc_alvo" type="number" inputmode="decimal" min="0" step="0.01" value="${c.alvoUSD}" placeholder="0,00"></div>
+        <div class="campo"><label for="fc_br">Preço no Brasil (R$)</label><input id="fc_br" type="number" inputmode="decimal" min="0" step="0.01" value="${c.precoBR}" placeholder="0,00"></div>
+      </div>
+      <div id="fc_comparacao" class="ajuda" style="margin-top:-4px"></div>
+      <div class="dupla">
+        <div class="campo"><label for="fc_status">Situação</label><select id="fc_status">
+          <option value="procurar" ${stAtual==='procurar'?'selected':''}>Procurar</option>
+          <option value="achado" ${stAtual==='achado'?'selected':''}>Achei o preço</option>
+          <option value="comprado" ${stAtual==='comprado'?'selected':''}>Comprado</option>
+        </select></div>
+        <div class="campo"><label for="fc_dest">Onde</label><select id="fc_dest">${selDestinos(c.destinoId)}</select></div>
+      </div>
+      <div class="campo"><label for="fc_loja">Loja</label><input id="fc_loja" value="${esc(c.loja||'')}" placeholder="Ex.: Cellshop"></div>
+      <div class="campo"><label>Para quem</label>
+        <div class="pessoas" id="fc_quem">
+          ${v.pessoas.map(p=>`<button type="button" data-q="${p.id}" aria-pressed="${(c.paraQuem||[]).includes(p.id)}">${esc(p.nome)}</button>`).join('')}
+        </div>
+        <p class="ajuda" style="margin-top:6px;margin-bottom:0">Quem você marcar aqui divide a cota deste item — e, se virar gasto, divide a conta.</p>
+      </div>
+      <div class="campo"><label for="fc_link">Link do anúncio</label><input id="fc_link" type="url" inputmode="url" value="${esc(c.link||'')}" placeholder="https://..."></div>
+      <div class="campo"><label for="fc_obs">Observações</label><textarea id="fc_obs" placeholder="Modelo, cor, voltagem, garantia...">${esc(c.obs||'')}</textarea></div>
+      <div id="fc_pagamento" hidden>
+        <div class="aviso bo"><span class="ic">${ico('carteira',16)}</span><div>Marcado como comprado: preencha o que pagou e eu lanço em Custos, dividido entre quem você marcou.</div></div>
+        <div class="campo"><label for="fc_pago">Quanto pagou</label>
+          <div style="display:flex;gap:8px"><input id="fc_pago" type="number" inputmode="decimal" min="0" step="0.01" style="flex:1" placeholder="0,00">
+          <select id="fc_pagoMoeda" style="flex:0 0 96px">${selMoedas('USD')}</select></div></div>
+        <div class="campo"><label for="fc_pagou">Quem pagou</label><select id="fc_pagou">${v.pessoas.map(p=>`<option value="${p.id}">${esc(p.nome)}</option>`).join('')}</select></div>
+      </div>
+      ${c.gastoId?`<div class="aviso in"><span class="ic">${ico('ok',16)}</span><div>Já lançado em Custos.</div></div>`:''}
+      ${c.link?`<a class="bt fant larga" style="text-decoration:none;margin-bottom:10px" target="_blank" rel="noopener" href="${esc(c.link)}">Abrir o anúncio ↗</a>`:''}
+      <button type="submit" class="bt larga">${novo?'Adicionar':'Salvar'}</button>
+      ${novo?'':`<button type="button" class="bt larga perigo" data-apagar-compra="${c.id}" style="margin-top:8px">Tirar da lista</button>`}
+    </form>`,()=>{
+      const comp=()=>{
+        const a=parseFloat($('#fc_alvo').value)||0, b=parseFloat($('#fc_br').value)||0;
+        const py=a*cambioUSD();
+        if(!a){ $('#fc_comparacao').textContent = 'Anote o preço quando encontrar — é o que alimenta a cota e a comparação.'; return; }
+        if(!b){ $('#fc_comparacao').textContent = 'Lá dá '+brlTxt(py)+'. Ponha o preço do Brasil para saber se compensa.'; return; }
+        const d=b-py;
+        $('#fc_comparacao').innerHTML = d>0
+          ? '<span class="ganho">Economia de '+brlTxt(d)+' ('+(d/b*100).toFixed(0)+'%)</span> — lá dá '+brlTxt(py)+', aqui '+brlTxt(b)+'.'
+          : '<span class="perda">Sai '+brlTxt(-d)+' mais caro lá</span> — não vale gastar cota com isso.';
+      };
+      const pag=()=>{ $('#fc_pagamento').hidden = !($('#fc_status').value==='comprado' && !c.gastoId); };
+      const prefill=()=>{ if($('#fc_status').value==='comprado' && !$('#fc_pago').value) $('#fc_pago').value=$('#fc_alvo').value||''; };
+      $('#fc_alvo').addEventListener('input',comp); $('#fc_br').addEventListener('input',comp); comp();
+      $('#fc_status').addEventListener('change',()=>{ pag(); prefill(); });
+      pag(); prefill();
+      $('#fc_quem').addEventListener('click',ev=>{
+        const b=ev.target.closest('[data-q]'); if(!b) return;
+        b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true');
+      });
+      $('#formCompra').addEventListener('submit',ev=>{
+        ev.preventDefault();
+        const quem=$$('#fc_quem [data-q]').filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.dataset.q);
+        Object.assign(c,{
+          nome:$('#fc_nome').value.trim()||'Item',
+          alvoUSD:parseFloat($('#fc_alvo').value)||'',
+          precoBR:parseFloat($('#fc_br').value)||'',
+          status:$('#fc_status').value, destinoId:$('#fc_dest').value,
+          loja:$('#fc_loja').value.trim(), link:$('#fc_link').value.trim(),
+          obs:$('#fc_obs').value.trim(), paraQuem:quem
+        });
+        if(novo) v.compras.push(c);
+        let lancou=false;
+        if(c.status==='comprado' && !c.gastoId){
+          const valor=parseFloat($('#fc_pago').value)||0;
+          if(valor>0){
+            const g={id:idNovo('g'),data:hojeISO(),descricao:c.nome,categoria:'compras',
+              valor, moeda:$('#fc_pagoMoeda').value, destinoId:c.destinoId,
+              pagoPor:$('#fc_pagou').value, divididoCom:quem.length?quem:v.pessoas.map(p=>p.id), criado:Date.now()};
+            const dentro = hojeISO()>=v.inicio && hojeISO()<=v.fim;
+            if(!dentro) g.data=v.inicio;
+            v.gastos.push(g); c.gastoId=g.id; lancou=true;
+          }
+        }
+        salvar(); fecharFolha(); desenhar();
+        if(lancou) torrada('Comprado e lançado em Custos');
+        else if(c.status==='comprado' && !c.gastoId) torrada('Marcado como comprado, mas sem valor: toque em “lançar” na lista.');
+        else torrada(novo?'Item adicionado':'Item salvo');
+      });
+    });
 }
 
 /* ============================================================
@@ -1227,6 +1576,22 @@ function telaViagem(){
     <p class="ajuda">Atualize antes de viajar e de novo quando a cotação virar. Tudo que você lançar em outra moeda é convertido por aqui.</p>
   </div>`);
 
+  /* imagens do mapa */
+  const pv=provedorAtual();
+  h.push(`<div class="tituloSecao">Imagens do mapa<span class="linha"></span></div><div class="cartao pad">
+    <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 12px;line-height:1.45">Os pontos e as distâncias são calculados no próprio app e não dependem de ninguém. Só as imagens de fundo vêm de um servidor externo — se ele bloquear ou sair do ar, troque aqui.</p>
+    <div class="campo"><label for="fp_prov">Provedor</label><select id="fp_prov">
+      ${PROVEDORES.map(x=>`<option value="${x.id}" ${x.id===((BD.mapa&&BD.mapa.provedor)||'osm')?'selected':''}>${esc(x.n)}</option>`).join('')}
+    </select><p class="ajuda" style="margin-top:6px">${esc(pv.d)}</p></div>
+    <div class="campo" id="fp_caixaCustom" ${((BD.mapa&&BD.mapa.provedor)==='custom')?'':'hidden'}>
+      <label for="fp_custom">Endereço das imagens</label>
+      <input id="fp_custom" type="url" inputmode="url" placeholder="https://servidor/{z}/{x}/{y}.png" value="${esc((BD.mapa&&BD.mapa.custom)||'')}">
+      <p class="ajuda" style="margin-top:6px">Precisa conter {z}, {x} e {y}.</p>
+    </div>
+    <div class="aviso in"><span class="ic">${ico('aviso',16)}</span><div><b>Por que não existe botão de “baixar o mapa inteiro”.</b> Pré-carregar uma região é o que a política do OpenStreetMap chama de <i>bulk downloading</i>, e é proibido — foi o que derrubou o acesso na primeira versão deste app. O que vale é o contrário: <b>abra o mapa e navegue pelos dias da viagem enquanto estiver no wi-fi</b>. Cada imagem que aparecer na tela fica guardada no aparelho e volta a desenhar sem sinal.</div></div>
+    <div style="font-size:12px;color:var(--tinta-2);margin-top:4px">Atribuição em uso: ${esc(pv.cred)}</div>
+  </div>`);
+
   /* transporte */
   h.push(`<div class="tituloSecao">Carro alugado ou Uber?<span class="linha"></span></div>
   <div class="cartao pad">
@@ -1269,7 +1634,7 @@ function telaViagem(){
         <span style="display:block;font-size:12.5px;color:var(--tinta-2);margin-top:2px;line-height:1.4">${l[1]}</span></span></label>`).join('')}
   </div>`);
 
-  /* instalar e mapa off-line */
+  /* instalar */
   h.push(`<div class="tituloSecao">No celular<span class="linha"></span></div><div class="cartao pad">
     <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 12px;line-height:1.45">Instalado na tela de início, o app abre em tela cheia e funciona sem internet.</p>
     <button class="bt larga" id="btInstalar" hidden>⤓ Instalar na tela de início</button>
@@ -1277,11 +1642,7 @@ function telaViagem(){
       <b style="color:var(--tinta)">No iPhone:</b> toque em <b>Compartilhar</b> na barra do Safari e escolha <b>Adicionar à Tela de Início</b>.
     </div>
     <div id="jaInstalado" style="font-size:13px;color:var(--ok);font-weight:600" hidden>Instalado. Você já está usando o app.</div>
-    <hr style="border:0;border-top:1px solid var(--linha);margin:14px 0">
-    <b style="font-size:14.5px">Mapa off-line</b>
-    <p style="font-size:13px;color:var(--tinta-2);margin:6px 0 10px;line-height:1.45">Baixe as imagens do mapa da região enquanto estiver no wi-fi. Depois o mapa desenha mesmo sem sinal, no Paraguai e na Argentina. São cerca de 900 imagens, perto de 10 MB.</p>
-    <button class="bt sec larga" id="btBaixarMapa">⤓ Baixar mapa desta viagem</button>
-    <div id="progMapa" style="font-size:12.5px;color:var(--tinta-2);margin-top:8px" hidden><div class="barra"><i id="progMapaBarra" style="width:0%"></i></div><span id="progMapaTxt"></span></div>
+    <p style="font-size:12.5px;color:var(--tinta-2);margin:12px 0 0;line-height:1.45">Roteiro, custos, lista de compras e a posição dos pontos funcionam sem sinal. As imagens de fundo do mapa ficam guardadas conforme você navega — passe pelos dias da viagem enquanto estiver no wi-fi.</p>
   </div>`);
 
   /* backup */
@@ -1291,6 +1652,7 @@ function telaViagem(){
       <button class="bt sec" data-exportar="1" style="flex:1;min-width:140px">⤓ Exportar backup</button>
       <button class="bt sec" data-importar="1" style="flex:1;min-width:140px">⤒ Importar</button>
     </div>
+    <button class="bt sec larga" data-limpar-tiles="1" style="margin-top:10px">Esquecer as imagens de mapa guardadas</button>
     <button class="bt perigo larga" data-zerar="1" style="margin-top:10px">Apagar tudo e recomeçar</button>
   </div>
   <p style="text-align:center;font-size:11.5px;color:var(--tinta-2);margin:18px 0 0">Nossas Viagens · v1 · feito para Rodolfo e Rita</p>`);
@@ -1313,6 +1675,8 @@ function abrirFolha(titulo,html,depois){
 function fecharFolha(){
   $('#folha').classList.remove('on'); $('#fundoFolha').classList.remove('on');
   document.body.style.overflow='';
+  /* limpa o conteúdo para não deixar campos antigos escondidos no documento */
+  setTimeout(()=>{ if(!$('#folha').classList.contains('on')){ $('#folhaCorpo').innerHTML=''; $('#folhaTitulo').textContent=''; } },240);
 }
 function selDestinos(sel){ return viagem().destinos.map(d=>`<option value="${d.id}" ${sel===d.id?'selected':''}>${PAISES[d.pais].b} ${esc(d.nome)}</option>`).join(''); }
 function selDias(sel){
@@ -1595,6 +1959,7 @@ let desenhar = function(){
   if(BD.aba==='roteiro') telaRoteiro();
   else if(BD.aba==='atracoes') telaAtracoes();
   else if(BD.aba==='mapa') telaMapa();
+  else if(BD.aba==='compras') telaCompras();
   else if(BD.aba==='custos') telaCustos();
   else telaViagem();
 }
@@ -1654,6 +2019,25 @@ document.addEventListener('click',e=>{
     return;
   }
   if(al('data-nova-atracao')) return folhaAtracao(null);
+  if(al('data-abrir-sites')){ abertos.has('sites')?abertos.delete('sites'):abertos.add('sites'); telaCompras(); return; }
+  if(al('data-nova-compra')) return folhaCompra(null);
+  if(b=al('data-sugestao')) return folhaCompra(null,b.dataset.sugestao);
+  if(b=al('data-compra')) return folhaCompra(b.dataset.compra);
+  if(b=al('data-avancar')){
+    const c=viagem().compras.find(x=>x.id===b.dataset.avancar); if(!c) return;
+    const seq=['procurar','achado','comprado'];
+    const prox=seq[(seq.indexOf(c.status||'procurar')+1)%3];
+    if(prox==='comprado') return folhaCompra(c.id,null,'comprado');
+    c.status=prox; salvar(); telaCompras(); torrada(prox==='achado'?'Preço encontrado':'Voltou para procurar');
+    return;
+  }
+  if(b=al('data-apagar-compra')){
+    const id=b.dataset.apagarCompra;
+    return confirmar('Tirar da lista','O item sai da lista de compras. Um gasto já lançado em Custos continua lá.','Tirar',()=>{
+      const v=viagem(); v.compras=v.compras.filter(x=>x.id!==id);
+      salvar(); fecharFolha(); desenhar(); torrada('Item removido');
+    });
+  }
   if(al('data-novo-gasto')) return folhaGasto(null);
   if(b=al('data-rapido')) return folhaGasto(null,b.dataset.rapido);
   if(b=al('data-gasto')) return folhaGasto(b.dataset.gasto);
@@ -1687,6 +2071,15 @@ document.addEventListener('click',e=>{
       BD.ativa=BD.viagens[0].id; salvar(); fecharFolha(); irPara('roteiro'); torrada('Viagem apagada');
     });
   }
+  if(al('data-limpar-tiles')){
+    return confirmar('Esquecer as imagens do mapa','Apaga só as imagens de fundo guardadas no aparelho. Seus dados de viagem não são tocados. Use isto se o mapa estiver mostrando avisos de erro no lugar do desenho.','Esquecer imagens',async ()=>{
+      let n=0;
+      try{ const ks=await caches.keys();
+        for(const k of ks) if(/^tiles/.test(k)){ await caches.delete(k); n++; } }catch(e){}
+      fecharFolha(); MAPA.ok=0; MAPA.erro=0;
+      torrada(n?'Imagens esquecidas — abra o Mapa de novo':'Nada guardado para apagar');
+    });
+  }
   if(al('data-exportar')) return exportar();
   if(al('data-importar')) return importar();
   if(al('data-zerar')){
@@ -1698,6 +2091,16 @@ document.addEventListener('click',e=>{
   }
 });
 document.addEventListener('change',e=>{
+  const pr=e.target.closest('#fp_prov');
+  if(pr){
+    BD.mapa=BD.mapa||{}; BD.mapa.provedor=pr.value; salvar();
+    const cx=$('#fp_caixaCustom'); if(cx) cx.hidden = pr.value!=='custom';
+    MAPA.bloqueado=false; MAPA.ok=0; MAPA.erro=0;
+    torrada('Provedor trocado — abra o Mapa para conferir');
+    return;
+  }
+  const cu=e.target.closest('#fp_custom');
+  if(cu){ BD.mapa=BD.mapa||{}; BD.mapa.custom=cu.value.trim(); salvar(); MAPA.ok=0; MAPA.erro=0; torrada('Endereço salvo'); return; }
   const c=e.target.closest('[data-cambio]');
   if(c){ const v=viagem(); v.cambio[c.dataset.cambio]=parseFloat(c.value)||0; salvar(); torrada('Câmbio atualizado'); return; }
   const k=e.target.closest('[data-check]');
@@ -1713,7 +2116,7 @@ let redimensiona;
 window.addEventListener('resize',()=>{ clearTimeout(redimensiona); redimensiona=setTimeout(()=>{ medirTopo(); if(BD.aba==='mapa'&&MAPA.pronto) desenharMapa(); },160); });
 window.addEventListener('orientationchange',()=>setTimeout(()=>{ if(BD.aba==='mapa'&&MAPA.pronto) enquadrarTudo(); },320));
 
-/* ---------- PWA: instalação, service worker e mapa off-line ---------- */
+/* ---------- PWA: instalação e service worker ---------- */
 let convitePWA=null;
 const rodandoInstalado = matchMedia('(display-mode: standalone)').matches || navigator.standalone===true;
 const ehIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -1726,63 +2129,6 @@ function pintarInstalacao(){
   ios.hidden = !(ehIOS && !rodandoInstalado);
   ja.hidden = !rodandoInstalado;
   bt.onclick = async ()=>{ if(!convitePWA) return; convitePWA.prompt(); await convitePWA.userChoice; convitePWA=null; pintarInstalacao(); };
-  const bm=$('#btBaixarMapa'); if(bm) bm.onclick=baixarMapa;
-}
-function tilesDaViagem(){
-  const p=viagem().atracoes.filter(a=>typeof a.lat==='number'&&typeof a.lon==='number').map(a=>({lat:a.lat,lon:a.lon}));
-  const ho=viagem().hospedagem; if(ho&&typeof ho.lat==='number') p.push({lat:ho.lat,lon:ho.lon});
-  if(!p.length) return [];
-  const m=0.02;
-  const n=Math.max(...p.map(a=>a.lat))+m, su=Math.min(...p.map(a=>a.lat))-m;
-  const l=Math.min(...p.map(a=>a.lon))-m, r=Math.max(...p.map(a=>a.lon))+m;
-  const lista=[];
-  for(let z=11;z<=15;z++){
-    const x0=Math.floor(lonX(l,z)/256), x1=Math.floor(lonX(r,z)/256);
-    const y0=Math.floor(latY(n,z)/256), y1=Math.floor(latY(su,z)/256);
-    for(let x=x0;x<=x1;x++) for(let y=y0;y<=y1;y++) lista.push(`${BASE_TILES}/${z}/${x}/${y}.png`);
-  }
-  return lista;
-}
-async function baixarMapa(){
-  const bt=$('#btBaixarMapa'), cx=$('#progMapa'), barra=$('#progMapaBarra'), txt=$('#progMapaTxt');
-  const lista=tilesDaViagem();
-  if(!lista.length) return torrada('Nenhum ponto com coordenada nesta viagem.');
-  bt.disabled=true; cx.hidden=false;
-  let feitos=0;
-  const fila=lista.slice();
-  /* Em modo no-cors a resposta é opaca e o status vem sempre zerado: não dá
-     para saber pelo fetch se deu certo. Quem diz a verdade é o cache. */
-  const trabalhador=async()=>{
-    while(fila.length){
-      const u=fila.shift();
-      try{ await fetch(u,{mode:'no-cors',cache:'reload'}); }catch(e){}
-      feitos++;
-      if(feitos%10===0||!fila.length){
-        barra.style.width=(feitos/lista.length*100)+'%';
-        txt.textContent=feitos+' de '+lista.length+' imagens';
-      }
-    }
-  };
-  await Promise.all(Array.from({length:6},trabalhador));
-  bt.disabled=false;
-  let guardadas=null;
-  try{
-    if(self.caches && (await caches.keys()).includes('tiles-v1')){
-      const c=await caches.open('tiles-v1');
-      const achados=await Promise.all(lista.map(u=>c.match(u).then(x=>!!x)));
-      guardadas=achados.filter(Boolean).length;
-    }
-  }catch(e){}
-  if(guardadas==null){
-    txt.textContent='Concluído. Sem o app instalado, as imagens ficam só no cache do navegador — instale na tela de início para guardá-las de verdade.';
-    torrada('Concluído');
-  } else if(guardadas>=lista.length){
-    txt.textContent='Pronto: '+lista.length+' imagens guardadas no aparelho.';
-    torrada('Mapa guardado para uso off-line');
-  } else {
-    txt.textContent=guardadas+' de '+lista.length+' guardadas — repita no wi-fi para completar o resto.';
-    torrada(guardadas?'Baixou em parte — repita no wi-fi':'Sem rede: não deu para baixar');
-  }
 }
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
@@ -1800,7 +2146,7 @@ desenhar = function(){ desenharOriginal(); if(BD.aba==='viagem') pintarInstalaca
 $$('#abas .i[data-ic]').forEach(el=>el.innerHTML=ico(el.dataset.ic,22));
 carregar();
 medirTopo(); setTimeout(medirTopo,300);
-if(!['roteiro','atracoes','mapa','custos','viagem'].includes(BD.aba)) BD.aba='roteiro';
+if(!['roteiro','atracoes','mapa','compras','custos','viagem'].includes(BD.aba)) BD.aba='roteiro';
 irPara(BD.aba);
 window.NV={BD,viagem,salvar,desenhar,analisarDia,otimizarDia,saldos,cotaPorPessoa,distKm,MAPA};
 </script>
