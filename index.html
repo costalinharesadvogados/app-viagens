@@ -442,13 +442,17 @@ const SITES = [
   {n:'Duty Free Puerto Iguazú', g:'loja', u:'https://dutyfreeshoppuertoiguazu.com/pt/?s={q}', aviso:true,
    d:'Site institucional, sem catálogo de preços. Serve para ver marcas, não valores.'},
   {n:'Mercado Livre', g:'brasil', u:'https://lista.mercadolivre.com.br/{q}', caminho:true,
-   d:'Quanto custa no Brasil — a régua para saber se vale a pena.'},
+   d:'Preço de rua no Brasil, com novo e usado. A régua mais realista.'},
+  {n:'Amazon Brasil', g:'brasil', u:'https://www.amazon.com.br/s?k={q}',
+   d:'Preço em reais, com o frete e a garantia nacional já na conta.'},
+  {n:'Amazon Estados Unidos', g:'brasil', u:'https://www.amazon.com/s?k={q}',
+   d:'Em dólar — compara direto com o preço do Paraguai, sem passar por câmbio.'},
   {n:'Buscapé', g:'brasil', u:'https://www.buscape.com.br/search?q={q}', aviso:true,
    d:'Comparador brasileiro. Endereço de busca não confirmado.'},
   {n:'Zoom', g:'brasil', u:'https://www.zoom.com.br/search?q={q}', aviso:true,
    d:'Comparador brasileiro. Endereço de busca não confirmado.'}
 ];
-const GRUPOS_SITE = {comparador:'Comparadores do Paraguai', loja:'Lojas', brasil:'Preço no Brasil'};
+const GRUPOS_SITE = {comparador:'Comparadores do Paraguai', loja:'Lojas de Ciudad del Este', brasil:'Para comparar o preço'};
 function urlBusca(site,termo){
   const t=(termo||'').trim();
   if(!t) return new URL(site.u.replace(/\{q\}.*$/,'').replace(/[?&][^?&]*$/,'')).origin;
@@ -582,7 +586,13 @@ function sementeFoz(){
 
 /* ---------- estado e armazenamento ---------- */
 const CHAVE='nossasviagens.v1';
-let BD = {versao:1, viagens:[], ativa:null, aba:'roteiro'};
+const BD = {versao:1, viagens:[], ativa:null, aba:'roteiro'};
+/* Substitui o CONTEÚDO do estado sem trocar o objeto. Reatribuir BD deixaria
+   qualquer referência já guardada apontando para o estado antigo. */
+function repor(novo){
+  Object.keys(BD).forEach(k=>{ delete BD[k]; });
+  Object.assign(BD,{versao:1,aba:'roteiro'},novo);
+}
 
 function carregar(){
   let bruto=null;
@@ -590,7 +600,7 @@ function carregar(){
   if(bruto){
     try{
       const d=JSON.parse(bruto);
-      if(d && Array.isArray(d.viagens)){ BD=Object.assign(BD,d); }
+      if(d && Array.isArray(d.viagens)){ Object.assign(BD,d); }
     }catch(e){ console.warn('dados ilegíveis, recomeçando',e); }
   }
   if(!BD.viagens.length){ BD.viagens=[sementeFoz()]; BD.ativa='foz2026'; }
@@ -1197,7 +1207,7 @@ function telaCompras(){
       <input id="buscaProduto" type="search" enterkeyhint="search" placeholder="Ex.: iPhone 16 128GB" value="${esc(termo)}" autocomplete="off">
       <button class="bt sec" id="btLimparBusca" aria-label="Limpar busca" style="padding:0 14px">✕</button>
     </div>
-    <p style="font-size:12.5px;color:var(--tinta-2);margin:0;line-height:1.45">Digite e toque no site. Abre em outra aba, já com a busca feita. Comece pelos comparadores e confira o preço no Brasil antes de decidir.</p>
+    <p style="font-size:12.5px;color:var(--tinta-2);margin:0;line-height:1.45">Digite e toque no site. Abre em outra aba, já com a busca feita. Comece pelos comparadores do Paraguai e confira no Mercado Livre e na Amazon antes de decidir.</p>
   </div>`);
 
   const blocoSites=(g)=>{
@@ -1270,7 +1280,7 @@ function telaCompras(){
   const nOutros=SITES.filter(s=>s.g!=='comparador').length;
   h.push(`<div class="tituloSecao" style="margin-top:16px">Mais sites<span class="linha"></span></div>
     <button class="bt sec larga" data-abrir-sites="1" style="justify-content:space-between">
-      <span>${abertoSites?'Esconder':'Ver'} lojas e preço no Brasil</span><span style="color:var(--tinta-2);font-weight:600">${nOutros}</span>
+      <span>${abertoSites?'Esconder':'Ver'} lojas e comparação de preço</span><span style="color:var(--tinta-2);font-weight:600">${nOutros}</span>
     </button>`);
   if(abertoSites){
     h.push(`<div class="tituloSecao">${GRUPOS_SITE.loja}<span class="linha"></span></div>`+blocoSites('loja'));
@@ -1322,7 +1332,7 @@ function telaCompras(){
 /* --- ficha do item de compra --- */
 function folhaCompra(id,nomeInicial,statusInicial){
   const v=viagem(), novo=!id;
-  const c = novo ? {id:idNovo('c'),nome:nomeInicial||'',paraQuem:v.pessoas.map(p=>p.id),alvoUSD:'',precoBR:'',
+  const c = novo ? {id:idNovo('c'),nome:nomeInicial||'',paraQuem:[],alvoUSD:'',precoBR:'',
                     loja:'',link:'',status:'procurar',obs:'',destinoId:(v.destinos.find(d=>d.pais!=='BR')||v.destinos[0]).id}
                  : (v.compras||[]).find(x=>x.id===id);
   if(!c) return;
@@ -1348,7 +1358,7 @@ function folhaCompra(id,nomeInicial,statusInicial){
         <div class="pessoas" id="fc_quem">
           ${v.pessoas.map(p=>`<button type="button" data-q="${p.id}" aria-pressed="${(c.paraQuem||[]).includes(p.id)}">${esc(p.nome)}</button>`).join('')}
         </div>
-        <p class="ajuda" style="margin-top:6px;margin-bottom:0">Quem você marcar aqui divide a cota deste item — e, se virar gasto, divide a conta.</p>
+        <p class="ajuda" style="margin-top:6px;margin-bottom:0">Toque em quem vai levar. Quase sempre é uma pessoa só — e é ela que gasta a cota deste item. Marcando mais de uma, a cota e a conta se dividem entre elas.</p>
       </div>
       <div class="campo"><label for="fc_link">Link do anúncio</label><input id="fc_link" type="url" inputmode="url" value="${esc(c.link||'')}" placeholder="https://..."></div>
       <div class="campo"><label for="fc_obs">Observações</label><textarea id="fc_obs" placeholder="Modelo, cor, voltagem, garantia...">${esc(c.obs||'')}</textarea></div>
@@ -1386,6 +1396,12 @@ function folhaCompra(id,nomeInicial,statusInicial){
       $('#formCompra').addEventListener('submit',ev=>{
         ev.preventDefault();
         const quem=$$('#fc_quem [data-q]').filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.dataset.q);
+        if(!quem.length){
+          torrada('Marque para quem é este item.');
+          const cx=$('#fc_quem'); cx.scrollIntoView({block:'center',behavior:'smooth'});
+          cx.animate([{outline:'2px solid var(--alerta)'},{outline:'2px solid transparent'}],{duration:900});
+          return;
+        }
         Object.assign(c,{
           nome:$('#fc_nome').value.trim()||'Item',
           alvoUSD:parseFloat($('#fc_alvo').value)||'',
@@ -1647,7 +1663,7 @@ function telaViagem(){
 
   /* backup */
   h.push(`<div class="tituloSecao">Segurança dos dados<span class="linha"></span></div><div class="cartao pad">
-    <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 12px;line-height:1.45">Tudo fica salvo só neste aparelho, neste navegador. Exporte um backup antes de viajar e mande para você mesmo.</p>
+    <p style="font-size:13.5px;color:var(--tinta-2);margin:0 0 12px;line-height:1.45">Tudo fica salvo só neste aparelho, neste navegador — o arquivo aberto no computador e o app instalado no celular são <b>lugares diferentes</b> e não conversam sozinhos. Para levar a lista de um para o outro: <b>Exportar</b> aqui, mandar o arquivo para você mesmo (WhatsApp, e-mail, Dropbox) e <b>Importar</b> no outro aparelho.</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button class="bt sec" data-exportar="1" style="flex:1;min-width:140px">⤓ Exportar backup</button>
       <button class="bt sec" data-importar="1" style="flex:1;min-width:140px">⤒ Importar</button>
@@ -1925,14 +1941,39 @@ function importar(){
     const f=i.files[0]; if(!f) return;
     const r=new FileReader();
     r.onload=()=>{
+      let d;
       try{
-        const d=JSON.parse(r.result);
-        if(!d||!Array.isArray(d.viagens)) throw new Error('formato');
-        BD=Object.assign({versao:1,aba:'roteiro'},d);
-        if(!BD.ativa||!BD.viagens.some(v=>v.id===BD.ativa)) BD.ativa=BD.viagens[0].id;
-        BD.viagens.forEach(sanear);
-        salvar(); fecharFolha(); desenhar(); torrada('Backup restaurado');
-      }catch(e){ torrada('Arquivo inválido. Use um backup exportado por este app.'); }
+        d=JSON.parse(r.result);
+        if(!d||!Array.isArray(d.viagens)||!d.viagens.length) throw new Error('formato');
+      }catch(e){ return torrada('Arquivo inválido. Use um backup exportado por este app.'); }
+      d.viagens.forEach(sanear);
+      const nomes=d.viagens.map(v=>v.nome).join(', ');
+      const jaTem=BD.viagens.length;
+      abrirFolha('Importar backup',`
+        <p style="font-size:14.5px;line-height:1.5;margin:0 0 6px">O arquivo traz <b>${d.viagens.length} viagem${d.viagens.length>1?'s':''}</b>: ${esc(nomes)}.</p>
+        <p style="font-size:13px;color:var(--tinta-2);line-height:1.45;margin:0 0 18px">Neste aparelho há ${jaTem} viagem${jaTem>1?'s':''} guardada${jaTem>1?'s':''}. Escolha o que fazer.</p>
+        <button class="bt larga" id="btSomar">Somar às minhas viagens</button>
+        <p class="ajuda" style="margin-top:6px">Mantém o que já existe aqui e acrescenta as do arquivo como viagens separadas. É o seguro.</p>
+        <button class="bt larga perigo" id="btSubstituir" style="margin-top:10px">Substituir tudo pelo arquivo</button>
+        <p class="ajuda" style="margin-top:6px;margin-bottom:0">Apaga as ${jaTem} viagem${jaTem>1?'s':''} deste aparelho, com gastos e listas, e deixa só o que veio no arquivo.</p>`,()=>{
+        $('#btSubstituir').onclick=()=>{
+          repor(d);
+          if(!BD.ativa||!BD.viagens.some(v=>v.id===BD.ativa)) BD.ativa=BD.viagens[0].id;
+          BD.viagens.forEach(sanear);
+          salvar(); fecharFolha(); irPara('roteiro'); torrada('Backup restaurado');
+        };
+        $('#btSomar').onclick=()=>{
+          const usados=new Set(BD.viagens.map(v=>v.id));
+          let primeira=null;
+          d.viagens.forEach(v=>{
+            if(usados.has(v.id)){ v.id=idNovo('vi'); v.nome=v.nome+' (importada)'; }
+            usados.add(v.id); BD.viagens.push(v);
+            if(!primeira) primeira=v.id;
+          });
+          BD.ativa=primeira||BD.ativa;
+          salvar(); fecharFolha(); irPara('roteiro'); torrada(d.viagens.length+' viagem(ns) acrescentada(s)');
+        };
+      });
     };
     r.readAsText(f);
   };
@@ -2085,7 +2126,7 @@ document.addEventListener('click',e=>{
   if(al('data-zerar')){
     return confirmar('Apagar tudo','Todas as viagens somem deste aparelho e o app volta com a viagem de Foz do Iguaçu de fábrica.','Apagar tudo',()=>{
       try{ localStorage.removeItem(CHAVE); }catch(e){}
-      BD={versao:1,viagens:[sementeFoz()],ativa:'foz2026',aba:'roteiro'};
+      repor({viagens:[sementeFoz()],ativa:'foz2026'});
       salvar(); fecharFolha(); irPara('roteiro'); torrada('Tudo zerado');
     });
   }
