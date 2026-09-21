@@ -422,39 +422,77 @@ const CATEGORIAS = {
   hospedagem:{e:'🛏',i:'hospedagem',n:'Hospedagem'},
   ingresso:{e:'🎟',i:'ingresso',n:'Ingresso'}, logistica:{e:'🧳',i:'logistica',n:'Logística'}, outros:{e:'📌',i:'outros',n:'Outros'}
 };
-const PAISES = {BR:{n:'Brasil',b:'🇧🇷'},PY:{n:'Paraguai',b:'🇵🇾'},AR:{n:'Argentina',b:'🇦🇷'}};
+const PAISES = {BR:{n:'Brasil',b:'🇧🇷'},PY:{n:'Paraguai',b:'🇵🇾'},AR:{n:'Argentina',b:'🇦🇷'},US:{n:'Estados Unidos',b:'🇺🇸'}};
 
 /* Sites de busca de produto. {q} é trocado pelo termo.
    Conferidos em 13/09/2026; os marcados com aviso:true não foram confirmados. */
 const SITES = [
-  {n:'Compras Paraguai', g:'comparador', u:'https://www.comprasparaguai.com.br/busca/?q={q}',
+  /* --- Paraguai / tríplice fronteira --- */
+  {n:'Compras Paraguai', p:['PY'], destaque:true, u:'https://www.comprasparaguai.com.br/busca/?q={q}',
    d:'O comparador com mais lojas de Ciudad del Este. Mostra preço em US$ e em R$.'},
-  {n:'Compara Paraguai', g:'comparador', u:'https://comparaparaguai.com/busca?q={q}',
+  {n:'Compara Paraguai', p:['PY'], destaque:true, u:'https://comparaparaguai.com/busca?q={q}',
    d:'Comparador com 24 lojas mapeadas. Bom para cruzar com o anterior.'},
-  {n:'Mega Eletrônicos', g:'loja', u:'https://www.megaeletronicos.com/producto/buscar/?search={q}',
+  {n:'Mega Eletrônicos', p:['PY'], u:'https://www.megaeletronicos.com/producto/buscar/?search={q}',
    d:'Eletrônicos, celulares e perfumaria, com preço em US$ e R$.'},
-  {n:'Nissei', g:'loja', u:'https://nissei.com/br/catalogsearch/result/?q={q}',
+  {n:'Nissei', p:['PY'], u:'https://nissei.com/br/catalogsearch/result/?q={q}',
    d:'Eletrônicos, informática, perfumaria, casa e ferramentas.'},
-  {n:'Shopping China', g:'loja', u:'https://www.shoppingchina.com.py/site/search?query={q}',
+  {n:'Shopping China', p:['PY'], u:'https://www.shoppingchina.com.py/site/search?query={q}',
    d:'A maior loja de departamentos de CDE. Preços em guaranis.'},
-  {n:'Cellshop', g:'loja', u:'https://cellshop.com.py/catalogsearch/result/?q={q}',
+  {n:'Cellshop', p:['PY'], u:'https://cellshop.com.py/catalogsearch/result/?q={q}',
    d:'Eletrônicos, celulares, informática e perfumes.'},
-  {n:'Atacado Connect', g:'loja', u:'https://atacadoconnect.com/termo/{q}', aviso:true,
+  {n:'Atacado Connect', p:['PY'], u:'https://atacadoconnect.com/termo/{q}', aviso:true,
    d:'Ex-Atacado Games: celulares, games e smart home. Endereço de busca não confirmado.'},
-  {n:'Duty Free Puerto Iguazú', g:'loja', u:'https://dutyfreeshoppuertoiguazu.com/pt/?s={q}', aviso:true,
+  {n:'Duty Free Puerto Iguazú', p:['AR'], u:'https://dutyfreeshoppuertoiguazu.com/pt/?s={q}', aviso:true,
    d:'Site institucional, sem catálogo de preços. Serve para ver marcas, não valores.'},
-  {n:'Mercado Livre', g:'brasil', u:'https://lista.mercadolivre.com.br/{q}', caminho:true,
+
+  /* --- Estados Unidos --- */
+  {n:'Amazon Estados Unidos', p:['US'], destaque:true, u:'https://www.amazon.com/s?k={q}',
+   d:'O piso de preço da maioria das categorias. Confira se vende e entrega no estado em que você estará.'},
+  {n:'Best Buy', p:['US'], destaque:true, u:'https://www.bestbuy.com/site/searchpage.jsp?st={q}',
+   d:'Eletrônicos. Dá para retirar na loja no mesmo dia — útil quando se está de passagem.'},
+  {n:'Best Buy — só open box', p:['US'], destaque:true,
+   u:'https://www.bestbuy.com/site/searchpage.jsp?st={q}&qp=condition_facet%3DCondition~Open-Box',
+   d:'A mesma busca já filtrada em open box, que foi como você comprou o Galaxy Book.'},
+  {n:'Walmart', p:['US'], destaque:true, u:'https://www.walmart.com/search?q={q}',
+   d:'Varejo geral: eletrônico básico, casa, farmácia e mantimento.'},
+  {n:'Target', p:['US'], u:'https://www.target.com/s?searchTerm={q}', aviso:true,
+   d:'Varejo geral, roupa e casa. Nome do parâmetro de busca não confirmado.'},
+  {n:'B&H Photo Video', p:['US'], u:'https://www.bhphotovideo.com/c/search?q={q}',
+   d:'Foto, vídeo, áudio e informática. Preço agressivo e a referência do setor.'},
+  {n:'Newegg', p:['US'], u:'https://www.newegg.com/p/pl?d={q}',
+   d:'Informática e componentes, com marketplace de terceiros.'},
+  {n:'Costco', p:['US'], u:'https://www.costco.com/CatalogSearch?keyword={q}', aviso:true,
+   d:'Clube de compras: precisa de associação para comprar. Parâmetro não confirmado.'},
+  {n:'Slickdeals', p:['US'], u:'https://slickdeals.net/newsearch.php?q={q}', aviso:true,
+   d:'Caçador de promoções da comunidade. Bom para achar a queda de preço da semana.'},
+
+  /* --- Brasil, para comparar --- */
+  {n:'Mercado Livre', p:['BR'], destaque:true, u:'https://lista.mercadolivre.com.br/{q}', caminho:true,
    d:'Preço de rua no Brasil, com novo e usado. A régua mais realista.'},
-  {n:'Amazon Brasil', g:'brasil', u:'https://www.amazon.com.br/s?k={q}',
+  {n:'Amazon Brasil', p:['BR'], destaque:true, u:'https://www.amazon.com.br/s?k={q}',
    d:'Preço em reais, com o frete e a garantia nacional já na conta.'},
-  {n:'Amazon Estados Unidos', g:'brasil', u:'https://www.amazon.com/s?k={q}',
-   d:'Em dólar — compara direto com o preço do Paraguai, sem passar por câmbio.'},
-  {n:'Buscapé', g:'brasil', u:'https://www.buscape.com.br/search?q={q}', aviso:true,
+  {n:'Buscapé', p:['BR'], u:'https://www.buscape.com.br/search?q={q}', aviso:true,
    d:'Comparador brasileiro. Endereço de busca não confirmado.'},
-  {n:'Zoom', g:'brasil', u:'https://www.zoom.com.br/search?q={q}', aviso:true,
+  {n:'Zoom', p:['BR'], u:'https://www.zoom.com.br/search?q={q}', aviso:true,
    d:'Comparador brasileiro. Endereço de busca não confirmado.'}
 ];
-const GRUPOS_SITE = {comparador:'Comparadores do Paraguai', loja:'Lojas de Ciudad del Este', brasil:'Para comparar o preço'};
+/* Monta os blocos da aba Compras conforme o destino da viagem aberta:
+   as lojas do país para onde se está indo ficam em cima; o resto desce. */
+function sitesDaViagem(){
+  const paises=[...new Set(viagem().destinos.map(d=>d.pais))];
+  const fora=paises.filter(x=>x!=='BR');
+  const alvo = fora.length? fora : ['BR'];
+  const noAlvo = s=>s.p.some(x=>alvo.includes(x));
+  const ondeComprar = SITES.filter(s=>noAlvo(s) && s.destaque);
+  const comparar = fora.length ? SITES.filter(s=>s.p.includes('BR') && s.destaque) : [];
+  const mostrados = new Set([...ondeComprar,...comparar]);
+  const resto = SITES.filter(s=>!mostrados.has(s));
+  const nomes = alvo.map(x=>(PAISES[x]||{n:x}).n);
+  const rotulo = nomes.length>2 ? 'no destino' : nomes.join(' e ');
+  /* rótulo curto para título, sem ginástica de preposição */
+  return {ondeComprar, comparar, resto, rotulo, soBrasil:!fora.length};
+}
+
 function urlBusca(site,termo){
   const t=(termo||'').trim();
   if(!t) return new URL(site.u.replace(/\{q\}.*$/,'').replace(/[?&][^?&]*$/,'')).origin;
@@ -581,8 +619,332 @@ function sementeFoz(){
       A({destinoId:'pti',nome:'Feirinha da Av. Brasil',cat:'compras',lat:-25.5988,lon:-54.5730,dur:60,custo:0,precisao:'aprox',
         janela:{dias:[0,1,2,3,4,5,6],abre:'16:00',fecha:'23:00'},dica:'Empanadas, vinhos, alfajores e artesanato. Muitos aceitam real e Pix. Barato e rápido.'})
     ],
+    transporte:{
+      titulo:'Carro alugado ou Uber?',
+      intro:'Para <b>este</b> roteiro, a conta fecha a favor do aplicativo — e por três motivos que não têm a ver com preço de diária.',
+      avisos:[
+        {ic:'⛔',b:'Fronteira.',t:'As grandes locadoras do aeroporto não liberam o carro para o Paraguai e a Argentina. Cruzar exige autorização por escrito <i>e</i> Carta Verde (seguro Mercosul). Só locadora local de fronteira entrega assim.'},
+        {ic:'🕒',b:'Devolução às 3h30 de sábado.',t:'O balcão do aeroporto de Foz só desperta por volta das 4h. Ou você devolve na véspera e paga transfer assim mesmo, ou paga taxa de devolução fora do horário e assume o risco do carro.'},
+        {ic:'🅿️',cor:'in',b:'O carro ficaria parado.',t:'Dois dias de compras no Paraguai são a pé e a noite na Argentina é de táxi. Você pagaria diária, seguro e estacionamento para não rodar.'}
+      ],
+      tabela:{colunas:['Item','Carro','App'],linhas:[
+        ['Locação 3 diárias (autom.+proteção)','570–900','—'],
+        ['Taxa de aeroporto','60–150','—'],
+        ['Carta Verde + autorização','150–300','—'],
+        ['Combustível (~180 km)','80–110','—'],
+        ['Estacionamentos','250–280','—'],
+        ['Aeroporto ↔ hotel','incluso','0 (transfer do hotel)'],
+        ['Cataratas ida e volta','incluso','100–140'],
+        ['Marco das 3 Fronteiras','incluso','45–65'],
+        ['Ponte da Amizade, 2 dias','+ estac. no PY','60–100'],
+        ['Puerto Iguazú (táxi, ida e volta)','incluso','640–840'],
+        ['Aeroporto às 3h30 de sábado','balcão fechado','0–172']
+      ],total:['Total estimado','1.110–1.740','895–1.400']},
+      conclusao:{ic:'✓',b:'O que fazer.',t:'Peça ao Village Iguassu, por escrito e com 48–72h de antecedência, o transfer gratuito do aeroporto, o café da manhã às 3h e a confirmação do transfer de volta às 3h30. Feche à parte só o táxi da Argentina. Para o Paraguai, vá a pé pela ponte.'},
+      rodape:'Valores de set/2026; diárias de locadora e corridas de app são estimativas — confirme antes de fechar.'
+    },
+    documentos:[
+      ['RG com menos de 10 anos ou passaporte, dos quatro','Serve para o Paraguai e para a Argentina. CNH digital não vale fora do Brasil.'],
+      ['Ingressos das Cataratas comprados online','Dia e hora marcados, lotação limitada. Não há bilheteria de porta confiável.'],
+      ['Reserva no Hotel das Cataratas (Belmond)','É o que permite ficar dentro do parque depois que ele fecha. WhatsApp (45) 99123-3145.'],
+      ['Reserva do jantar em Puerto Iguazú','E o táxi/transfer combinado para os dois trechos.'],
+      ['Transfer e café das 3h com o hotel','Por escrito, 48 a 72h antes.'],
+      ['Notas fiscais separadas por pessoa','A cota de US$ 500 é por CPF. Guarde tudo até chegar em casa.']
+    ],
     gastos:[], checklist:[], compras:[], termoBusca:'',
     notas:'Reserva ida SBLRFB · volta GTRTGM. Ingresso das Cataratas é só online, com hora marcada. Reservar Belmond e jantar na Argentina com antecedência.'
+  };
+}
+
+/* ---------- semente: Jericoacoara ---------- */
+function sementeJeri(){
+  const A = (o)=>Object.assign({id:idNovo('at'),cat:'passeio',dur:60,custo:0,moeda:'BRL',sel:false,dia:null,hora:null,precisao:'ok',dica:'',janela:null,ehTrecho:false,feita:false},o);
+  return {
+    id:'jeri2026',
+    nome:'Jericoacoara — feriado de Finados',
+    inicio:'2026-10-30', fim:'2026-11-02',
+    moedaBase:'BRL',
+    cambio:{BRL:1, USD:5.11, MILHAS:0.025},
+    cambioData:'20/09/2026',
+    pessoas:[{id:'p1',nome:'Rodolfo'},{id:'p2',nome:'Rita'},{id:'p3',nome:'Arthur'},{id:'p4',nome:'André'},{id:'p5',nome:'Rosana'},{id:'p6',nome:'Filho(a) — André e Rosana'},{id:'p7',nome:'Martônio'},{id:'p8',nome:'Juliana'},{id:'p9',nome:'Filho(a) — Martônio e Juliana'},{id:'p10',nome:'Kleber'},{id:'p11',nome:'Sara'},{id:'p12',nome:'Filho(a) — Kleber e Sara'},{id:'p13',nome:'Guto'},{id:'p14',nome:'Sônia'},{id:'p15',nome:'Filho(a) — Guto e Sônia'}],
+    destinos:[
+      {id:'jeri',nome:'Vila de Jericoacoara',pais:'BR',moeda:'BRL',lat:-2.7961,lon:-40.5137,orcamento:9000},
+      {id:'leste',nome:'Lado leste — Preá e lagoas',pais:'BR',moeda:'BRL',lat:-2.8690,lon:-40.4470,orcamento:5000},
+      {id:'oeste',nome:'Lado oeste — Guriú e Tatajuba',pais:'BR',moeda:'BRL',lat:-2.8530,lon:-40.6200,orcamento:5500},
+      {id:'estrada',nome:'Estrada e Jijoca',pais:'BR',moeda:'BRL',lat:-2.9160,lon:-40.5170,orcamento:3500}
+    ],
+    hospedagem:{nome:'Rede Andrade Pousada do Norte',end:'Rua Ângela Marques, 99 — vila de Jericoacoara, Jijoca de Jericoacoara/CE, CEP 62598-973',lat:-2.7955,lon:-40.5125,
+      obs:'Recepção 24h, café da manhã incluso, piscina. Cerca de 100 m da praia e 370 m do centro. Garagem e lavanderia à parte. Reservas (48) 3380-8800 ou (83) 99822-1077; hotel (88) 99222-2258. Perguntar por escrito onde deixar o carro e se há transfer a partir de Jijoca.'},
+    voos:[],
+    atracoes:[
+      /* ---- 30/10 sexta — chegada ---- */
+      A({destinoId:'estrada',nome:'Fortaleza → Jijoca pela CE-085',cat:'transporte',lat:-2.9160,lon:-40.5170,dur:300,custo:80,precisao:'aprox',ehTrecho:true,
+        dica:'Cerca de 300 km de asfalto, 4 a 5 horas. Combustível de ida e volta rateado supondo quatro pessoas por carro — ajuste se forem menos carros. Combinem um ponto de encontro na saída e outro em Jijoca: com quinze pessoas em vários carros, quem chega primeiro espera.',sel:true,dia:'2026-10-30',hora:'07:00'}),
+      A({destinoId:'estrada',nome:'Almoço na estrada',cat:'comida',lat:-3.2100,lon:-39.9600,dur:60,custo:90,precisao:'aprox',
+        dica:'Parada em Itapipoca ou Amontada, conforme o ritmo.',sel:true,dia:'2026-10-30',hora:'12:00'}),
+      A({destinoId:'estrada',nome:'Estacionamento e jardineira até a vila',cat:'transporte',lat:-2.9160,lon:-40.5170,dur:75,custo:95,precisao:'aprox',ehTrecho:true,
+        dica:'Estacionamento rateado por quatro carros (R$ 40 a diária cada, três diárias) mais a jardineira por pessoa. Com quinze, vale fretar uma jardineira só para o grupo em vez de pagar por assento. Carro de turista não entra na vila: o trecho final são 20 km de areia e duna. Estacionamento em Jijoca ou no Preá em torno de R$ 40 a diária (referência de 2022, reconfirmar) e jardineira de R$ 40 a R$ 80 por pessoa, 40 a 60 minutos.',sel:true,dia:'2026-10-30',hora:'13:30'}),
+      A({destinoId:'jeri',nome:'Check-in na Pousada do Norte',cat:'hospedagem',lat:-2.7955,lon:-40.5125,dur:45,custo:0,
+        dica:'Rua Ângela Marques, 99. A vila é plana e se atravessa a pé em dez minutos.',sel:true,dia:'2026-10-30',hora:'15:00'}),
+      A({destinoId:'jeri',nome:'Pôr do sol na Duna',cat:'passeio',lat:-2.7947,lon:-40.5158,dur:75,custo:0,
+        dica:'O ritual da vila. Suba com 40 minutos de antecedência para pegar lugar; leve água e desça com lanterna, a vila não tem iluminação forte.',sel:true,dia:'2026-10-30',hora:'16:45'}),
+      A({destinoId:'jeri',nome:'Jantar — Pescador Jeri',cat:'comida',lat:-2.7968,lon:-40.5140,dur:90,custo:120,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'18:00',fecha:'23:30'},
+        dica:'Rua São Francisco com Beco do Pescador. Frutos do mar: polvo, robalo, peixe inteiro na brasa. MESA PARA QUINZE EM FERIADO: reserve agora, por telefone, e confirme na véspera.',sel:true,dia:'2026-10-30',hora:'19:30'}),
+
+      /* ---- 31/10 sábado — lado leste ---- */
+      A({destinoId:'leste',nome:'Árvore da Preguiça',cat:'passeio',lat:-2.8105,lon:-40.5540,dur:40,custo:0,precisao:'aprox',
+        dica:'Parada clássica de foto no caminho para o Preá.',sel:true,dia:'2026-10-31',hora:'09:00'}),
+      A({destinoId:'leste',nome:'Praia do Preá',cat:'passeio',lat:-2.8310,lon:-40.5880,dur:60,custo:0,precisao:'aprox',
+        dica:'Praia de kite, vento forte. Boa para ver a meninada voando e tomar água de coco.',sel:true,dia:'2026-10-31',hora:'10:00'}),
+      A({destinoId:'leste',nome:'Lagoa do Paraíso — day use no Alchymist Beach Club',cat:'passeio',lat:-2.8700,lon:-40.4460,dur:300,custo:200,precisao:'aprox',
+        dica:'PENDENTE: horário, valor do day use e exigência de reserva não são publicados — confirme por telefone antes. Restaurante, bar, espreguiçadeiras e cabanas, stand-up e caiaque na lagoa, DJ nos fins de semana. Acesso por transfer ou 4x4.',sel:true,dia:'2026-10-31',hora:'11:30'}),
+      A({destinoId:'jeri',nome:'Jantar — Pimenta Verde',cat:'comida',lat:-2.7965,lon:-40.5135,dur:90,custo:110,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'12:00',fecha:'22:35'},
+        dica:'Rua São Francisco com Beco Doce. Regional nordestina: casquinha de caranguejo, moquecas.',sel:true,dia:'2026-10-31',hora:'20:00'}),
+
+      /* ---- 01/11 domingo — lado oeste ---- */
+      A({destinoId:'oeste',nome:'Mangue Seco e os cavalos-marinhos do Guriú',cat:'passeio',lat:-2.8300,lon:-40.6070,dur:120,custo:120,precisao:'aprox',
+        dica:'Passeio de canoa pelo mangue com guia local. Melhor na maré baixa — confirme o horário da maré na véspera. Com quinze pessoas são várias canoas: feche com um único guia para o grupo.',sel:true,dia:'2026-11-01',hora:'08:30'}),
+      A({destinoId:'oeste',nome:'Dunas de Tatajuba e Lagoa Grande',cat:'passeio',lat:-2.8530,lon:-40.6500,dur:180,custo:150,precisao:'aprox',
+        dica:'A vila velha soterrada pelas dunas e a lagoa com redes dentro da água. Almoço por lá — avise o restaurante do tamanho do grupo pela manhã.',sel:true,dia:'2026-11-01',hora:'11:00'}),
+      A({destinoId:'oeste',nome:'Lagoa da Torta',cat:'passeio',lat:-2.8600,lon:-40.6180,dur:90,custo:0,precisao:'aprox',
+        dica:'Menos cheia que a do Paraíso, boa para o fim da tarde na volta.',sel:true,dia:'2026-11-01',hora:'14:30'}),
+      A({destinoId:'jeri',nome:'Pedra Furada',cat:'passeio',lat:-2.8010,lon:-40.5030,dur:60,custo:0,precisao:'aprox',
+        dica:'Caminhada de uns 3 km pela praia a partir da vila. Só dá para chegar na maré baixa — cheque a tábua de marés.',sel:true,dia:'2026-11-01',hora:'17:00'}),
+      A({destinoId:'jeri',nome:'Jantar — Bistrô Caiçara',cat:'comida',lat:-2.7960,lon:-40.5130,dur:90,custo:120,precisao:'aprox',
+        janela:{dias:[1,2,3,4,5,6],abre:'17:00',fecha:'22:00'},
+        dica:'Rua Principal. Camarão caiçara e paella. ATENÇÃO: é domingo — Éllo e Na Casa Dela do Beco estarão fechados.',sel:true,dia:'2026-11-01',hora:'19:30'}),
+
+      /* ---- 02/11 segunda — volta ---- */
+      A({destinoId:'jeri',nome:'Manhã livre na vila',cat:'passeio',lat:-2.7961,lon:-40.5137,dur:120,custo:0,
+        dica:'Banho de mar, artesanato na Rua Principal e café antes de pegar a estrada.',sel:true,dia:'2026-11-02',hora:'09:00'}),
+      A({destinoId:'estrada',nome:'Jardineira até o carro',cat:'transporte',lat:-2.9160,lon:-40.5170,dur:75,custo:60,precisao:'aprox',ehTrecho:true,
+        dica:'Combine o horário na véspera, na recepção.',sel:true,dia:'2026-11-02',hora:'11:30'}),
+      A({destinoId:'estrada',nome:'Jijoca → Fortaleza',cat:'transporte',lat:-3.7319,lon:-38.5267,dur:300,custo:0,ehTrecho:true,
+        dica:'Combustível já lançado na ida. Chegada prevista por volta das 18h.',sel:true,dia:'2026-11-02',hora:'13:00'}),
+
+      /* ---- opções não marcadas ---- */
+      A({destinoId:'leste',nome:'Lagoa Azul',cat:'passeio',lat:-2.8557,lon:-40.4644,dur:120,custo:0,precisao:'aprox',
+        dica:'Alternativa à Lagoa do Paraíso, costuma ser mais calma.'}),
+      A({destinoId:'jeri',nome:'Canoa havaiana ao nascer do sol até a Pedra Furada',cat:'passeio',lat:-2.7970,lon:-40.5100,dur:120,custo:150,precisao:'aprox',
+        dica:'Sai por volta das 5h da praia da vila. Precisa marcar na véspera.'}),
+      A({destinoId:'oeste',nome:'Quadriciclo ou UTV pelo lado oeste',cat:'passeio',lat:-2.8400,lon:-40.6000,dur:240,custo:200,precisao:'aprox',
+        dica:'Alternativa ao passeio de buggy com motorista, para quem quer dirigir.'}),
+      A({destinoId:'jeri',nome:'Restaurante Miragem',cat:'comida',lat:-2.7966,lon:-40.5138,dur:90,custo:130,precisao:'aprox',
+        janela:{dias:[0,1,3,4,5,6],abre:'18:00',fecha:'23:00'},dica:'Rua São Francisco. Nordestina com toques franceses: ceviche de robalo, polvo braseado. Fecha terça.'}),
+      A({destinoId:'jeri',nome:'Na Casa Dela do Beco',cat:'comida',lat:-2.7959,lon:-40.5142,dur:100,custo:150,precisao:'aprox',
+        janela:{dias:[1,2,3,4,5,6],abre:'18:30',fecha:'23:00'},dica:'Beco do Forró. Mediterrânea com sabor nordestino: ceviche, polvo, costela no forno a lenha. Fecha domingo.'}),
+      A({destinoId:'jeri',nome:'Éllo Restaurante',cat:'comida',lat:-2.7963,lon:-40.5144,dur:120,custo:280,precisao:'aprox',
+        janela:{dias:[1,2,3,4,5,6],abre:'18:30',fecha:'22:30'},dica:'Rua São Francisco. Francesa com ingredientes regionais, menu degustação do chef. Fecha domingo.'}),
+      A({destinoId:'jeri',nome:'Restaurante Tamarindo',cat:'comida',lat:-2.7957,lon:-40.5133,dur:90,custo:120,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'18:00',fecha:'22:00'},dica:'Travessa Ismael. Frutos do mar; o camarão flambado na cachaça com manga e risoto de limão é o carro-chefe.'})
+    ],
+    transporte:{
+      titulo:'O carro vai até onde?',
+      intro:'A viagem é de carro próprio, mas <b>o carro não entra em Jericoacoara</b>. A vila fica dentro do Parque Nacional e só circulam ali jardineiras, buggies e 4x4 autorizados. Com <b>quinze pessoas</b>, quase tudo aqui muda de escala.',
+      avisos:[
+        {ic:'🛣️',cor:'in',b:'Até Jijoca é asfalto.',t:'Cerca de 300 km pela CE-085, a Estruturante, em 4 a 5 horas saindo de Fortaleza. Essa parte qualquer carro faz. Combinem ponto de encontro na saída e em Jijoca.'},
+        {ic:'⛔',b:'Os últimos 20 km são areia.',t:'Do Preá até a vila é duna. Deixem os carros no estacionamento da entrada, em Jijoca ou no Preá, e sigam de jardineira: 40 a 60 minutos.'},
+        {ic:'👥',b:'Quinze pessoas mudam a conta.',t:'Assento avulso de jardineira sai de R$ 40 a R$ 80 por pessoa — para o grupo inteiro compensa <b>fretar uma jardineira só de vocês</b>, com horário próprio de ida e de volta. Nos passeios, buggy leva quatro passageiros: são quatro buggies por dia, ou um 4x4 grande fechado para o grupo.'},
+        {ic:'📞',cor:'in',b:'Pergunte à pousada antes.',t:'Confirme por escrito se a Pousada do Norte tem transfer próprio a partir de Jijoca, onde recomendam deixar os carros e se conseguem bloquear quartos para quinze. Isso muda a hora de chegada do dia 30.'}
+      ],
+      tabela:{colunas:['Item','Por pessoa (R$)','Grupo de 15 (R$)'],linhas:[
+        ['Combustível Fortaleza ↔ Jijoca','70–90','1.050–1.350 (4 carros)'],
+        ['Estacionamento, 3 diárias','30–40','480 (4 carros)'],
+        ['Jardineira ida e volta','120–160','1.800–2.400'],
+        ['Passeio lado leste','250–350','3.750–5.250'],
+        ['Passeio lado oeste','300–400','4.500–6.000']
+      ],total:['Total estimado','770–1.040','11.580–15.480']},
+      conclusao:{ic:'✓',b:'O que fazer.',t:'Peça à pousada o bloqueio de quartos e um orçamento de jardineira fretada para quinze, ida e volta, com horário combinado. Feche os dois passeios com um único operador — em grupo desse tamanho o preço por pessoa cai e ninguém fica para trás.'},
+      rodape:'Estacionamento e jardineira vêm de guias de viagem, não de fonte oficial; a referência mais recente do estacionamento é de 2022. A coluna do grupo supõe quatro carros e quinze pessoas. Trate como ordem de grandeza e reconfirme.'
+    },
+    documentos:[
+      ['Bloqueio de quartos para quinze','Rede Andrade Pousada do Norte, 3 diárias, de 30/10 a 02/11. Feriado de Finados: bloco desse tamanho não se resolve em cima da hora.'],
+      ['Jardineira fretada, ida e volta','Orçamento pela pousada ou por operador local, com horário combinado para o grupo inteiro. Mais barato e mais previsível que assento avulso.'],
+      ['Os dois passeios fechados com um operador só','Buggy leva quatro passageiros: são quatro veículos por dia, ou um 4x4 grande. Fechando junto, o preço por pessoa cai.'],
+      ['Reserva dos jantares, para quinze','Éllo e Na Casa Dela do Beco fecham domingo, 01/11. Reserve por telefone e confirme na véspera.'],
+      ['Confirmar o day use do Alchymist','Horário, valor e se exige reserva — nada disso está publicado. Pergunte também se atendem grupo de quinze.'],
+      ['Onde deixar os carros','Estacionamento em Jijoca ou no Preá, para quatro carros. Combine com a pousada antes de sair de Fortaleza.'],
+      ['Dinheiro em espécie','Jardineira, estacionamento e barracas de praia nem sempre têm máquina, e o sinal na vila oscila.'],
+      ['Tábua de marés do fim de semana','Pedra Furada e os cavalos-marinhos do Guriú só funcionam na maré baixa.'],
+      ['Lanterna, protetor solar e repelente','A vila não tem iluminação pública forte e a areia esquenta.'],
+      ['Grupo de WhatsApp da viagem','Com quinze pessoas em quatro carros, combinar parada, horário de passeio e mesa de jantar por mensagem economiza o dia.']
+    ],
+    gastos:[], checklist:[], compras:[], termoBusca:'',
+    notas:'Viagem de carro, saindo de Fortaleza. O carro para em Jijoca ou no Preá: a vila é dentro do Parque Nacional e não recebe carro de turista. Grupo de 15: Rodolfo, Rita e Arthur, mais as famílias de André e Rosana, Martônio e Juliana, Kleber e Sara, Guto e Sônia, cada uma com uma criança. Faltam os nomes das quatro crianças. Pendências: bloqueio de quartos, jardineira fretada e o day use do Alchymist. As coordenadas dos pontos fora da vila e dos restaurantes são aproximadas — servem para orientar no mapa, não para navegar.'
+  };
+}
+
+/* ---------- semente: Estados Unidos ---------- */
+function sementeEUA(){
+  const A = (o)=>Object.assign({id:idNovo('at'),cat:'passeio',dur:60,custo:0,moeda:'USD',sel:false,dia:null,hora:null,precisao:'ok',dica:'',janela:null,ehTrecho:false,feita:false},o);
+  return {
+    id:'eua2026',
+    nome:'Estados Unidos — Natal e Ano-Novo',
+    inicio:'2026-12-16', fim:'2027-01-06',
+    moedaBase:'BRL',
+    cambio:{BRL:1, USD:5.11, MILHAS:0.025},
+    cambioData:'14/09/2026',
+    pessoas:[{id:'p1',nome:'Rodolfo'},{id:'p2',nome:'Rita'},{id:'p3',nome:'Arthur'}],
+    cotaPY:1000,
+    cotaRotulo:'Cota de isenção da via aérea',
+    cotaTexto:'Na via aérea a cota é de <b>US$ 1.000 por passageiro</b>, criança inclusive, a cada 30 dias. Acima disso, 50% de imposto sobre o excedente. <b>Bem indivisível não se reparte entre duas pessoas</b> — o computador tem que caber sozinho na cota de alguém.',
+    destinos:[
+      {id:'miami',nome:'Miami',pais:'US',moeda:'USD',lat:25.7617,lon:-80.1918,orcamento:2500},
+      {id:'orlando',nome:'Orlando',pais:'US',moeda:'USD',lat:28.5383,lon:-81.3792,orcamento:3500},
+      {id:'nola',nome:'Nova Orleans',pais:'US',moeda:'USD',lat:29.9511,lon:-90.0715,orcamento:2000},
+      {id:'asheville',nome:'Asheville e Blue Ridge',pais:'US',moeda:'USD',lat:35.5951,lon:-82.5515,orcamento:2000},
+      {id:'golfo',nome:'Costa do Golfo e Everglades',pais:'US',moeda:'USD',lat:26.6400,lon:-81.8700,orcamento:1500},
+      {id:'estrada',nome:'Estrada — paradas da I-10 e da I-95',pais:'US',moeda:'USD',lat:30.4383,lon:-84.2807,orcamento:1500}
+    ],
+    hospedagem:{nome:'Base em Orlando (a definir)',end:'Orlando, Flórida',lat:28.5383,lon:-81.3792,
+      obs:'Orlando é a base da viagem: vocês voltam para lá no Natal e no Réveillon. Além dela, há pernoites em Miami (16/12 e 03 a 05/01), Pensacola (19/12), Nova Orleans (20 a 22/12), Tallahassee (23/12), Columbia SC (26/12), Asheville (27 a 29/12), Jacksonville (30/12), Sarasota (01/01) e Nápoles (02/01). Nenhuma reservada ainda.'},
+    voos:[
+      {id:'v1',data:'2026-12-16',hora:'06:00',titulo:'FOR → GRU → MIA',sub:'LA3253 06:00 · LA8198 12:55 · chega 19:20',reserva:'NFULQD',fim:'2026-12-16 19:20'},
+      {id:'v2',data:'2027-01-05',hora:'20:25',titulo:'MIA → SCL → GRU → FOR',sub:'LA503 20:25 · LA762 07:20 · LA3506 15:55 · chega 19:20 de 06/01',reserva:'NFULQD',fim:'2027-01-06 19:20'}
+    ],
+    atracoes:[
+      A({destinoId:'miami',nome:'Desembarque e imigração no MIA',cat:'logistica',lat:25.7959,lon:-80.2870,dur:120,custo:0,ehTrecho:true,
+        dica:'Pouso às 19:20. A fila da imigração em Miami à noite pode passar de uma hora — conte com isso e não marque nada para hoje.',sel:true,dia:'2026-12-16',hora:'19:20'}),
+      A({destinoId:'miami',nome:'Check-in em Miami',cat:'hospedagem',lat:25.7900,lon:-80.2300,dur:45,custo:0,precisao:'aprox',
+        dica:'Primeira noite obrigatória em Miami: com esse horário de chegada não dá para subir para Orlando hoje.',sel:true,dia:'2026-12-16',hora:'21:45'}),
+      A({destinoId:'estrada',nome:'Miami → Orlando de Brightline',cat:'transporte',lat:28.4312,lon:-81.3081,dur:210,custo:99,precisao:'aprox',ehTrecho:true,
+        dica:'3h30 para 380 km. Smart US$ 79 a 99 por pessoa, Premium a partir de US$ 149. A estação de Orlando fica dentro do MCO, ótimo para pegar o carro. Em Miami a estação é a MiamiCentral, no centro: do MIA, Metrorail ou aplicativo. Alternativa: ônibus a partir de US$ 24, saindo do próprio MIA, mas chegando longe do MCO.',sel:true,dia:'2026-12-17',hora:'10:00'}),
+      A({destinoId:'orlando',nome:'Retirada do carro no MCO',cat:'logistica',lat:28.4312,lon:-81.3081,dur:60,custo:0,
+        dica:'Aluguel one-way: retirada em Orlando, devolução em Miami no dia 05/01. Cadeirinha NÃO é necessária: na Flórida o dispositivo de retenção é exigido só até os 5 anos, e o Arthur faz 7. Assento de elevação continua sendo a recomendação de segurança, e o banco traseiro é recomendado até os 12 anos.',sel:true,dia:'2026-12-17',hora:'14:00'}),
+      A({destinoId:'orlando',nome:'Check-in em Orlando',cat:'hospedagem',lat:28.5383,lon:-81.3792,dur:45,custo:0,precisao:'aprox',sel:true,dia:'2026-12-17',hora:'15:30'}),
+      A({destinoId:'orlando',nome:'Dia livre em Orlando',cat:'passeio',lat:28.5383,lon:-81.3792,dur:480,custo:0,precisao:'aprox',
+        dica:'Parques, outlets ou descanso antes da estrada. Se quiserem parque, este é o dia.',sel:true,dia:'2026-12-18',hora:'09:00'}),
+      A({destinoId:'estrada',nome:'Orlando → Pensacola pela I-10',cat:'transporte',lat:30.4213,lon:-87.2169,dur:420,custo:23,precisao:'aprox',ehTrecho:true,
+        dica:'Cerca de 700 km, 7 horas. Combustível estimado.',sel:true,dia:'2026-12-19',hora:'08:00'}),
+      A({destinoId:'estrada',nome:'Almoço em Tallahassee',cat:'comida',lat:30.4383,lon:-84.2807,dur:60,custo:20,precisao:'aprox',sel:true,dia:'2026-12-19',hora:'12:30'}),
+      A({destinoId:'estrada',nome:'Pernoite em Pensacola ou Destin',cat:'hospedagem',lat:30.4213,lon:-87.2169,dur:45,custo:0,precisao:'aprox',
+        dica:'Praias de areia branca do panhandle. Destin fica 80 km antes, se quiserem parar mais cedo.',sel:true,dia:'2026-12-19',hora:'16:30'}),
+      A({destinoId:'estrada',nome:'USS Alabama, em Mobile',cat:'passeio',lat:30.6816,lon:-88.0147,dur:90,custo:20,precisao:'aprox',
+        dica:'Encouraçado da Segunda Guerra aberto à visitação, bem na beira da I-10. Boa parada com criança.',sel:true,dia:'2026-12-20',hora:'10:30'}),
+      A({destinoId:'estrada',nome:'Parada em Biloxi',cat:'passeio',lat:30.3960,lon:-88.8853,dur:60,custo:0,precisao:'aprox',sel:true,dia:'2026-12-20',hora:'13:00'}),
+      A({destinoId:'nola',nome:'Chegada e check-in em Nova Orleans',cat:'hospedagem',lat:29.9511,lon:-90.0715,dur:45,custo:0,precisao:'aprox',
+        dica:'Pensacola a Nova Orleans são 350 km, 3h15 de estrada, fora as paradas.',sel:true,dia:'2026-12-20',hora:'16:30'}),
+      A({destinoId:'nola',nome:'French Quarter e Jackson Square a pé',cat:'passeio',lat:29.9574,lon:-90.0629,dur:210,custo:0,
+        dica:'O coração colonial da cidade. Comece cedo, antes do calor e da multidão.',sel:true,dia:'2026-12-21',hora:'09:30'}),
+      A({destinoId:'nola',nome:'Café du Monde — beignets',cat:'comida',lat:29.9574,lon:-90.0620,dur:45,custo:10,precisao:'aprox',
+        janela:{dias:[0,1,2,3,4,5,6],abre:'07:00',fecha:'23:00'},dica:'Aberto quase 24h. A fila anda rápido; o balcão é mais veloz que as mesas.',sel:true,dia:'2026-12-21',hora:'12:30'}),
+      A({destinoId:'nola',nome:'Garden District e bonde da St. Charles',cat:'passeio',lat:29.9290,lon:-90.0840,dur:180,custo:5,precisao:'aprox',
+        dica:'Casarões do século XIX e o Lafayette Cemetery. O bonde é o transporte e o passeio ao mesmo tempo.',sel:true,dia:'2026-12-21',hora:'15:00'}),
+      A({destinoId:'nola',nome:'Jantar no French Quarter',cat:'comida',lat:29.9560,lon:-90.0660,dur:120,custo:60,precisao:'aprox',
+        dica:'Cozinha creole e cajun. Em dezembro, reserve.',sel:true,dia:'2026-12-21',hora:'19:30'}),
+      A({destinoId:'nola',nome:'National WWII Museum',cat:'passeio',lat:29.9430,lon:-90.0700,dur:240,custo:35,precisao:'aprox',
+        dica:'Um dos museus mais bem avaliados dos Estados Unidos. Ingresso por pessoa; confira a política para crianças.',sel:true,dia:'2026-12-22',hora:'09:30'}),
+      A({destinoId:'nola',nome:'Passeio de barco a vapor no Mississippi',cat:'passeio',lat:29.9540,lon:-90.0620,dur:120,custo:45,precisao:'aprox',
+        dica:'O Steamboat Natchez sai do French Quarter. Reserve online.',sel:true,dia:'2026-12-22',hora:'15:00'}),
+      A({destinoId:'nola',nome:'Frenchmen Street — jazz ao vivo',cat:'passeio',lat:29.9630,lon:-90.0570,dur:180,custo:20,precisao:'aprox',
+        dica:'A rua onde o jazz de verdade acontece, longe do circuito da Bourbon. Começa cedo, por volta das 20h.',sel:true,dia:'2026-12-22',hora:'20:00'}),
+      A({destinoId:'estrada',nome:'Nova Orleans → Tallahassee',cat:'transporte',lat:30.4383,lon:-84.2807,dur:390,custo:23,precisao:'aprox',ehTrecho:true,
+        dica:'Cerca de 620 km, 6 horas. Quebra a volta em dois dias e deixa a véspera de Natal livre.',sel:true,dia:'2026-12-23',hora:'08:00'}),
+      A({destinoId:'estrada',nome:'Tallahassee → Orlando',cat:'transporte',lat:28.5383,lon:-81.3792,dur:260,custo:13,precisao:'aprox',ehTrecho:true,
+        dica:'400 km, 4 horas. Chegada no início da tarde da véspera de Natal.',sel:true,dia:'2026-12-24',hora:'08:30'}),
+      A({destinoId:'orlando',nome:'Ceia de Natal em Orlando',cat:'comida',lat:28.5383,lon:-81.3792,dur:180,custo:65,precisao:'aprox',
+        dica:'Restaurante em 24/12 nos Estados Unidos fecha cedo ou abre só com reserva. Resolva isso com antecedência.',sel:true,dia:'2026-12-24',hora:'19:00'}),
+      A({destinoId:'orlando',nome:'Natal em Orlando',cat:'passeio',lat:28.5383,lon:-81.3792,dur:480,custo:0,
+        dica:'No dia 25 quase tudo fecha nos Estados Unidos, inclusive supermercado. Compre na véspera.',sel:true,dia:'2026-12-25',hora:'10:00'}),
+      A({destinoId:'estrada',nome:'Orlando → Columbia, Carolina do Sul',cat:'transporte',lat:34.0007,lon:-81.0348,dur:400,custo:25,precisao:'aprox',ehTrecho:true,
+        dica:'750 km, 6h30 pela I-95 e I-26. Pernoite para não fazer os 900 km até Asheville de uma vez.',sel:true,dia:'2026-12-26',hora:'08:00'}),
+      A({destinoId:'asheville',nome:'Columbia → Asheville',cat:'transporte',lat:35.5951,lon:-82.5515,dur:190,custo:10,precisao:'aprox',ehTrecho:true,
+        dica:'300 km, 3 horas, subindo a serra.',sel:true,dia:'2026-12-27',hora:'09:00'}),
+      A({destinoId:'asheville',nome:'Check-in em Asheville',cat:'hospedagem',lat:35.5951,lon:-82.5515,dur:45,custo:0,precisao:'aprox',sel:true,dia:'2026-12-27',hora:'12:30'}),
+      A({destinoId:'asheville',nome:'Centro histórico de Asheville',cat:'passeio',lat:35.5946,lon:-82.5540,dur:180,custo:0,
+        dica:'Art déco, livrarias, cervejarias e música ao vivo. A cidade se caminha.',sel:true,dia:'2026-12-27',hora:'14:30'}),
+      A({destinoId:'asheville',nome:'Christmas at Biltmore — visita diurna',cat:'ingresso',lat:35.5401,lon:-82.5524,dur:300,custo:70,precisao:'aprox',
+        dica:'A maior casa particular dos Estados Unidos, decorada para o Natal. Temporada de 06/11/2026 a 10/01/2027. A partir de US$ 105 por adulto; crianças abaixo de 9 anos não pagam, então o Arthur (7 anos) é isento: US$ 210 pelos dois adultos. O valor está rateado pelos três porque o app calcula custo por pessoa. RESERVE JÁ: as datas entre o Natal e o Ano-Novo esgotam.',sel:true,dia:'2026-12-28',hora:'10:00'}),
+      A({destinoId:'asheville',nome:'Candlelight Christmas Evening no Biltmore',cat:'ingresso',lat:35.5401,lon:-82.5524,dur:180,custo:80,precisao:'aprox',
+        dica:'A casa iluminada a vela, com música ao vivo. É INGRESSO SEPARADO da visita diurna, e é o mais concorrido. Preço não publicado: estimativa para dois adultos, rateada pelos três. O Arthur é isento por ter menos de 9 anos.',sel:true,dia:'2026-12-28',hora:'18:00'}),
+      A({destinoId:'asheville',nome:'Blue Ridge Parkway e mirantes',cat:'passeio',lat:35.5650,lon:-82.4200,dur:300,custo:0,
+        dica:'ATENÇÃO: trechos da Parkway fecham com frequência no inverno por neve e gelo, sem previsibilidade. Cheque o status oficial no site do parque na véspera. Se a estrada estiver fechada, as trilhas seguem abertas.',sel:true,dia:'2026-12-29',hora:'09:00'}),
+      A({destinoId:'estrada',nome:'Asheville → Jacksonville',cat:'transporte',lat:30.3322,lon:-81.6557,dur:390,custo:23,precisao:'aprox',ehTrecho:true,
+        dica:'600 km, 6 horas descendo para a Flórida.',sel:true,dia:'2026-12-30',hora:'08:00'}),
+      A({destinoId:'estrada',nome:'Jacksonville → Orlando',cat:'transporte',lat:28.5383,lon:-81.3792,dur:160,custo:8,precisao:'aprox',ehTrecho:true,
+        dica:'230 km, 2h30. Chegada com folga para a virada.',sel:true,dia:'2026-12-31',hora:'09:00'}),
+      A({destinoId:'orlando',nome:'Réveillon em Orlando',cat:'passeio',lat:28.5383,lon:-81.3792,dur:300,custo:0,precisao:'aprox',
+        dica:'Os parques fazem queima de fogos e lotam; há também fogos no Lake Eola, no centro, com entrada franca.',sel:true,dia:'2026-12-31',hora:'21:00'}),
+      A({destinoId:'golfo',nome:'Orlando → Sarasota',cat:'transporte',lat:27.3364,lon:-82.5307,dur:160,custo:8,precisao:'aprox',ehTrecho:true,
+        dica:'220 km, 2h30. Dia curto de estrada, para começar o ano sem pressa.',sel:true,dia:'2027-01-01',hora:'11:00'}),
+      A({destinoId:'golfo',nome:'Siesta Key ao pôr do sol',cat:'passeio',lat:27.2670,lon:-82.5490,dur:120,custo:0,
+        dica:'Areia de quartzo puro, branca e fria mesmo no sol. O estacionamento lota — chegue antes das 16h.',sel:true,dia:'2027-01-01',hora:'16:30'}),
+      A({destinoId:'golfo',nome:'Sarasota → Nápoles, com parada em Sanibel',cat:'transporte',lat:26.1420,lon:-81.7948,dur:180,custo:10,precisao:'aprox',ehTrecho:true,
+        dica:'Sanibel é a ilha das conchas; a ponte é pedagiada. 180 km no total.',sel:true,dia:'2027-01-02',hora:'09:00'}),
+      A({destinoId:'golfo',nome:'Naples Pier e 5th Avenue South',cat:'passeio',lat:26.1310,lon:-81.8070,dur:150,custo:0,
+        dica:'Píer histórico, golfinhos ao fim da tarde e a rua de restaurantes logo atrás.',sel:true,dia:'2027-01-02',hora:'16:00'}),
+      A({destinoId:'golfo',nome:'Everglades City — passeio de airboat',cat:'passeio',lat:25.8581,lon:-81.3831,dur:120,custo:50,precisao:'aprox',
+        dica:'Jacarés, manguezais e o barco a hélice. Melhor de manhã, quando os bichos estão ativos.',sel:true,dia:'2027-01-03',hora:'09:30'}),
+      A({destinoId:'miami',nome:'Alligator Alley até Miami',cat:'transporte',lat:25.7617,lon:-80.1918,dur:150,custo:10,precisao:'aprox',ehTrecho:true,
+        dica:'A I-75 corta os Everglades em linha reta. 200 km, sem nada no caminho — abasteça antes.',sel:true,dia:'2027-01-03',hora:'13:00'}),
+      A({destinoId:'miami',nome:'Check-in em Miami',cat:'hospedagem',lat:25.7900,lon:-80.2300,dur:45,custo:0,precisao:'aprox',sel:true,dia:'2027-01-03',hora:'16:00'}),
+      A({destinoId:'miami',nome:'Compras — Sawgrass Mills',cat:'compras',lat:26.1500,lon:-80.3220,dur:300,custo:0,
+        dica:'O maior outlet da região. Reserve o dia: é grande e fica a 45 minutos do centro de Miami.',sel:true,dia:'2027-01-04',hora:'10:00'}),
+      A({destinoId:'miami',nome:'Compras — Dolphin Mall',cat:'compras',lat:25.7880,lon:-80.3830,dur:180,custo:0,
+        dica:'Mais perto do aeroporto, bom para fechar o que faltou.',sel:true,dia:'2027-01-04',hora:'16:30'}),
+      A({destinoId:'miami',nome:'Devolução do carro e aeroporto',cat:'logistica',lat:25.7959,lon:-80.2870,dur:120,custo:0,ehTrecho:true,
+        dica:'Voo às 20:25. Devolva o carro com pelo menos 3h30 de antecedência e confirme o tanque cheio.',sel:true,dia:'2027-01-05',hora:'16:00'}),
+      A({destinoId:'orlando',nome:'Kennedy Space Center',cat:'passeio',lat:28.5729,lon:-80.6490,dur:480,custo:75,precisao:'aprox',
+        dica:'A 1 hora de Orlando, na costa. Excelente com criança. Cabe no dia 18/12 ou na manhã do 31/12.'}),
+      A({destinoId:'miami',nome:'South Beach e Ocean Drive',cat:'passeio',lat:25.7820,lon:-80.1300,dur:180,custo:0,
+        dica:'Art déco e praia. Opção para o dia 04/01, se as compras terminarem cedo.'}),
+      A({destinoId:'miami',nome:'Wynwood Walls',cat:'passeio',lat:25.8010,lon:-80.1990,dur:150,custo:10,precisao:'aprox',
+        dica:'Bairro de arte urbana, com galerias e cafés.'}),
+      A({destinoId:'nola',nome:'Bourbon Street à noite',cat:'passeio',lat:29.9590,lon:-90.0650,dur:120,custo:0,
+        dica:'A rua mais famosa e a menos autêntica. Vale a passada, não a noite inteira. Com criança, só até o começo da noite.'}),
+      A({destinoId:'nola',nome:'Passeio de pântano com jacarés',cat:'passeio',lat:29.8000,lon:-90.3000,dur:240,custo:60,precisao:'aprox',
+        dica:'Sai dos arredores da cidade. Alternativa ao airboat dos Everglades, se preferirem fazer aqui.'}),
+      A({destinoId:'asheville',nome:'Chimney Rock e Lake Lure',cat:'passeio',lat:35.4310,lon:-82.2510,dur:300,custo:30,precisao:'aprox',
+        dica:'Mirante sobre o desfiladeiro, a 40 minutos de Asheville. Alternativa se a Parkway estiver fechada.'}),
+      A({destinoId:'orlando',nome:'Um dia de parque temático',cat:'ingresso',lat:28.3747,lon:-81.5494,dur:600,custo:170,precisao:'aprox',
+        dica:'Disney ou Universal. Em dezembro o ingresso é mais caro e a lotação é máxima entre 26/12 e 01/01 — o melhor dia seria 18/12.'})
+    ],
+    transporte:{
+      titulo:'Como vocês circulam',
+      intro:'Duas pernas: o trecho <b>Miami → Orlando</b> sem carro, logo na chegada, e o <b>carro alugado one-way</b> de Orlando até Miami, que cobre todo o resto da viagem.',
+      avisos:[
+        {ic:'🚆',cor:'in',b:'Brightline, o trem.',t:'3h30 para 380 km, partidas a cada duas horas. Smart US$ 79 a 99, Premium a partir de US$ 149. A estação de Orlando fica <b>dentro do MCO</b>. Em Miami a estação é a MiamiCentral, no centro — do aeroporto, Metrorail ou aplicativo.'},
+        {ic:'🚌',cor:'in',b:'Ônibus, a alternativa barata.',t:'FlixBus, Greyhound, Jet Set e RedCoach somam cerca de 29 partidas por dia, a partir de US$ 24, média de US$ 34 a 39. Saem do próprio MIA, mas chegam a terminais longe do MCO.'},
+        {ic:'🚗',b:'O carro é one-way.',t:'Retirada no MCO em 17/12 e devolução em Miami em 05/01. Tem taxa de one-way, mas evita repetir trecho e não paga diária parada. Cadeirinha dispensada: a Flórida exige dispositivo de retenção só até os 5 anos e o Arthur tem 7 — de cinto, no banco de trás.'},
+        {ic:'🛣️',b:'São cerca de 4.550 km ao volante.',t:'Orlando–Nova Orleans–Orlando, mais Orlando–Asheville–Orlando, mais a descida pelo Golfo até Miami. Bem distribuídos em dezenove dias, mas é muita estrada — divida a direção.'}
+      ],
+      tabela:{colunas:['Trecho','km aprox.','Tempo'],linhas:[
+        ['Miami → Orlando (trem ou ônibus)','380','3h30–5h'],
+        ['Orlando → Pensacola','700','7h'],
+        ['Pensacola → Nova Orleans','350','3h15'],
+        ['Nova Orleans → Tallahassee','620','6h'],
+        ['Tallahassee → Orlando','400','4h'],
+        ['Orlando → Columbia, SC','750','6h30'],
+        ['Columbia → Asheville','300','3h'],
+        ['Asheville → Jacksonville','600','6h'],
+        ['Jacksonville → Orlando','230','2h30'],
+        ['Orlando → Sarasota → Nápoles → Miami','600','7h no total']
+      ],total:['Total ao volante','≈ 4.550 km','—']},
+      conclusao:{ic:'✓',b:'O que fazer agora.',t:'Reservar os ingressos do Biltmore (diurno e Candlelight), fechar o aluguel one-way e resolver a franquia de bagagem despachada, que a tarifa Economy Light não inclui.'},
+      rodape:'Preços de trem e ônibus levantados em set/2026; distâncias e tempos são aproximados e não contam paradas.'
+    },
+    documentos:[
+      ['Passaportes válidos e visto americano em dia','Dos três, com validade cobrindo toda a viagem.'],
+      ['Franquia de bagagem despachada comprada','A Economy Light dá apenas 1 item pessoal de 10 kg e 1 mala de mão de 12 kg por pessoa. Nenhuma bagagem despachada. Comprar antecipado pelo site é bem mais barato que no aeroporto — resolver até meados de novembro.'],
+      ['Ingressos do Christmas at Biltmore','Visita diurna e Candlelight Christmas Evening são ingressos separados. A semana entre o Natal e o Ano-Novo esgota com antecedência.'],
+      ['Carro reservado, one-way','Retirada no MCO, devolução em Miami. Cadeirinha não é exigida para o Arthur (7 anos): na Flórida vale só até os 5. Banco traseiro é o recomendado até os 12.'],
+      ['Seguro viagem e cartão internacional','E avisar o banco das datas, para o cartão não bloquear.'],
+      ['Notas fiscais separadas por pessoa','A cota é de US$ 1.000 por passageiro. O computador precisa caber sozinho na cota de alguém.'],
+      ['Checar a Blue Ridge Parkway antes de subir','Trechos fecham por neve e gelo no inverno. O status sai no site oficial do parque.'],
+      ['Reserva da ceia de 24/12 em Orlando','Restaurante nos Estados Unidos fecha cedo na véspera, e quase tudo fecha no dia 25.']
+    ],
+    compras:[
+      {id:'c_macmini',nome:'Mac mini M6 16GB/256GB',paraQuem:['p1'],alvoUSD:879.99,precoBR:'',
+       loja:'Amazon EUA',link:'https://www.amazon.com/s?k=mac+mini+m6',status:'procurar',destinoId:'miami',
+       obs:'Cotação de 14/09/2026. Apple, Best Buy e B&H pediam US$ 899 nessa configuração. Com o imposto de vendas da Flórida (~7%) dá US$ 941,59, que ainda cabe na cota de US$ 1.000 — é a única configuração que cabe. Fonte bivolt, troca-se só o cabo. AppleCare+ americano não é transferível, e a assistência no Brasil costuma exigir a nota de origem. Recotar em novembro.'},
+      {id:'c_macmini512',nome:'Mac mini M6 16GB/512GB (alternativa)',paraQuem:['p1'],alvoUSD:1069,precoBR:'',
+       loja:'B&H',link:'https://www.bhphotovideo.com/c/search?q=mac+mini+m6',status:'procurar',destinoId:'miami',
+       obs:'US$ 1.069 na B&H e na Amazon; a Apple pedia US$ 1.099. ATENÇÃO: com o imposto passa dos US$ 1.000 da cota, e o excedente paga 50%. A B&H não envia ao Brasil.'}
+    ],
+    gastos:[], checklist:[], termoBusca:'Mac mini',
+    notas:'Voos emitidos — LATAM, reserva NFULQD, bilhete LA9579388NGUN, R$ 10.381,83 pelos três. ALERTA: tarifa Economy Light, sem bagagem despachada. Câmbio de 14/09/2026 (USD 1 = R$ 5,11); atualizar antes de viajar. Nenhuma hospedagem reservada ainda. Arthur nasceu em 29/07/2019 e terá 7 anos na viagem: dispensa cadeirinha na Flórida (exigida só até os 5) e é isento no Biltmore (abaixo de 9 anos não paga).'
   };
 }
 
@@ -605,7 +967,7 @@ function carregar(){
       if(d && Array.isArray(d.viagens)){ Object.assign(BD,d); }
     }catch(e){ console.warn('dados ilegíveis, recomeçando',e); }
   }
-  if(!BD.viagens.length){ BD.viagens=[sementeFoz()]; BD.ativa='foz2026'; }
+  if(!BD.viagens.length){ BD.viagens=[sementeFoz(),sementeJeri(),sementeEUA()]; BD.ativa='foz2026'; }
   if(!BD.ativa || !BD.viagens.some(v=>v.id===BD.ativa)) BD.ativa=BD.viagens[0].id;
   BD.viagens.forEach(sanear);
 }
@@ -1203,6 +1565,7 @@ function resumoCompras(){
 function telaCompras(){
   const v=viagem(), h=[], lista=v.compras||[], r=resumoCompras();
   const termo=v.termoBusca||'';
+  const SV=sitesDaViagem();
 
   h.push(`<div class="cartao pad">
     <label for="buscaProduto" style="display:block;font-size:12.5px;font-weight:700;color:var(--tinta-2);margin-bottom:6px">Procurar preço de um produto</label>
@@ -1210,13 +1573,13 @@ function telaCompras(){
       <input id="buscaProduto" type="search" enterkeyhint="search" placeholder="Ex.: iPhone 16 128GB" value="${esc(termo)}" autocomplete="off">
       <button class="bt sec" id="btLimparBusca" aria-label="Limpar busca" style="padding:0 14px">✕</button>
     </div>
-    <p style="font-size:12.5px;color:var(--tinta-2);margin:0;line-height:1.45">Digite e toque no site. Abre em outra aba, já com a busca feita. Comece pelos comparadores do Paraguai e confira no Mercado Livre e na Amazon antes de decidir.</p>
+    <p style="font-size:12.5px;color:var(--tinta-2);margin:0;line-height:1.45">Digite e toque no site. Abre em outra aba, já com a busca feita. Em cima ficam as lojas do destino (${esc(SV.rotulo)}); os demais comparadores ficam abaixo da lista.</p>
   </div>`);
 
-  const blocoSites=(g)=>{
+  const blocoSites=(lista)=>{
     let x=`<div class="cartao">`;
-    SITES.filter(s=>s.g===g).forEach((site,i)=>{
-      x+=`<a class="site" href="${esc(urlBusca(site,termo))}" target="_blank" rel="noopener" data-site="${g}|${i}">
+    lista.forEach(site=>{
+      x+=`<a class="site" href="${esc(urlBusca(site,termo))}" target="_blank" rel="noopener" data-site="${SITES.indexOf(site)}">
         <span style="flex:1;min-width:0">
           <span class="n">${esc(site.n)}${site.aviso?'<span class="eti sol">a confirmar</span>':''}</span>
           <span class="d">${esc(site.d)}</span>
@@ -1224,8 +1587,8 @@ function telaCompras(){
     });
     return x+`</div>`;
   };
-  h.push(`<div class="tituloSecao">${GRUPOS_SITE.comparador}<span class="linha"></span><span style="text-transform:none;letter-spacing:0">comece por aqui</span></div>`);
-  h.push(blocoSites('comparador'));
+  h.push(`<div class="tituloSecao">Onde comprar — ${esc(SV.rotulo)}<span class="linha"></span><span style="text-transform:none;letter-spacing:0">comece por aqui</span></div>`);
+  h.push(blocoSites(SV.ondeComprar));
 
   h.push(`<div class="tituloSecao">Nossa lista<span class="linha"></span>${lista.length?`<span style="text-transform:none;letter-spacing:0">${lista.length}</span>`:''}</div>`);
 
@@ -1278,17 +1641,19 @@ function telaCompras(){
     h.push(`<div class="sugestoes" style="justify-content:flex-start;margin-top:12px">${['Celular','Perfume','Notebook','Tênis','Bebida','Brinquedo'].map(x=>`<button class="chip" data-sugestao="${x}">＋ ${x}</button>`).join('')}</div>`);
   }
 
+  /* comparação com o Brasil, quando a viagem é fora */
+  if(SV.comparar.length){
+    h.push(`<div class="tituloSecao" style="margin-top:16px">Quanto custa no Brasil<span class="linha"></span><span style="text-transform:none;letter-spacing:0">vale a pena?</span></div>`);
+    h.push(blocoSites(SV.comparar));
+  }
+
   /* demais sites, recolhidos */
   const abertoSites=abertos.has('sites');
-  const nOutros=SITES.filter(s=>s.g!=='comparador').length;
   h.push(`<div class="tituloSecao" style="margin-top:16px">Mais sites<span class="linha"></span></div>
     <button class="bt sec larga" data-abrir-sites="1" style="justify-content:space-between">
-      <span>${abertoSites?'Esconder':'Ver'} lojas e comparação de preço</span><span style="color:var(--tinta-2);font-weight:600">${nOutros}</span>
+      <span>${abertoSites?'Esconder':'Ver'} as outras lojas e comparadores</span><span style="color:var(--tinta-2);font-weight:600">${SV.resto.length}</span>
     </button>`);
-  if(abertoSites){
-    h.push(`<div class="tituloSecao">${GRUPOS_SITE.loja}<span class="linha"></span></div>`+blocoSites('loja'));
-    h.push(`<div class="tituloSecao">${GRUPOS_SITE.brasil}<span class="linha"></span></div>`+blocoSites('brasil'));
-  }
+  if(abertoSites) h.push(blocoSites(SV.resto));
 
   /* cota */
   const cotas=cotaPorPessoa();
@@ -1321,10 +1686,7 @@ function telaCompras(){
     campo.addEventListener('input',()=>{
       viagem().termoBusca=campo.value; salvar();
       const t=campo.value;
-      $$('#tela-compras .site').forEach(a=>{
-        const [g,i]=a.dataset.site.split('|');
-        a.href=urlBusca(SITES.filter(s=>s.g===g)[Number(i)],t);
-      });
+      $$('#tela-compras .site').forEach(a=>{ a.href=urlBusca(SITES[Number(a.dataset.site)],t); });
     });
     campo.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); campo.blur(); } });
   }
@@ -1361,7 +1723,9 @@ function folhaCompra(id,nomeInicial,statusInicial){
         <div class="pessoas" id="fc_quem">
           ${v.pessoas.map(p=>`<button type="button" data-q="${p.id}" aria-pressed="${(c.paraQuem||[]).includes(p.id)}">${esc(p.nome)}</button>`).join('')}
         </div>
-        <p class="ajuda" style="margin-top:6px;margin-bottom:0">Toque em quem vai levar. Quase sempre é uma pessoa só — e é ela que gasta a cota deste item. Marcando mais de uma, a cota e a conta se dividem entre elas.</p>
+        ${v.pessoas.length
+          ? `<p class="ajuda" style="margin-top:6px;margin-bottom:0">Toque em quem vai levar. Quase sempre é uma pessoa só — e é ela que gasta a cota deste item. Marcando mais de uma, a cota e a conta se dividem entre elas.</p>`
+          : `<div class="aviso in" style="margin-top:8px"><span class="ic">${ico('aviso',16)}</span><div>Esta viagem ainda não tem ninguém cadastrado, então dá para salvar sem escolher. Para dividir cota e conta, cadastre as pessoas em <b>Viagem › Editar viagem</b>.</div></div>`}
       </div>
       <div class="campo"><label for="fc_link">Link do anúncio</label><input id="fc_link" type="url" inputmode="url" value="${esc(c.link||'')}" placeholder="https://..."></div>
       <div class="campo"><label for="fc_obs">Observações</label><textarea id="fc_obs" placeholder="Modelo, cor, voltagem, garantia...">${esc(c.obs||'')}</textarea></div>
@@ -1399,7 +1763,7 @@ function folhaCompra(id,nomeInicial,statusInicial){
       $('#formCompra').addEventListener('submit',ev=>{
         ev.preventDefault();
         const quem=$$('#fc_quem [data-q]').filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.dataset.q);
-        if(!quem.length){
+        if(!quem.length && v.pessoas.length){
           torrada('Marque para quem é este item.');
           const cx=$('#fc_quem'); cx.scrollIntoView({block:'center',behavior:'smooth'});
           cx.animate([{outline:'2px solid var(--alerta)'},{outline:'2px solid transparent'}],{duration:900});
@@ -1463,9 +1827,9 @@ function telaCustos(){
   /* cota do Paraguai */
   const cotas=cotaPorPessoa();
   if(cotas){
-    h.push(`<div class="tituloSecao">Cota de isenção · US$ ${v.cotaPY} por pessoa<span class="linha"></span></div>
+    h.push(`<div class="tituloSecao">${esc(v.cotaRotulo||'Cota de isenção')} · US$ ${v.cotaPY} por pessoa<span class="linha"></span></div>
     <div class="cartao pad">
-      <p style="margin:0 0 12px;font-size:12.5px;color:var(--tinta-2);line-height:1.45">Compras no Paraguai e no duty free argentino dividem a <b>mesma</b> cota de US$ ${v.cotaPY} por CPF, por via terrestre, a cada 30 dias. Acima disso, 50% de imposto sobre o excedente.</p>
+      <p style="margin:0 0 12px;font-size:12.5px;color:var(--tinta-2);line-height:1.45">${v.cotaTexto||'Compras no Paraguai e no duty free argentino dividem a <b>mesma</b> cota de US$ '+v.cotaPY+' por CPF, por via terrestre, a cada 30 dias. Acima disso, 50% de imposto sobre o excedente.'}</p>
       ${cotas.map(p=>{
         const pc=Math.min(100,p.usado/v.cotaPY*100), estourou=p.usado>v.cotaPY;
         return `<div style="margin-bottom:12px">
@@ -1612,47 +1976,33 @@ function telaViagem(){
     <div style="font-size:12px;color:var(--tinta-2);margin-top:4px">Atribuição em uso: ${esc(pv.cred)}</div>
   </div>`);
 
-  /* transporte */
-  h.push(`<div class="tituloSecao">Carro alugado ou Uber?<span class="linha"></span></div>
-  <div class="cartao pad">
-    <p style="font-size:13.5px;line-height:1.5;margin:0 0 12px">Para <b>este</b> roteiro, a conta fecha a favor do aplicativo — e por três motivos que não têm a ver com preço de diária.</p>
-    <div class="aviso at"><span class="ic">⛔</span><div><b>Fronteira.</b> As grandes locadoras do aeroporto não liberam o carro para o Paraguai e a Argentina. Cruzar exige autorização por escrito <i>e</i> Carta Verde (seguro Mercosul). Só locadora local de fronteira entrega assim.</div></div>
-    <div class="aviso at"><span class="ic">🕒</span><div><b>Devolução às 3h30 de sábado.</b> O balcão do aeroporto de Foz só desperta por volta das 4h. Ou você devolve na véspera e paga transfer assim mesmo, ou paga taxa de devolução fora do horário e assume o risco do carro.</div></div>
-    <div class="aviso in"><span class="ic">🅿️</span><div><b>O carro ficaria parado.</b> Dois dias de compras no Paraguai são a pé e a noite na Argentina é de táxi. Você pagaria diária, seguro e estacionamento para não rodar.</div></div>
-    <div style="overflow-x:auto;margin-top:6px">
-    <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:330px">
-      <tr style="text-align:left;color:var(--tinta-2)"><th style="padding:6px 4px;font-weight:700">Item</th><th style="padding:6px 4px;text-align:right;font-weight:700">Carro</th><th style="padding:6px 4px;text-align:right;font-weight:700">App</th></tr>
-      ${[['Locação 3 diárias (autom.+proteção)','570–900','—'],
-         ['Taxa de aeroporto','60–150','—'],
-         ['Carta Verde + autorização','150–300','—'],
-         ['Combustível (~180 km)','80–110','—'],
-         ['Estacionamentos','250–280','—'],
-         ['Aeroporto ↔ hotel','incluso','0 (transfer do hotel)'],
-         ['Cataratas ida e volta','incluso','100–140'],
-         ['Marco das 3 Fronteiras','incluso','45–65'],
-         ['Ponte da Amizade, 2 dias','+ estac. no PY','60–100'],
-         ['Puerto Iguazú (táxi, ida e volta)','incluso','640–840'],
-         ['Aeroporto às 3h30 de sábado','balcão fechado','0–172']
-        ].map(l=>`<tr style="border-top:1px solid var(--linha)"><td style="padding:7px 4px">${l[0]}</td><td style="padding:7px 4px;text-align:right" class="numero">${l[1]}</td><td style="padding:7px 4px;text-align:right" class="numero">${l[2]}</td></tr>`).join('')}
-      <tr style="border-top:2px solid var(--linha);font-weight:800"><td style="padding:9px 4px">Total estimado</td><td style="padding:9px 4px;text-align:right" class="numero">1.110–1.740</td><td style="padding:9px 4px;text-align:right;color:var(--ok)" class="numero">895–1.400</td></tr>
-    </table></div>
-    <div class="aviso bo" style="margin-top:12px"><span class="ic">✓</span><div><b>O que fazer.</b> Peça ao Village Iguassu, por escrito e com 48–72h de antecedência, o transfer gratuito do aeroporto, o café da manhã às 3h e a confirmação do transfer de volta às 3h30. Feche à parte só o táxi da Argentina. Para o Paraguai, vá a pé pela ponte.</div></div>
-    <p class="ajuda" style="margin-top:10px">Valores de set/2026; diárias de locadora e corridas de app são estimativas — confirme antes de fechar.</p>
-  </div>`);
+  /* transporte — vem da viagem; sem dados, a seção some */
+  if(v.transporte){
+    const tr=v.transporte;
+    h.push(`<div class="tituloSecao">${esc(tr.titulo||'Como circular')}<span class="linha"></span></div>
+    <div class="cartao pad">
+      ${tr.intro?`<p style="font-size:13.5px;line-height:1.5;margin:0 0 12px">${tr.intro}</p>`:''}
+      ${(tr.avisos||[]).map(x=>`<div class="aviso ${x.cor||'at'}"><span class="ic">${x.ic||'•'}</span><div><b>${esc(x.b||'')}</b> ${x.t||''}</div></div>`).join('')}
+      ${tr.tabela?`<div style="overflow-x:auto;margin-top:6px">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:330px">
+        <tr style="text-align:left;color:var(--tinta-2)">${tr.tabela.colunas.map((cl,i)=>`<th style="padding:6px 4px;font-weight:700${i?';text-align:right':''}">${esc(cl)}</th>`).join('')}</tr>
+        ${tr.tabela.linhas.map(l=>`<tr style="border-top:1px solid var(--linha)">${l.map((cl,i)=>`<td style="padding:7px 4px${i?';text-align:right':''}"${i?' class="numero"':''}>${esc(cl)}</td>`).join('')}</tr>`).join('')}
+        ${tr.tabela.total?`<tr style="border-top:2px solid var(--linha);font-weight:800">${tr.tabela.total.map((cl,i)=>`<td style="padding:9px 4px${i?';text-align:right':''}"${i?' class="numero"':''}>${esc(cl)}</td>`).join('')}</tr>`:''}
+      </table></div>`:''}
+      ${tr.conclusao?`<div class="aviso bo" style="margin-top:12px"><span class="ic">${tr.conclusao.ic||'✓'}</span><div><b>${esc(tr.conclusao.b||'')}</b> ${tr.conclusao.t||''}</div></div>`:''}
+      ${tr.rodape?`<p class="ajuda" style="margin-top:10px">${esc(tr.rodape)}</p>`:''}
+    </div>`);
+  }
 
-  /* documentos */
-  h.push(`<div class="tituloSecao">Antes de sair de casa<span class="linha"></span></div><div class="cartao pad">
-    ${[['RG com menos de 10 anos ou passaporte, dos quatro','Serve para o Paraguai e para a Argentina. CNH digital não vale fora do Brasil.'],
-       ['Ingressos das Cataratas comprados online','Dia e hora marcados, lotação limitada. Não há bilheteria de porta confiável.'],
-       ['Reserva no Hotel das Cataratas (Belmond)','É o que permite ficar dentro do parque depois que ele fecha. WhatsApp (45) 99123-3145.'],
-       ['Reserva do jantar em Puerto Iguazú','E o táxi/transfer combinado para os dois trechos.'],
-       ['Transfer e café das 3h com o hotel','Por escrito, 48 a 72h antes.'],
-       ['Notas fiscais separadas por pessoa','A cota de US$ 500 é por CPF. Guarde tudo até chegar em casa.']
-      ].map((l,i)=>`<label style="display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--linha);cursor:pointer">
+  /* documentos — vem da viagem */
+  if((v.documentos||[]).length){
+    h.push(`<div class="tituloSecao">${esc(v.documentosTitulo||'Antes de sair de casa')}<span class="linha"></span></div><div class="cartao pad">
+    ${v.documentos.map((l,i)=>`<label style="display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--linha);cursor:pointer">
         <input type="checkbox" data-check="${i}" ${(v.checklist||[]).includes(String(i))?'checked':''} style="width:24px;height:24px;margin:1px 0 0;flex:0 0 auto;accent-color:var(--agua-2)">
-        <span style="flex:1"><b style="font-size:14px;font-weight:600">${l[0]}</b>
-        <span style="display:block;font-size:12.5px;color:var(--tinta-2);margin-top:2px;line-height:1.4">${l[1]}</span></span></label>`).join('')}
+        <span style="flex:1"><b style="font-size:14px;font-weight:600">${esc(l[0])}</b>
+        <span style="display:block;font-size:12.5px;color:var(--tinta-2);margin-top:2px;line-height:1.4">${esc(l[1])}</span></span></label>`).join('')}
   </div>`);
+  }
 
   /* instalar */
   h.push(`<div class="tituloSecao">No celular<span class="linha"></span></div><div class="cartao pad">
@@ -1843,7 +2193,7 @@ function folhaGasto(id,catInicial){
       $('#formGasto').addEventListener('submit',e=>{
         e.preventDefault();
         const div=$$('#fg_divide [data-div]').filter(b=>b.getAttribute('aria-pressed')==='true').map(b=>b.dataset.div);
-        if(!div.length){
+        if(!div.length && v.pessoas.length){
           torrada('Escolha entre quem dividir este gasto.');
           const cx=$('#fg_divide'); cx.scrollIntoView({block:'center',behavior:'smooth'});
           cx.animate([{outline:'2px solid var(--alerta)'},{outline:'2px solid transparent'}],{duration:900});
@@ -1862,12 +2212,28 @@ function folhaGasto(id,catInicial){
 }
 
 /* --- viagens / edição / destinos --- */
+/* Modelos embutidos: permitem reconstruir uma viagem cujo conteúdo tenha
+   ficado errado, sem perder gastos e lista de compras já lançados. */
+const MODELOS = {foz2026:sementeFoz, jeri2026:sementeJeri, eua2026:sementeEUA};
+function restaurarDoModelo(id){
+  const fab=MODELOS[id]; if(!fab) return false;
+  const i=BD.viagens.findIndex(v=>v.id===id); if(i<0) return false;
+  const antiga=BD.viagens[i], nova=fab();
+  nova.gastos=antiga.gastos||[];          /* o que ele já lançou não se perde */
+  nova.compras=antiga.compras||[];
+  nova.checklist=antiga.checklist||[];
+  if(antiga.cambio) nova.cambio=Object.assign({},nova.cambio,antiga.cambio);
+  BD.viagens[i]=nova; BD.ativa=id; salvar();
+  return true;
+}
 function folhaViagens(){
   abrirFolha('Suas viagens',`
     ${BD.viagens.map(v=>`<button class="bt larga ${v.id===BD.ativa?'':'sec'}" data-abrir-viagem="${v.id}" style="justify-content:space-between;margin-bottom:8px;text-align:left">
-      <span><b>${esc(v.nome)}</b><br><span style="font-weight:400;font-size:12.5px;opacity:.8">${dataCurta(v.inicio)}–${dataCurta(v.fim)} · ${v.destinos.length} destino${v.destinos.length===1?'':'s'}</span></span>
+      <span><b>${esc(v.nome)}</b><br><span style="font-weight:400;font-size:12.5px;opacity:.8">${dataCurta(v.inicio)}–${dataCurta(v.fim)} · ${v.destinos.length} destino${v.destinos.length===1?'':'s'} · ${v.atracoes.length} atraç${v.atracoes.length===1?'ão':'ões'} · ${v.pessoas.length} pessoa${v.pessoas.length===1?'':'s'}</span></span>
       ${v.id===BD.ativa?'<span>✓</span>':'<span>›</span>'}</button>`).join('')}
     <button class="bt larga fant" data-nova-viagem="1" style="margin-top:10px">＋ Nova viagem</button>
+    ${MODELOS[BD.ativa]?`<button class="bt larga sec" data-restaurar-modelo="${BD.ativa}" style="margin-top:8px">↻ Restaurar a viagem aberta do modelo</button>
+      <p class="ajuda" style="margin-top:6px">Refaz roteiro, atrações, destinos, pessoas e voos a partir do modelo que vem no app. <b>Gastos e lista de compras são preservados.</b> Use se o conteúdo de uma viagem estiver trocado.</p>`:''}
     ${BD.viagens.length>1?`<button class="bt larga perigo" data-apagar-viagem="${BD.ativa}" style="margin-top:8px">Apagar a viagem aberta</button>`:''}`);
 }
 function folhaEditarViagem(nova){
@@ -2122,11 +2488,20 @@ document.addEventListener('click',e=>{
     const v=viagem(); v.destinos.push({id:idNovo('d'),nome:'Novo destino',pais:'BR',moeda:'BRL',lat:null,lon:null,orcamento:0});
     salvar(); folhaDestinos(); return;
   }
+  if(b=al('data-restaurar-modelo')){
+    const id=b.dataset.restaurarModelo;
+    const v=BD.viagens.find(x=>x.id===id);
+    return confirmar('Restaurar do modelo','Refaz o roteiro, as atrações, os destinos, as pessoas e os voos de “'+esc(v?v.nome:id)+'” como estão no modelo do app. Os gastos e a lista de compras que você já lançou continuam. Não dá para desfazer.','Restaurar',()=>{
+      const ok=restaurarDoModelo(id);
+      fecharFolha(); irPara('roteiro');
+      torrada(ok?'Viagem restaurada do modelo':'Esta viagem não tem modelo embutido');
+    });
+  }
   if(b=al('data-apagar-viagem')){
     const id=b.dataset.apagarViagem;
     return confirmar('Apagar viagem','Some tudo dessa viagem: roteiro, atrações e gastos. Exporte um backup antes se tiver dúvida.','Apagar viagem',()=>{
       BD.viagens=BD.viagens.filter(v=>v.id!==id);
-      if(!BD.viagens.length) BD.viagens=[sementeFoz()];
+      if(!BD.viagens.length) BD.viagens=[sementeFoz(),sementeJeri(),sementeEUA()];
       BD.ativa=BD.viagens[0].id; salvar(); fecharFolha(); irPara('roteiro'); torrada('Viagem apagada');
     });
   }
@@ -2144,7 +2519,7 @@ document.addEventListener('click',e=>{
   if(al('data-zerar')){
     return confirmar('Apagar tudo','Todas as viagens somem deste aparelho e o app volta com a viagem de Foz do Iguaçu de fábrica.','Apagar tudo',()=>{
       try{ localStorage.removeItem(CHAVE); }catch(e){}
-      repor({viagens:[sementeFoz()],ativa:'foz2026'});
+      repor({viagens:[sementeFoz(),sementeJeri(),sementeEUA()],ativa:'foz2026'});
       salvar(); fecharFolha(); irPara('roteiro'); torrada('Tudo zerado');
     });
   }
